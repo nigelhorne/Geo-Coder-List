@@ -35,7 +35,7 @@ sub geocode {
 		return;
 	}
 
-	foreach my $geocoder($self->{geocoders}) {
+	foreach my $geocoder(@{$self->{geocoders}}) {
 		my @rc = $geocoder->geocode(%params);
 		if(scalar(@rc)) {
 			return wantarray ? @rc : $rc[0];

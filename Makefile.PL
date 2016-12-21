@@ -14,6 +14,8 @@ WriteMakefile(
     PL_FILES	=> {},
     BUILD_REQUIRES => {
 	'Test::Most' => 0,
+	'Geo::Coder::Google::V3' => 0,
+	'Test::Number::Delta' => 0,
     },
     PREREQ_PM => {
     },
