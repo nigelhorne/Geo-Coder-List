@@ -42,7 +42,7 @@ LIST: {
 		delta_ok($location->{geometry}{location}{lat}, 38.991);
 		delta_ok($location->{geometry}{location}{lng}, -77.026);
 
-		$location = $geocoderlist->geocode('St Mary The Virgin, Minster, Thanet, Kent, England');
+		$location = $geocoderlist->geocode(location => 'St Mary The Virgin, Minster, Thanet, Kent, England');
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
 		delta_ok($location->{geometry}{location}{lat}, 51.330);
