@@ -1,0 +1,9 @@
+lib/Geo/Coder/List.pm
+LICENSE
+Makefile.PL
+MANIFEST			This list of files
+README.md
+t/00-load.t
+t/10-new.t
+t/google.t
+t/osm.t

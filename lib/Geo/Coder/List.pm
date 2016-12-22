@@ -37,6 +37,13 @@ sub geocode {
 
 	foreach my $geocoder(@{$self->{geocoders}}) {
 		my @rc = $geocoder->geocode(%params);
+		foreach my $location(@rc) {
+			# Add HTML::GoogleMaps::V3 compatability
+			unless($location->{geometry}{location}{lat}) {
+				$location->{geometry}{location}{lat} = $location->{lat};
+				$location->{geometry}{location}{lng} = $location->{lon};
+			}
+		}
 		if(scalar(@rc)) {
 			return wantarray ? @rc : $rc[0];
 		}
