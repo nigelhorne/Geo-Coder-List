@@ -28,8 +28,8 @@ WriteMakefile(
     	resources => {
     		repository => {
 			type => 'git',
-			url => 'git://github.com/nigelhorne/Geo::Coder::List.git',
-			web => 'https://github.com/nigelhorne/Geo::Coder::List',
+			url => 'git://github.com/nigelhorne/Geo-Coder-List.git',
+			web => 'https://github.com/nigelhorne/Geo-Coder-List',
     		},
 	},
     },
