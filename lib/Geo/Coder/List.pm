@@ -1,6 +1,28 @@
 package Geo::Coder::List;
 
-our $VERSION = 0.00;
+=head1 NAME
+
+Geo::Coder::List - provide lots of backends for HTML::GoogleMaps::V3
+
+=head1 VERSION
+
+Version 0.00
+
+=cut
+
+our $VERSION = '0.00';
+
+=head1 SYNOPSIS
+
+L<Geo::Coder::All> and L<Geo::Coder::Many> are great routines but neither quite does what I want.
+This module's primary use is to all many backends to be used by L<HTML::GoogleMaps::V3>
+
+=head1 SUBROUTINES/METHODS
+
+=head2 new
+
+Creates a Geo::Coder::List object.
+=cut
 
 sub new {
 	my $proto = shift;
@@ -8,16 +30,35 @@ sub new {
 
 	return unless(defined($class));
 
-	my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
+	# my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
 
-	return bless { %args, geocoders => [] }, $class;
+	# return bless { %args, geocoders => [] }, $class;
+	return bless { geocoders => [] }, $class;
 }
+
+=head2 push
+
+Add an encoder to list of encoders.
+
+	use Geo::Coder::List;
+	use Geo::Coder::GooglePlaces;
+
+	my $list = Geo::Coder::List->new()->push(Geo::Coder::GooglePlaces->new());
+=cut
 
 sub push {
 	my($self, $geocoder) = @_;
 
 	push @{$self->{geocoders}}, $geocoder;
+
+	return $self;
 }
+
+=head2 geocode
+
+Runs geocode on all of the loaded drivers.
+See L<Geo::Coder::GooglePlaces::V3> for an explanation
+=cut
 
 sub geocode {
 	my $self = shift;
@@ -49,5 +90,62 @@ sub geocode {
 		}
 	}
 }
+
+
+=head1 AUTHOR
+
+Nigel Horne, C<< <njh at bandsman.co.uk> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-geo-coder-list at rt.cpan.org>,
+or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Coder-List>.
+I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+=head1 SEE ALSO
+
+L<Geo::Coder::Many>
+L<Geo::Coder::All>
+L<Geo::Coder::GooglePlaces>
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Geo::Coder::List
+
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Geo-Coder-List>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/Geo-Coder-List>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Geo-Coder-List/>
+
+=back
+
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2016 Nigel Horne.
+
+This program is released under the following licence: GPL
+
+=cut
 
 1;

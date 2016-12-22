@@ -6,4 +6,8 @@ README.md
 t/00-load.t
 t/10-new.t
 t/google.t
+t/googleplaces.t
+t/list.t
 t/osm.t
+t/pod-cm.t
+t/pod.t
