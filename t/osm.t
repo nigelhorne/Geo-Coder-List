@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 20;
+use Test::Most tests => 21;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -22,13 +22,15 @@ OSM: {
 
 		if($@) {
 			diag('Geo::Coder::OSM not installed - skipping tests');
-			skip 'Geo::Coder::OSM not installed', 18;
+			skip 'Geo::Coder::OSM not installed', 19;
 		} else {
 			diag("Using Geo::Coder::OSM $Geo::Coder::OSM::VERSION");
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List');
 		my $geocoder = new_ok('Geo::Coder::OSM');
 		$geocoderlist->push($geocoder);
+
+		ok(!defined($geocoderlist->geocode()));
 
 		my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 		ok(defined($location));
@@ -50,7 +52,7 @@ OSM: {
 		delta_ok($location->{geometry}{location}{lat}, 51.388);
 		delta_ok($location->{geometry}{location}{lng}, 0.50672);
 
-		$location = $geocoderlist->geocode('St Mary The Virgin, Minster, Thanet, Kent, England');
+		$location = $geocoderlist->geocode(location => 'St Mary The Virgin, Minster, Thanet, Kent, England');
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
 		delta_ok($location->{geometry}{location}{lat}, 51.330);
