@@ -22,6 +22,10 @@ LIST: {
 			require Geo::Coder::OSM;
 
 			Geo::Coder::OSM->import;
+
+			require Geo::Coder::Bing;
+
+			Geo::Coder::Bing->import;
 		};
 
 		if($@) {
@@ -34,6 +38,9 @@ LIST: {
 
 		if(my $key = $ENV{GMAP_KEY}) {
 			$geocoderlist->push(new_ok('Geo::Coder::GooglePlaces::V3' => [ key => $key]));
+		}
+		if(my $key = $ENV{BMAP_KEY}) {
+			$geocoderlist->push(new_ok('Geo::Coder::Bing' => [ key => $key]));
 		}
 
 		my $location = $geocoderlist->geocode('Silver Spring, MD, USA');

@@ -17,6 +17,7 @@ WriteMakefile(
 	'Geo::Coder::Google::V3' => 0,
 	'Geo::Coder::OSM' => 0,
 	'Test::Number::Delta' => 0,
+	'LWP::Request::https' => 0,
     },
     PREREQ_PM => {
     },

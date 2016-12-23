@@ -81,8 +81,20 @@ sub geocode {
 		foreach my $location(@rc) {
 			# Add HTML::GoogleMaps::V3 compatability
 			unless($location->{geometry}{location}{lat}) {
-				$location->{geometry}{location}{lat} = $location->{lat};
-				$location->{geometry}{location}{lng} = $location->{lon};
+				if($location->{lat}) {
+					# OSM
+					$location->{geometry}{location}{lat} = $location->{lat};
+					$location->{geometry}{location}{lng} = $location->{lon};
+				} elsif($location->{BestLocation}) {
+					# Bing
+					$location->{geometry}{location}{lat} = $location->{BestLocation}->{Coordinates}->{Latitude};
+					$location->{geometry}{location}{lng} = $location->{BestLocation}->{Coordinates}->{Longitude};
+				} elsif($location->{point}) {
+					# Bing
+					$location->{geometry}{location}{lat} = $location->{point}->{coordinates}[0];
+					$location->{geometry}{location}{lng} = $location->{point}->{coordinates}[1];
+				}
+
 			}
 		}
 		if(scalar(@rc)) {
