@@ -12,26 +12,26 @@ BEGIN {
 	use_ok('Geo::Coder::List');
 }
 
-GOOGLEPLACES: {
+BING: {
 	SKIP: {
 		eval {
-			require Geo::Coder::GooglePlaces::V3;
+			require Geo::Coder::Bing;
 
-			Geo::Coder::GooglePlaces::V3->import;
+			Geo::Coder::Bing->import;
 		};
 
 		if($@) {
-			diag('Geo::Coder::GooglePlaces::V3 not installed - skipping tests');
-			skip 'Geo::Coder::GooglePlaces::V3 not installed', 14;
+			diag('Geo::Coder::Bing not installed - skipping tests');
+			skip 'Geo::Coder::Bing not installed', 14;
 		} else {
-			diag("Using Geo::Coder::GooglePlaces::V3 $Geo::Coder::GooglePlaces::V3::VERSION");
+			diag("Using Geo::Coder::Bing $Geo::Coder::Bing::VERSION");
 		}
-		my $geocoderlist = new_ok('Geo::Coder::List');
-		my $key = $ENV{GMAP_KEY};
-		my $geocoder = $key ? new_ok('Geo::Coder::GooglePlaces::V3' => [ key => $key ]) : new_ok('Geo::Coder::GooglePlaces::V3');
-		$geocoderlist->push($geocoder);
 
-		if($key) {
+		if(my $key = $ENV{BMAP_KEY}) {
+			my $geocoderlist = new_ok('Geo::Coder::List');
+			my $geocoder = new_ok('Geo::Coder::Bing' => [ key => $key ]);
+			$geocoderlist->push($geocoder);
+
 			my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 			ok(defined($location));
 			ok(ref($location) eq 'HASH');
@@ -50,8 +50,8 @@ GOOGLEPLACES: {
 			delta_ok($location->{geometry}{location}{lat}, 51.330);
 			delta_ok($location->{geometry}{location}{lng}, 1.31596);
 		} else {
-			diag('Set GMAP_KEY to enable more tests');
-			skip 'GMAP_KEY not set', 12;
+			diag('Set BMAP_KEY to enable more tests');
+			skip 'BMAP_KEY not set', 14;
 		}
 	}
 }

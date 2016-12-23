@@ -40,7 +40,7 @@ GOOGLE: {
 		ok(defined($location));
 		ok(ref($location) ne 'HASH');
 
-		$location = $geocoderlist->geocode('Rochester, Kent, England');
+		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, England' });
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
 		delta_ok($location->{geometry}{location}{lat}, 51.388);

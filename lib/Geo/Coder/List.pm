@@ -2,15 +2,15 @@ package Geo::Coder::List;
 
 =head1 NAME
 
-Geo::Coder::List - provide lots of backends for HTML::GoogleMaps::V3
+Geo::Coder::List - Provide lots of backends for HTML::GoogleMaps::V3
 
 =head1 VERSION
 
-Version 0.00
+Version 0.01
 
 =cut
 
-our $VERSION = '0.00';
+our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 

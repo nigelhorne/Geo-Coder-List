@@ -18,6 +18,7 @@ WriteMakefile(
 	'Geo::Coder::OSM' => 0,
 	'Test::Number::Delta' => 0,
 	'LWP::Request::https' => 0,
+	'Test::NoWarnings' => 0,
     },
     PREREQ_PM => {
     },
@@ -28,8 +29,8 @@ WriteMakefile(
     	resources => {
     		repository => {
 			type => 'git',
-			url => 'git://github.com/nigelhorne/Geo::Coder::List.git',
-			web => 'https://github.com/nigelhorne/Geo::Coder::List',
+			url => 'git://github.com/nigelhorne/Geo-Coder-List.git',
+			web => 'https://github.com/nigelhorne/Geo-Coder-List',
     		},
 	},
     },
