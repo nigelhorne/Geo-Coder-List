@@ -1,4 +1,7 @@
 Revision history for Geo-Coder-List
 
+0.02
+	If a search dies, use the next encoder
+
 0.01	Thu 22 Dec 11:57:45 EST 2016
         First draft
