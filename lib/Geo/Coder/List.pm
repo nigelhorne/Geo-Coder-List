@@ -77,7 +77,13 @@ sub geocode {
 	}
 
 	foreach my $geocoder(@{$self->{geocoders}}) {
-		my @rc = $geocoder->geocode(%params);
+		my @rc;
+		eval {
+			# e.g. over QUERY LIMIT with this one
+			# TODO: remove from the list of geocoders
+			@rc = $geocoder->geocode(%params);
+		};
+		next if $@;
 		foreach my $location(@rc) {
 			# Add HTML::GoogleMaps::V3 compatability
 			unless($location->{geometry}{location}{lat}) {
