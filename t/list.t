@@ -15,9 +15,9 @@ BEGIN {
 LIST: {
 	SKIP: {
 		eval {
-			require Geo::Coder::Google;
+			require Geo::Coder::Google::V3;
 
-			Geo::Coder::Google->import;
+			Geo::Coder::Google::V3->import;
 
 			require Geo::Coder::GooglePlaces::V3;
 
