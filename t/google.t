@@ -49,6 +49,5 @@ GOOGLE: {
 		$location = $geocoderlist->geocode('St Mary The Virgin, Minster, Thanet, Kent, England');
 		ok(defined($location));
 		ok(ref($location) ne 'HASH');
-
 	}
 }
