@@ -72,8 +72,14 @@ sub geocode {
 		$params{'location'} = shift;
 	}
 
-	if(!defined($params{'location'})) {
+	my $location = $params{'location'};
+
+	if(!defined($location)) {
 		return;
+	}
+
+	if((!wantarray) && (my $rc = $locations{$location})) {
+		return $rc;
 	}
 
 	foreach my $geocoder(@{$self->{geocoders}}) {
@@ -103,8 +109,13 @@ sub geocode {
 
 			}
 		}
+
 		if(scalar(@rc)) {
-			return wantarray ? @rc : $rc[0];
+			if(wantarray) {
+				return @rc;
+			}
+			$locations{$location} = $rc[0];
+			return $rc[0];
 		}
 	}
 }
@@ -160,7 +171,7 @@ L<http://search.cpan.org/dist/Geo-Coder-List/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016 Nigel Horne.
+Copyright 2016-2017 Nigel Horne.
 
 This program is released under the following licence: GPL
 

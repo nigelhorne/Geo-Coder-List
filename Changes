@@ -1,6 +1,10 @@
 Revision history for Geo-Coder-List
 
-0.02
+0.03
+	Some places now on the map, so change tests for failure
+	Remember locations to increase speed
+
+0.02	28 Dec 2016
 	If a search dies, use the next encoder
 	Build needs L:P:https
 
