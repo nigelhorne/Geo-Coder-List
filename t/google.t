@@ -42,7 +42,7 @@ GOOGLE: {
 		delta_ok($location->{geometry}{location}{lat}, 38.991);
 		delta_ok($location->{geometry}{location}{lng}, -77.026);
 
-		$location = $geocoderlist->geocode('Wisdom Hospice, Rochester, New York');
+		$location = $geocoderlist->geocode('Plugh Hospice, Rochester, New York');
 		ok(defined($location));
 		ok(ref($location) ne 'HASH');
 

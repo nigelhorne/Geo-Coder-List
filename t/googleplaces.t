@@ -47,8 +47,8 @@ GOOGLEPLACES: {
 			$location = $geocoderlist->geocode('St Mary The Virgin, Minster, Thanet, Kent, England');
 			ok(defined($location));
 			ok(ref($location) eq 'HASH');
-			delta_ok($location->{geometry}{location}{lat}, 51.272);
-			delta_ok($location->{geometry}{location}{lng}, 1.213);
+			delta_ok($location->{geometry}{location}{lat}, 51.330);
+			delta_ok($location->{geometry}{location}{lng}, 1.366);
 		} else {
 			diag('Set GMAP_KEY to enable more tests');
 			skip 'GMAP_KEY not set', 12;
