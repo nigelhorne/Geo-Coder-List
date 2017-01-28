@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 20;
+use Test::Most tests => 21;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -55,5 +55,8 @@ GOOGLE: {
 		$location = $geocoderlist->geocode('Xyzzy Lane, Minster, Thanet, Kent, England');
 		ok(defined($location));
 		ok(ref($location) ne 'HASH');
+
+		$location = $geocoderlist->geocode();
+		ok(!defined($location));
 	}
 }

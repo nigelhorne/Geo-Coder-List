@@ -6,16 +6,16 @@ Geo::Coder::List - Provide lots of backends for HTML::GoogleMaps::V3
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 SYNOPSIS
 
 L<Geo::Coder::All> and L<Geo::Coder::Many> are great routines but neither quite does what I want.
-This module's primary use is to all many backends to be used by L<HTML::GoogleMaps::V3>
+This module's primary use is to allow many backends to be used by L<HTML::GoogleMaps::V3>
 
 =head1 SUBROUTINES/METHODS
 

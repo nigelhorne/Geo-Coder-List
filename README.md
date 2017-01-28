@@ -9,12 +9,12 @@ Provide lots of backends for HTML::GoogleMaps::V3
 
 # VERSION
 
-Version 0.02
+Version 0.03
 
 # SYNOPSIS
 
 [Geo::Coder::All](https://metacpan.org/pod/Geo::Coder::All) and [Geo::Coder::Many](https://metacpan.org/pod/Geo::Coder::Many) are great routines but neither quite does what I want.
-This module's primary use is to all many backends to be used by [HTML::GoogleMaps::V3](https://metacpan.org/pod/HTML::GoogleMaps::V3)
+This module's primary use is to allow many backends to be used by [HTML::GoogleMaps::V3](https://metacpan.org/pod/HTML::GoogleMaps::V3)
 
 # SUBROUTINES/METHODS
 
