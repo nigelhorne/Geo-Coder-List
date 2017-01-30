@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 16;
+use Test::Most tests => 14;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -19,26 +19,30 @@ LIST: {
 
 			Geo::Coder::Google::V3->import;
 
-			require Geo::Coder::GooglePlaces::V3;
+			if($ENV{GMAP_KEY}) {
+				require Geo::Coder::GooglePlaces::V3;
 
-			Geo::Coder::GooglePlaces::V3->import;
+				Geo::Coder::GooglePlaces::V3->import;
+			}
 
 			require Geo::Coder::OSM;
 
 			Geo::Coder::OSM->import;
 
-			require Geo::Coder::Bing;
+			if($ENV{GMAP_KEY}) {
+				require Geo::Coder::Bing;
 
-			Geo::Coder::Bing->import;
+				Geo::Coder::Bing->import;
+			}
 		};
 
 		if($@) {
 			diag($@);
 			diag('Not enough geocoders installed - skipping tests');
-			skip 'Not enough geocoders installed', 14;
+			skip 'Not enough geocoders installed', 12;
 		}
-		my $geocoderlist = new_ok('Geo::Coder::List');
-		$geocoderlist->push(new_ok('Geo::Coder::Google::V3'))
+		my $geocoderlist = new_ok('Geo::Coder::List')
+			->push(new_ok('Geo::Coder::Google::V3'))
 			->push(new_ok('Geo::Coder::OSM'));
 
 		if(my $key = $ENV{GMAP_KEY}) {

@@ -14,7 +14,7 @@ WriteMakefile(
     PL_FILES	=> {},
     BUILD_REQUIRES => {
 	'Test::Most' => 0,
-	'Geo::Coder::Google::V3' => 0,
+	'Geo::Coder::Google::V3' => 0.10,
 	'Geo::Coder::OSM' => 0,
 	'Test::Number::Delta' => 0,
 	'LWP::Protocol::https' => 0,

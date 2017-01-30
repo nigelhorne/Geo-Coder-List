@@ -26,9 +26,8 @@ GOOGLE: {
 		} else {
 			diag("Using Geo::Coder::Google::V3 $Geo::Coder::Google::V3::VERSION");
 		}
-		my $geocoderlist = new_ok('Geo::Coder::List');
-		my $geocoder = new_ok('Geo::Coder::Google::V3');
-		$geocoderlist->push($geocoder);
+		my $geocoderlist = new_ok('Geo::Coder::List')
+			->push(new_ok('Geo::Coder::Google::V3'));
 
 		my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 		ok(defined($location));
