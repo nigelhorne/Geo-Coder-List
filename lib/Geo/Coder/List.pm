@@ -6,11 +6,11 @@ Geo::Coder::List - Provide lots of backends for HTML::GoogleMaps::V3
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =cut
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 SYNOPSIS
 

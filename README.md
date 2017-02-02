@@ -9,7 +9,7 @@ Provide lots of backends for HTML::GoogleMaps::V3
 
 # VERSION
 
-Version 0.03
+Version 0.05
 
 # SYNOPSIS
 
