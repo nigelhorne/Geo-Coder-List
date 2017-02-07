@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Test::Most tests => 14;
 use Test::NoWarnings;
-use Test::Number::Delta within => 1e-2;
+use Test::Number::Delta within => 1e-1;
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
 
