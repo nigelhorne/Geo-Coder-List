@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 14;
+use Test::Most tests => 15;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-1;
 
@@ -54,7 +54,7 @@ LIST: {
 
 		my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 		ok(defined($location));
-		ok(ref($location) eq 'HASH');
+		is(ref($location), 'HASH', 'geocode should return a reference to as HASH');
 		delta_ok($location->{geometry}{location}{lat}, 38.991);
 		delta_ok($location->{geometry}{location}{lng}, -77.026);
 
@@ -65,5 +65,6 @@ LIST: {
 		delta_ok($location->{geometry}{location}{lng}, 1.366);
 
 		ok(!defined($geocoderlist->geocode()));
+		ok(!defined($geocoderlist->geocode('')));
 	}
 }

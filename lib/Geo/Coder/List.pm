@@ -74,9 +74,8 @@ sub geocode {
 
 	my $location = $params{'location'};
 
-	if(!defined($location)) {
-		return;
-	}
+	return unless(defined($location));
+	return unless(length($location) > 0);
 
 	if((!wantarray) && (my $rc = $locations{$location})) {
 		return $rc;

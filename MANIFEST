@@ -14,6 +14,7 @@ t/changes.t
 t/coverage.t
 t/critic.t
 t/cv.t
+t/dist.t
 t/google.t
 t/googleplaces.t
 t/list.t
