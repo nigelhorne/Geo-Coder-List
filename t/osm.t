@@ -52,10 +52,10 @@ OSM: {
 		delta_ok($location->{geometry}{location}{lat}, 51.388);
 		delta_ok($location->{geometry}{location}{lng}, 0.50672);
 
-		$location = $geocoderlist->geocode(location => 'St Mary The Virgin, Minster, Thanet, Kent, England');
+		$location = $geocoderlist->geocode(location => '8600 Rockville Pike, Bethesda MD, 20894 USA');
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
-		delta_ok($location->{geometry}{location}{lat}, 51.330);
-		delta_ok($location->{geometry}{location}{lng}, 1.31596);
+		delta_ok($location->{geometry}{location}{lat}, 39.00);
+		delta_ok($location->{geometry}{location}{lng}, -77.10);
 	}
 }

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Test::Most tests => 15;
 use Test::NoWarnings;
-use Test::Number::Delta within => 1e-1;
+use Test::Number::Delta within => 1e-2;
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
 
@@ -29,7 +29,7 @@ LIST: {
 
 			Geo::Coder::OSM->import;
 
-			if($ENV{GMAP_KEY}) {
+			if($ENV{BMAP_KEY}) {
 				require Geo::Coder::Bing;
 
 				Geo::Coder::Bing->import;
@@ -58,11 +58,11 @@ LIST: {
 		delta_ok($location->{geometry}{location}{lat}, 38.991);
 		delta_ok($location->{geometry}{location}{lng}, -77.026);
 
-		$location = $geocoderlist->geocode(location => 'St Mary The Virgin, Minster, Thanet, Kent, England');
+		$location = $geocoderlist->geocode(location => '8600 Rockville Pike, Bethesda MD, 20894 USA');
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
-		delta_ok($location->{geometry}{location}{lat}, 51.330);
-		delta_ok($location->{geometry}{location}{lng}, 1.366);
+		delta_ok($location->{geometry}{location}{lat}, 39.00);
+		delta_ok($location->{geometry}{location}{lng}, -77.10);
 
 		ok(!defined($geocoderlist->geocode()));
 		ok(!defined($geocoderlist->geocode('')));

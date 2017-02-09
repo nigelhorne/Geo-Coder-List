@@ -17,6 +17,7 @@ t/cv.t
 t/dist.t
 t/google.t
 t/googleplaces.t
+t/gv.t
 t/list.t
 t/manifest.t
 t/noplan.t
