@@ -17,7 +17,7 @@ GOOGLEPLACES: {
 		eval {
 			require Geo::Coder::GooglePlaces::V3;
 
-			Geo::Coder::GooglePlaces::V3->import;
+			Geo::Coder::GooglePlaces::V3->import();
 		};
 
 		if($@) {
@@ -34,7 +34,7 @@ GOOGLEPLACES: {
 		if($key) {
 			my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 			ok(defined($location));
-			ok(ref($location) eq 'HASH');
+			is(ref($location), 'HASH', 'geocode should return a reference to a HASH');
 			delta_ok($location->{geometry}{location}{lat}, 38.991);
 			delta_ok($location->{geometry}{location}{lng}, -77.026);
 

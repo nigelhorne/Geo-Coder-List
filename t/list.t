@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 15;
+use Test::Most tests => 16;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -39,7 +39,7 @@ LIST: {
 		if($@) {
 			diag($@);
 			diag('Not enough geocoders installed - skipping tests');
-			skip 'Not enough geocoders installed', 12;
+			skip 'Not enough geocoders installed', 13;
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List')
 			->push(new_ok('Geo::Coder::Google::V3'))
@@ -54,7 +54,7 @@ LIST: {
 
 		my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 		ok(defined($location));
-		is(ref($location), 'HASH', 'geocode should return a reference to as HASH');
+		is(ref($location), 'HASH', 'geocode should return a reference to a HASH');
 		delta_ok($location->{geometry}{location}{lat}, 38.991);
 		delta_ok($location->{geometry}{location}{lng}, -77.026);
 

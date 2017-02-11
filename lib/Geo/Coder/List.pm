@@ -105,7 +105,6 @@ sub geocode {
 					$location->{geometry}{location}{lat} = $location->{point}->{coordinates}[0];
 					$location->{geometry}{location}{lng} = $location->{point}->{coordinates}[1];
 				}
-
 			}
 		}
 
@@ -113,12 +112,14 @@ sub geocode {
 			if(wantarray) {
 				return @rc;
 			}
-			$locations{$location} = $rc[0];
-			return $rc[0];
+			if(length($rc[0])) {
+				$locations{$location} = $rc[0];
+				return $rc[0];
+			}
 		}
 	}
+	return undef;
 }
-
 
 =head1 AUTHOR
 

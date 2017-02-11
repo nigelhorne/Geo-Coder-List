@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 21;
+use Test::Most tests => 20;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -22,7 +22,7 @@ GOOGLE: {
 
 		if($@) {
 			diag('Geo::Coder::Google::V3 not installed - skipping tests');
-			skip 'Geo::Coder::Google::V3 not installed', 18;
+			skip 'Geo::Coder::Google::V3 not installed', 17;
 		} else {
 			diag("Using Geo::Coder::Google::V3 $Geo::Coder::Google::V3::VERSION");
 		}
@@ -42,8 +42,7 @@ GOOGLE: {
 		delta_ok($location->{geometry}{location}{lng}, -77.026);
 
 		$location = $geocoderlist->geocode('Plugh Hospice, Rochester, New York');
-		ok(defined($location));
-		ok(ref($location) ne 'HASH');
+		ok(!defined($location));
 
 		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, England' });
 		ok(defined($location));
@@ -52,10 +51,9 @@ GOOGLE: {
 		delta_ok($location->{geometry}{location}{lng}, 0.50672);
 
 		$location = $geocoderlist->geocode('Xyzzy Lane, Minster, Thanet, Kent, England');
-		ok(defined($location));
-		ok(ref($location) ne 'HASH');
-
-		$location = $geocoderlist->geocode();
 		ok(!defined($location));
+
+		ok(!defined($geocoderlist->geocode()));
+		ok(!defined($geocoderlist->geocode('')));
 	}
 }
