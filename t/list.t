@@ -39,7 +39,7 @@ LIST: {
 		if($@) {
 			diag($@);
 			diag('Not enough geocoders installed - skipping tests');
-			skip 'Not enough geocoders installed', 14;
+			skip 'Not enough geocoders installed', 13;
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List')
 			->push(new_ok('Geo::Coder::Google::V3'))
