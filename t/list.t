@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 16;
+use Test::Most tests => 15;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -39,7 +39,7 @@ LIST: {
 		if($@) {
 			diag($@);
 			diag('Not enough geocoders installed - skipping tests');
-			skip 'Not enough geocoders installed', 14;
+			skip 'Not enough geocoders installed', 12;
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List')
 			->push(new_ok('Geo::Coder::Google::V3'))
