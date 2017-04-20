@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 21;
+use Test::Most tests => 24;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -57,5 +57,23 @@ OSM: {
 		ok(ref($location) eq 'HASH');
 		delta_ok($location->{geometry}{location}{lat}, 39.00);
 		delta_ok($location->{geometry}{location}{lng}, -77.10);
+
+		# Check list context finds both Portland, ME and Portaland, OR
+		my @locations = $geocoderlist->geocode('Portland, USA');
+
+		ok(scalar(@locations) > 1);
+
+		my ($maine, $oregon);
+		foreach my $state(map { $_->{'address'}->{'state'} } @locations) {
+			# diag($state);
+			if($state eq 'Maine') {
+				$maine++;
+			} elsif($state eq 'Oregon') {
+				$oregon++;
+			}
+		}
+
+		ok($maine == 1);
+		ok($oregon == 1);
 	}
 }

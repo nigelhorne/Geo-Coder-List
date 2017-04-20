@@ -1,5 +1,8 @@
 package Geo::Coder::List;
 
+use warnings;
+use strict;
+
 =head1 NAME
 
 Geo::Coder::List - Provide lots of backends for HTML::GoogleMaps::V3
@@ -11,6 +14,7 @@ Version 0.05
 =cut
 
 our $VERSION = '0.05';
+our %locations;
 
 =head1 SYNOPSIS
 
@@ -40,10 +44,11 @@ sub new {
 
 Add an encoder to list of encoders.
 
-	use Geo::Coder::List;
-	use Geo::Coder::GooglePlaces;
+    use Geo::Coder::List;
+    use Geo::Coder::GooglePlaces;
+    # ...
+    my $list = Geo::Coder::List->new()->push(Geo::Coder::GooglePlaces->new());
 
-	my $list = Geo::Coder::List->new()->push(Geo::Coder::GooglePlaces->new());
 =cut
 
 sub push {
@@ -118,7 +123,7 @@ sub geocode {
 			}
 		}
 	}
-	return undef;
+	undef;
 }
 
 =head1 AUTHOR
@@ -145,7 +150,6 @@ You can find documentation for this module with the perldoc command.
 
     perldoc Geo::Coder::List
 
-
 You can also look for information at:
 
 =over 4
@@ -167,7 +171,6 @@ L<http://cpanratings.perl.org/d/Geo-Coder-List>
 L<http://search.cpan.org/dist/Geo-Coder-List/>
 
 =back
-
 
 =head1 LICENSE AND COPYRIGHT
 
