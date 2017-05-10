@@ -38,12 +38,11 @@ OSM: {
 		delta_ok($location->{geometry}{location}{lat}, 38.991);
 		delta_ok($location->{geometry}{location}{lng}, -77.026);
 
-		# OSM is broken, putting Kent here fails
-		$location = $geocoderlist->geocode('Wisdom Hospice, Rochester, England');
+		$location = $geocoderlist->geocode('10 Downing St, London, UK');
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
-		delta_ok($location->{geometry}{location}{lat}, 51.372);
-		delta_ok($location->{geometry}{location}{lng}, 0.50873);
+		delta_ok($location->{geometry}{location}{lat}, 51.50);
+		delta_ok($location->{geometry}{location}{lng}, -0.13);
 
 		# But putting it here succeeds!
 		$location = $geocoderlist->geocode('Rochester, Kent, England');
