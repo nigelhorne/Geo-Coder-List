@@ -57,7 +57,7 @@ OSM: {
 		delta_ok($location->{geometry}{location}{lat}, 39.00);
 		delta_ok($location->{geometry}{location}{lng}, -77.10);
 
-		# Check list context finds both Portland, ME and Portaland, OR
+		# Check list context finds both Portland, ME and Portland, OR
 		my @locations = $geocoderlist->geocode('Portland, USA');
 
 		ok(scalar(@locations) > 1);

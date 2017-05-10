@@ -9,11 +9,11 @@ Geo::Coder::List - Call many geocoders
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 our %locations;
 
 =head1 SYNOPSIS
@@ -96,6 +96,7 @@ sub geocode {
 	return unless(length($location) > 0);
 
 	if((!wantarray) && (my $rc = $locations{$location})) {
+		delete $rc->{'geocoder'};
 		return $rc;
 	}
 

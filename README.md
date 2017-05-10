@@ -5,11 +5,9 @@
 
 # Geo::Coder::List
 
-Call many geocoders
-
 # VERSION
 
-Version 0.05
+Version 0.06
 
 # SYNOPSIS
 
@@ -39,9 +37,9 @@ and OpenStreetMap for other places:
         ->push({ regex => qr/(Canada|USA|United States)$/, geocoder => new_ok('Geo::Coder::CA') })
         ->push(new_ok('Geo::Coder::OSM'));
 
-    # Uses Geo::Coder::CA
+    # Uses Geo::Coder::CA, and if that fails uses Geo::Coder::OSM
     my $location = $geocoderlist->geocode(location => '1600 Pennsylvania Ave NW, Washington DC, USA');
-    # Uses Geo::Coder::OSM
+    # Only uses Geo::Coder::OSM
     $location = $geocoderlist->geocode('10 Downing St, London, UK');
 
 ## geocode
