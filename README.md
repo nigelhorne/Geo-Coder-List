@@ -5,7 +5,7 @@
 
 # Geo::Coder::List
 
-Provide lots of backends for HTML::GoogleMaps::V3
+Call many geocoders
 
 # VERSION
 
@@ -26,10 +26,23 @@ Creates a Geo::Coder::List object.
 
 Add an encoder to list of encoders.
 
-        use Geo::Coder::List;
-        use Geo::Coder::GooglePlaces;
+    use Geo::Coder::List;
+    use Geo::Coder::GooglePlaces;
+    # ...
+    my $list = Geo::Coder::List->new()->push(Geo::Coder::GooglePlaces->new());
 
-        my $list = Geo::Coder::List->new()->push(Geo::Coder::GooglePlaces->new());
+Different encoders can be preferred for different locations.
+For example this code uses geocode.ca for Canada and US addresses,
+and OpenStreetMap for other places:
+
+    my $geocoderlist = new_ok('Geo::Coder::List')
+        ->push({ regex => qr/(Canada|USA|United States)$/, geocoder => new_ok('Geo::Coder::CA') })
+        ->push(new_ok('Geo::Coder::OSM'));
+
+    # Uses Geo::Coder::CA
+    my $location = $geocoderlist->geocode(location => '1600 Pennsylvania Ave NW, Washington DC, USA');
+    # Uses Geo::Coder::OSM
+    $location = $geocoderlist->geocode('10 Downing St, London, UK');
 
 ## geocode
 

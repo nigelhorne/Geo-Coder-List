@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-Geo::Coder::List - Provide lots of backends for HTML::GoogleMaps::V3
+Geo::Coder::List - Call many geocoders
 
 =head1 VERSION
 
@@ -49,6 +49,19 @@ Add an encoder to list of encoders.
     # ...
     my $list = Geo::Coder::List->new()->push(Geo::Coder::GooglePlaces->new());
 
+Different encoders can be preferred for different locations.
+For example this code uses geocode.ca for Canada and US addresses,
+and OpenStreetMap for other places:
+
+    my $geocoderlist = new_ok('Geo::Coder::List')
+        ->push({ regex => qr/(Canada|USA|United States)$/, geocoder => new_ok('Geo::Coder::CA') })
+        ->push(new_ok('Geo::Coder::OSM'));
+
+    # Uses Geo::Coder::CA
+    my $location = $geocoderlist->geocode(location => '1600 Pennsylvania Ave NW, Washington DC, USA');
+    # Uses Geo::Coder::OSM
+    $location = $geocoderlist->geocode('10 Downing St, London, UK');
+
 =cut
 
 sub push {
@@ -86,7 +99,14 @@ sub geocode {
 		return $rc;
 	}
 
-	foreach my $geocoder(@{$self->{geocoders}}) {
+	foreach my $g(@{$self->{geocoders}}) {
+		my $geocoder = $g;
+		if(ref($g) eq 'HASH') {
+			my $regex = $g->{'regex'};
+			if($location =~ $regex) {
+				$geocoder = $g->{'geocoder'};
+			}
+		}
 		my @rc;
 		eval {
 			# e.g. over QUERY LIMIT with this one
@@ -109,8 +129,13 @@ sub geocode {
 					# Bing
 					$location->{geometry}{location}{lat} = $location->{point}->{coordinates}[0];
 					$location->{geometry}{location}{lng} = $location->{point}->{coordinates}[1];
+				} elsif($location->{latt}) {
+					# geocoder.ca
+					$location->{geometry}{location}{lat} = $location->{latt};
+					$location->{geometry}{location}{lng} = $location->{longt};
 				}
 			}
+			$location->{geocoder} = $geocoder;
 		}
 
 		if(scalar(@rc)) {

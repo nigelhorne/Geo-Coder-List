@@ -2,6 +2,7 @@ Revision history for Geo-Coder-List
 
 0.06
 	Added test for list context
+	Allow different encoders to be used for different locations
 
 0.05	Thu Feb  2 09:28:09 EST 2017
 	Fix tests
