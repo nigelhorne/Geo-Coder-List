@@ -9,11 +9,11 @@ Geo::Coder::List - Call many geocoders
 
 =head1 VERSION
 
-Version 0.06
+Version 0.07
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 our %locations;
 
 =head1 SYNOPSIS
@@ -150,6 +150,30 @@ sub geocode {
 		}
 	}
 	undef;
+}
+
+=head2 ua
+
+Accessor method to set the UserAgent object used internally by each of the geocoders. You
+can call I<env_proxy> for example, to get the proxy information from
+environment variables:
+
+    my $ua = LWP::UserAgent->new();
+    $ua->env_proxy(1);
+    $geocoder->ua($ua);
+
+Note that unlike Geo::Coders, there is no read method, since that would be pointless.
+
+=cut
+
+sub ua {
+	my $self = shift;
+
+	if(my $ua = shift) {
+		foreach my $g(@{$self->{geocoders}}) {
+			$g->ua($ua);
+		}
+	}
 }
 
 =head1 AUTHOR

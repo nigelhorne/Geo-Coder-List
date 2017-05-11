@@ -1,5 +1,8 @@
 Revision history for Geo-Coder-List
 
+0.07
+	Added ua() method
+
 0.06	Wed May 10 09:57:09 EDT 2017
 	Allow different encoders to be used for different locations
 	Added test for list context

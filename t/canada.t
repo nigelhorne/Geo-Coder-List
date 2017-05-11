@@ -2,7 +2,8 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 10;
+use LWP;
+use Test::Most tests => 11;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -28,12 +29,16 @@ GOOGLEPLACES: {
 			diag("Using Geo::Coder::CA $Geo::Coder::CA::VERSION");
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List');
-		$geocoderlist->push(new_ok('Geo::Coder::CA'));
+		my $ca = new_ok('Geo::Coder::CA');
+		$geocoderlist->push($ca);
+
+		my $ua = LWP::UserAgent->new();
+		$ua->env_proxy(1);
+		$geocoderlist->ua($ua);
+		ok($ca->ua() eq $ua);
 
 		my $location = $geocoderlist->geocode(location => '9235 Main St, Richibucto, New Brunswick, Canada');
 		ok(defined($location));
-# use Data::Dumper;
-# diag(Data::Dumper->new([\$location])->Dump());
 		is(ref($location), 'HASH', 'geocode should return a reference to a HASH');
 		delta_ok($location->{geometry}{location}{lat}, 46.68);
 		delta_ok($location->{geometry}{location}{lng}, -64.86);
