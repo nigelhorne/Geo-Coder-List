@@ -5,9 +5,11 @@
 
 # Geo::Coder::List
 
+Call many geocoders
+
 # VERSION
 
-Version 0.06
+Version 0.07
 
 # SYNOPSIS
 
@@ -46,6 +48,18 @@ and OpenStreetMap for other places:
 
 Runs geocode on all of the loaded drivers.
 See [Geo::Coder::GooglePlaces::V3](https://metacpan.org/pod/Geo::Coder::GooglePlaces::V3) for an explanation
+
+## ua
+
+Accessor method to set the UserAgent object used internally by each of the geocoders. You
+can call _env\_proxy_ for example, to get the proxy information from
+environment variables:
+
+    my $ua = LWP::UserAgent->new();
+    $ua->env_proxy(1);
+    $geocoder->ua($ua);
+
+Note that unlike Geo::Coders, there is no read method, since that would be pointless.
 
 # AUTHOR
 
