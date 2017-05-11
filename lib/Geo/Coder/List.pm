@@ -171,7 +171,11 @@ sub ua {
 
 	if(my $ua = shift) {
 		foreach my $g(@{$self->{geocoders}}) {
-			$g->ua($ua);
+			my $geocoder = $g;
+			if(ref($g) eq 'HASH') {
+				$geocoder = $g->{'geocoder'};
+			}
+			$geocoder->ua($ua);
 		}
 	}
 }
