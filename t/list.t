@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 27;
+use Test::Most tests => 25;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -44,7 +44,7 @@ LIST: {
 		if($@) {
 			diag($@);
 			diag('Not enough geocoders installed - skipping tests');
-			skip 'Not enough geocoders installed', 21;
+			skip 'Not enough geocoders installed', 19;
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List')
 			->push({ regex => qr/(Canada|USA|United States)$/, geocoder => new_ok('Geo::Coder::CA') })
@@ -53,10 +53,10 @@ LIST: {
 			->push(new_ok('Geo::Coder::OSM'));
 
 		if(my $key = $ENV{GMAP_KEY}) {
-			$geocoderlist->push(new_ok('Geo::Coder::GooglePlaces::V3' => [ key => $key ]));
+			$geocoderlist->push(Geo::Coder::GooglePlaces::V3->new(key => $key));
 		}
 		if(my $key = $ENV{BMAP_KEY}) {
-			$geocoderlist->push(new_ok('Geo::Coder::Bing' => [ key => $key ]));
+			$geocoderlist->push(Geo::Coder::Bing->new(key => $key));
 		}
 
 		my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
