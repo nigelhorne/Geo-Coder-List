@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 24;
+use Test::Most tests => 27;
 use Test::NoWarnings;
 use Test::Number::Delta within => 1e-2;
 
@@ -30,7 +30,11 @@ LIST: {
 
 			Geo::Coder::OSM->import;
 
-			if($ENV{BMAP_KEY}) {
+			require Geo::Coder::XYZ;
+
+			Geo::Coder::XYZ->import;
+
+			if(my $key = $ENV{BMAP_KEY}) {
 				require Geo::Coder::Bing;
 
 				Geo::Coder::Bing->import;
@@ -44,6 +48,7 @@ LIST: {
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List')
 			->push({ regex => qr/(Canada|USA|United States)$/, geocoder => new_ok('Geo::Coder::CA') })
+			->push(new_ok('Geo::Coder::XYZ'))
 			->push(new_ok('Geo::Coder::Google::V3'))
 			->push(new_ok('Geo::Coder::OSM'));
 
@@ -57,8 +62,8 @@ LIST: {
 		my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 		ok(defined($location));
 		is(ref($location), 'HASH', 'geocode should return a reference to a HASH');
-		delta_ok($location->{geometry}{location}{lat}, 38.991);
-		delta_ok($location->{geometry}{location}{lng}, -77.026);
+		delta_ok($location->{geometry}{location}{lat}, 38.99);
+		delta_ok($location->{geometry}{location}{lng}, -77.03);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::CA', 'Verify CA encoder is used');
 
 		$location = $geocoderlist->geocode(location => '8600 Rockville Pike, Bethesda MD, 20894 USA');
@@ -68,12 +73,12 @@ LIST: {
 		delta_ok($location->{geometry}{location}{lng}, -77.10);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::CA', 'Verify CA encoder is used');
 
-		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, England' });
+		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, UK' });
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
-		delta_ok($location->{geometry}{location}{lat}, 51.388);
-		delta_ok($location->{geometry}{location}{lng}, 0.50672);
-		is(ref($location->{'geocoder'}), 'Geo::Coder::Google::V3', 'Verify Google encoder is used');
+		delta_ok($location->{geometry}{location}{lat}, 51.38);
+		delta_ok($location->{geometry}{location}{lng}, 0.54);
+		is(ref($location->{'geocoder'}), 'Geo::Coder::XYZ', 'Verify XYZ encoder is used');
 
 		ok(!defined($geocoderlist->geocode()));
 		ok(!defined($geocoderlist->geocode('')));

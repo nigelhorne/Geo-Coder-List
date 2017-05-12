@@ -48,7 +48,7 @@ GOOGLEPLACES: {
 			ok(defined($location));
 			ok(ref($location) eq 'HASH');
 			delta_ok($location->{geometry}{location}{lat}, 51.330);
-			delta_ok($location->{geometry}{location}{lng}, 1.366);
+			delta_ok($location->{geometry}{location}{lng}, 1.316);
 
 			ok(!defined($geocoderlist->geocode()));
 			ok(!defined($geocoderlist->geocode('')));

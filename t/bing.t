@@ -41,8 +41,8 @@ BING: {
 			$location = $geocoderlist->geocode('Wisdom Hospice, Rochester, England');
 			ok(defined($location));
 			ok(ref($location) eq 'HASH');
-			delta_ok($location->{geometry}{location}{lat}, 55.274);
-			delta_ok($location->{geometry}{location}{lng}, -2.262);
+			delta_ok($location->{geometry}{location}{lat}, 51.396);
+			delta_ok($location->{geometry}{location}{lng}, 0.488);
 
 			$location = $geocoderlist->geocode('St Mary The Virgin, Minster, Thanet, Kent, England');
 			ok(defined($location));
