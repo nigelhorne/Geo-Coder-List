@@ -14,6 +14,8 @@ BEGIN {
 
 GOOGLE: {
 	SKIP: {
+		skip 'Test requires Internet access', 20 unless(-e 't/online.enabled');
+
 		eval {
 			require Geo::Coder::Google::V3;
 

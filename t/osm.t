@@ -14,6 +14,8 @@ BEGIN {
 
 OSM: {
 	SKIP: {
+		skip 'Test requires Internet access', 22 unless(-e 't/online.enabled');
+
 		eval {
 			require Geo::Coder::OSM;
 

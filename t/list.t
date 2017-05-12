@@ -2,20 +2,28 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 25;
+use Test::Most tests => 24;
 use Test::NoWarnings;
-use Test::Number::Delta within => 1e-2;
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
 
 BEGIN {
 	use_ok('Geo::Coder::List');
-	use_ok('Geo::Coder::CA');
 }
 
 LIST: {
 	SKIP: {
+		skip 'Test requires Internet access', 22 unless(-e 't/online.enabled');
+
 		eval {
+			require Test::Number::Delta;
+
+			Test::Number::Delta->import;
+
+			require Geo::Coder::CA;
+
+			Geo::Coder::CA->import;
+
 			require Geo::Coder::Google::V3;
 
 			Geo::Coder::Google::V3->import;
@@ -62,22 +70,22 @@ LIST: {
 		my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 		ok(defined($location));
 		is(ref($location), 'HASH', 'geocode should return a reference to a HASH');
-		delta_ok($location->{geometry}{location}{lat}, 38.99);
-		delta_ok($location->{geometry}{location}{lng}, -77.03);
+		delta_within($location->{geometry}{location}{lat}, 38.99, 1e-2);
+		delta_within($location->{geometry}{location}{lng}, -77.03, 1e-2);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::CA', 'Verify CA encoder is used');
 
 		$location = $geocoderlist->geocode(location => '8600 Rockville Pike, Bethesda MD, 20894 USA');
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
-		delta_ok($location->{geometry}{location}{lat}, 39.00);
-		delta_ok($location->{geometry}{location}{lng}, -77.10);
+		delta_within($location->{geometry}{location}{lat}, 38.99, 1e-1);
+		delta_within($location->{geometry}{location}{lng}, -77.03, 1e-1);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::CA', 'Verify CA encoder is used');
 
-		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, UK' });
+		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, England' });
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
-		delta_ok($location->{geometry}{location}{lat}, 51.38);
-		delta_ok($location->{geometry}{location}{lng}, 0.54);
+		delta_within($location->{geometry}{location}{lat}, 51.38, 1e-2);
+		delta_within($location->{geometry}{location}{lng}, 0.54, 1e-2);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::XYZ', 'Verify XYZ encoder is used');
 
 		ok(!defined($geocoderlist->geocode()));
