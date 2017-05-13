@@ -1,6 +1,6 @@
 Revision history for Geo-Coder-List
 
-0.09
+0.09	Sat 13 May 10:15:44 EDT 2017
 	Fix travis breakage that could also break cpan_testers
 
 0.08	Sat 13 May 09:48:36 EDT 2017
