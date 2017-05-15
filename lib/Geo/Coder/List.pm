@@ -124,7 +124,7 @@ sub geocode {
 				@rc = ();
 				last;
 			}
-			# Add HTML::GoogleMaps::V3 compatability
+			# Try to create a common interface, helps with HTML::GoogleMaps::V3
 			unless($location->{geometry}{location}{lat}) {
 				if($location->{lat}) {
 					# OSM
@@ -142,6 +142,11 @@ sub geocode {
 					# geocoder.ca
 					$location->{geometry}{location}{lat} = $location->{latt};
 					$location->{geometry}{location}{lng} = $location->{longt};
+				}
+
+				if($location->{'standard'}{'countryname'}) {
+					# XYZ
+					$location->{'address'}{'country'} = $location->{'standard'}{'countryname'};
 				}
 			}
 			$location->{geocoder} = $geocoder;
