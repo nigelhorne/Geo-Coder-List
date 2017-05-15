@@ -120,6 +120,10 @@ sub geocode {
 		};
 		next if $@;
 		foreach my $location(@rc) {
+			if($location->{'error'}) {
+				@rc = ();
+				last;
+			}
 			# Add HTML::GoogleMaps::V3 compatability
 			unless($location->{geometry}{location}{lat}) {
 				if($location->{lat}) {
