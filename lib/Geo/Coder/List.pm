@@ -206,6 +206,8 @@ L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Coder-List>.
 I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
+There is no reverse_geocode() yet.
+
 =head1 SEE ALSO
 
 L<Geo::Coder::Many>
