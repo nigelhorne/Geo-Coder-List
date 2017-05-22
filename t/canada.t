@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use LWP;
-use Test::Most tests => 12;
+use Test::Most tests => 15;
 use Test::NoWarnings;
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
@@ -12,9 +12,9 @@ BEGIN {
 	use_ok('Geo::Coder::List');
 }
 
-GOOGLEPLACES: {
+CANADA: {
 	SKIP: {
-		skip 'Test requires Internet access', 10 unless(-e 't/online.enabled');
+		skip 'Test requires Internet access', 13 unless(-e 't/online.enabled');
 
 		eval {
 			require Geo::Coder::CA;
@@ -24,12 +24,20 @@ GOOGLEPLACES: {
 			require Test::Number::Delta;
 
 			Test::Number::Delta->import();
+
+			require Test::LWP::UserAgent;
+
+			Test::LWP::UserAgent->import();
+
+			require Test::Carp;
+
+			Test::Carp->import();
 		};
 
 		# curl 'geocoder.ca/some_location?locate=9235+Main+St,+Richibucto,+New Brunswick,+Canada&json=1'
 		if($@) {
 			diag('Geo::Coder::CA not installed - skipping tests');
-			skip 'Geo::Coder::CA not installed', 10;
+			skip 'Geo::Coder::CA not installed', 13;
 		} else {
 			diag("Using Geo::Coder::CA $Geo::Coder::CA::VERSION");
 		}
@@ -53,5 +61,11 @@ GOOGLEPLACES: {
 
 		ok(!defined($geocoderlist->geocode()));
 		ok(!defined($geocoderlist->geocode('')));
+
+		$ua = new_ok('Test::LWP::UserAgent');
+		$ua->map_response('nominatim.openstreetmap.org', new_ok('HTTP::Response' => [ '500' ]));
+		$geocoderlist->ua($ua);
+
+		ok(!defined($geocoderlist->geocode('10 Downing St., London, UK')));
 	}
 }
