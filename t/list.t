@@ -91,7 +91,7 @@ LIST: {
 		delta_within($location->{geometry}{location}{lat}, 51.38, 1e-2);
 		delta_within($location->{geometry}{location}{lng}, 0.54, 1e-2);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::XYZ', 'Verify XYZ encoder is used');
-		ok($location->{address}{country} eq 'United Kingdom');
+		ok($location->{state} eq 'UK');
 
 		ok(!defined($geocoderlist->geocode()));
 		ok(!defined($geocoderlist->geocode('')));

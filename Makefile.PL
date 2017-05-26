@@ -34,6 +34,7 @@ if($online_tests) {
 	$build_requires->{'Test::Number::Delta'} = 0;
 	$build_requires->{'Test::LWP::UserAgent'} = 0;
 	$build_requires->{'Test::Carp'} = 0;
+	$build_requires->{'Test::Warn'} = 0;
 } else {
 	unlink('t/online.enabled');
 }

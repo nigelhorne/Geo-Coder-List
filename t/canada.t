@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 use LWP;
-use Test::Most tests => 15;
-use Test::NoWarnings;
+use Test::Most tests => 14;
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
 
@@ -14,7 +13,7 @@ BEGIN {
 
 CANADA: {
 	SKIP: {
-		skip 'Test requires Internet access', 13 unless(-e 't/online.enabled');
+		skip 'Test requires Internet access', 12 unless(-e 't/online.enabled');
 
 		eval {
 			require Geo::Coder::CA;
@@ -29,15 +28,15 @@ CANADA: {
 
 			Test::LWP::UserAgent->import();
 
-			require Test::Carp;
+			require Test::Warn;
 
-			Test::Carp->import();
+			Text::Warn->import();
 		};
 
 		# curl 'geocoder.ca/some_location?locate=9235+Main+St,+Richibucto,+New Brunswick,+Canada&json=1'
 		if($@) {
 			diag('Geo::Coder::CA not installed - skipping tests');
-			skip 'Geo::Coder::CA not installed', 13;
+			skip 'Geo::Coder::CA not installed', 12;
 		} else {
 			diag("Using Geo::Coder::CA $Geo::Coder::CA::VERSION");
 		}
@@ -66,6 +65,8 @@ CANADA: {
 		$ua->map_response('nominatim.openstreetmap.org', new_ok('HTTP::Response' => [ '500' ]));
 		$geocoderlist->ua($ua);
 
-		ok(!defined($geocoderlist->geocode('10 Downing St., London, UK')));
+		warning_like
+		{ $location = $geocoderlist->geocode('10 Downing St., London, UK') }
+			{ carped => qr/Geo::Coder::CA: geocode.ca API returned error: 404 Not Found/ };
 	}
 }
