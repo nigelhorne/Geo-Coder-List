@@ -21,6 +21,7 @@ if($ENV{RELEASE_TESTING}) {
 my $build_requires = {
 	'Test::Most' => 0,
 	'Test::NoWarnings' => 0,
+	'Carp' => 0,
 };
 
 if($online_tests) {

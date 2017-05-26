@@ -2,6 +2,7 @@ package Geo::Coder::List;
 
 use warnings;
 use strict;
+use Carp;
 
 =head1 NAME
 
@@ -120,7 +121,10 @@ sub geocode {
 			# TODO: remove from the list of geocoders
 			@rc = $geocoder->geocode(%params);
 		};
-		next if $@;
+		if($@) {
+			Carp::carp(ref($geocoder) . ": $@");
+			next;
+		}
 		foreach my $location(@rc) {
 			if($location->{'error'}) {
 				@rc = ();
