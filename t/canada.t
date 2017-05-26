@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use LWP;
 use Test::Most tests => 14;
+use Test::NoWarnings
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
 
@@ -27,10 +28,6 @@ CANADA: {
 			require Test::LWP::UserAgent;
 
 			Test::LWP::UserAgent->import();
-
-			require Test::Warn;
-
-			Text::Warn->import();
 		};
 
 		# curl 'geocoder.ca/some_location?locate=9235+Main+St,+Richibucto,+New Brunswick,+Canada&json=1'
@@ -58,15 +55,14 @@ CANADA: {
 		$location = $geocoderlist->geocode(location => 'Allen, Indiana, USA');
 		ok(!defined($location));
 
+		$ua = new_ok('Test::LWP::UserAgent');
+		$ua->map_response('geocoder.ca', new_ok('HTTP::Response' => [ '500' ]));
+		$geocoderlist->ua($ua);
+
+		$location = $geocoderlist->geocode(location => '9235 Main St, Richibucto, New Brunswick, Canada');
+
 		ok(!defined($geocoderlist->geocode()));
 		ok(!defined($geocoderlist->geocode('')));
 
-		$ua = new_ok('Test::LWP::UserAgent');
-		$ua->map_response('nominatim.openstreetmap.org', new_ok('HTTP::Response' => [ '500' ]));
-		$geocoderlist->ua($ua);
-
-		warning_like
-		{ $location = $geocoderlist->geocode('10 Downing St., London, UK') }
-			{ carped => qr/Geo::Coder::CA: geocode.ca API returned error: 404 Not Found/ };
 	}
 }
