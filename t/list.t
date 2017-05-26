@@ -73,10 +73,12 @@ LIST: {
 		delta_within($location->{geometry}{location}{lat}, 38.99, 1e-2);
 		delta_within($location->{geometry}{location}{lng}, -77.03, 1e-2);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::CA', 'Verify CA encoder is used');
+		sleep(1);	# play nicely
 
 		$location = $geocoderlist->geocode('Wokingham, Berkshire, England');
 		delta_within($location->{geometry}{location}{lat}, 51.41, 1e-2);
 		delta_within($location->{geometry}{location}{lng}, -0.83, 1e-2);
+		sleep(1);	# play nicely
 
 		$location = $geocoderlist->geocode(location => '8600 Rockville Pike, Bethesda MD, 20894 USA');
 		ok(defined($location));
@@ -84,6 +86,7 @@ LIST: {
 		delta_within($location->{geometry}{location}{lat}, 38.99, 1e-1);
 		delta_within($location->{geometry}{location}{lng}, -77.03, 1e-1);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::CA', 'Verify CA encoder is used');
+		sleep(1);	# play nicely
 
 		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, England' });
 		ok(defined($location));
@@ -92,6 +95,7 @@ LIST: {
 		delta_within($location->{geometry}{location}{lng}, 0.54, 1e-2);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::XYZ', 'Verify XYZ encoder is used');
 		ok($location->{state} eq 'UK');
+		sleep(1);	# play nicely
 
 		ok(!defined($geocoderlist->geocode()));
 		ok(!defined($geocoderlist->geocode('')));
