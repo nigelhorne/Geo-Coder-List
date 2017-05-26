@@ -2,6 +2,7 @@ Revision history for Geo-Coder-List
 
 0.10
 	If a geocoder returns error go to the next one
+	If regex wasn't matched it tried it anyway
 
 0.09	Sat 13 May 10:15:44 EDT 2017
 	Fix travis breakage that could also break cpan_testers

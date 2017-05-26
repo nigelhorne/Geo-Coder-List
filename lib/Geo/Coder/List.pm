@@ -110,6 +110,8 @@ sub geocode {
 			my $regex = $g->{'regex'};
 			if($location =~ $regex) {
 				$geocoder = $g->{'geocoder'};
+			} else {
+				next;
 			}
 		}
 		my @rc;
