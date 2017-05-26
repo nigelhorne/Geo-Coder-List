@@ -23,6 +23,10 @@ OSM: {
 			require Test::Number::Delta;
 
 			Test::Number::Delta->import();
+
+			require LWP::UserAgent::Throttled;
+
+			LWP::UserAgent::Throttled->import();
 		};
 
 		if($@) {
@@ -45,7 +49,8 @@ OSM: {
 		delta_within($location->{geometry}{location}{lng}, -77.02, 1e-1);
 		sleep(1);	# play nicely
 
-		my $ua = LWP::UserAgent->new();
+		my $ua = LWP::UserAgent::Throttled->new();
+		$ua->load(2);
 		$ua->env_proxy(1);
 		$geocoderlist->ua($ua);
 

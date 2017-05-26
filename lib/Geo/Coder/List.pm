@@ -10,11 +10,11 @@ Geo::Coder::List - Call many geocoders
 
 =head1 VERSION
 
-Version 0.09
+Version 0.10
 
 =cut
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 our %locations;
 
 =head1 SYNOPSIS

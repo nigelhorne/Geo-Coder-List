@@ -1,6 +1,6 @@
 Revision history for Geo-Coder-List
 
-0.10
+0.10	Fri May 26 17:29:04 EDT 2017
 	If a geocoder returns error go to the next one
 	If regex wasn't matched it tried it anyway
 	Carp when a coder fails
