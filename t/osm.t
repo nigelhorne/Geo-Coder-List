@@ -47,10 +47,9 @@ OSM: {
 		ok(ref($location) eq 'HASH');
 		delta_within($location->{geometry}{location}{lat}, 38.99, 1e-1);
 		delta_within($location->{geometry}{location}{lng}, -77.02, 1e-1);
-		sleep(1);	# play nicely
 
 		my $ua = LWP::UserAgent::Throttled->new();
-		$ua->load(2);
+		$ua->throttle({ 'nominatim.openstreetmap.org' => 1 });
 		$ua->env_proxy(1);
 		$geocoderlist->ua($ua);
 
@@ -59,7 +58,6 @@ OSM: {
 		ok(ref($location) eq 'HASH');
 		delta_within($location->{geometry}{location}{lat}, 51.50, 1e-1);
 		delta_within($location->{geometry}{location}{lng}, -0.13, 1e-1);
-		sleep(1);	# play nicely
 
 		$location = $geocoderlist->geocode('Rochester, Kent, England');
 		ok(defined($location));
@@ -68,7 +66,6 @@ OSM: {
 		delta_within($location->{geometry}{location}{lng}, 0.5067, 1e-1);
 		ok($location->{address}{country_code} eq 'gb');
 		ok($location->{address}{country} eq 'United Kingdom');
-		sleep(1);	# play nicely
 
 		$location = $geocoderlist->geocode(location => '8600 Rockville Pike, Bethesda MD, 20894 USA');
 		ok(defined($location));
@@ -77,7 +74,6 @@ OSM: {
 		delta_within($location->{geometry}{location}{lng}, -77.10, 1e-1);
 		ok($location->{address}{country_code} eq 'us');
 		like($location->{address}{country}, qr/United States/, 'check USA');
-		sleep(1);	# play nicely
 
 		# Check list context finds both Portland, ME and Portland, OR
 		my @locations = $geocoderlist->geocode('Portland, USA');
