@@ -136,34 +136,37 @@ sub geocode {
 		foreach my $location(@rc) {
 			if($location->{'error'}) {
 				@rc = ();
-				last;
-			}
-			# Try to create a common interface, helps with HTML::GoogleMaps::V3
-			unless($location->{geometry}{location}{lat}) {
-				if($location->{lat}) {
-					# OSM
-					$location->{geometry}{location}{lat} = $location->{lat};
-					$location->{geometry}{location}{lng} = $location->{lon};
-				} elsif($location->{BestLocation}) {
-					# Bing
-					$location->{geometry}{location}{lat} = $location->{BestLocation}->{Coordinates}->{Latitude};
-					$location->{geometry}{location}{lng} = $location->{BestLocation}->{Coordinates}->{Longitude};
-				} elsif($location->{point}) {
-					# Bing
-					$location->{geometry}{location}{lat} = $location->{point}->{coordinates}[0];
-					$location->{geometry}{location}{lng} = $location->{point}->{coordinates}[1];
-				} elsif($location->{latt}) {
-					# geocoder.ca
-					$location->{geometry}{location}{lat} = $location->{latt};
-					$location->{geometry}{location}{lng} = $location->{longt};
-				}
+			} else {
+				# Try to create a common interface, helps with HTML::GoogleMaps::V3
+				if(!defined($location->{geometry}{location}{lat})) {
+					if($location->{lat}) {
+						# OSM
+						$location->{geometry}{location}{lat} = $location->{lat};
+						$location->{geometry}{location}{lng} = $location->{lon};
+					} elsif($location->{BestLocation}) {
+						# Bing
+						$location->{geometry}{location}{lat} = $location->{BestLocation}->{Coordinates}->{Latitude};
+						$location->{geometry}{location}{lng} = $location->{BestLocation}->{Coordinates}->{Longitude};
+					} elsif($location->{point}) {
+						# Bing
+						$location->{geometry}{location}{lat} = $location->{point}->{coordinates}[0];
+						$location->{geometry}{location}{lng} = $location->{point}->{coordinates}[1];
+					} elsif($location->{latt}) {
+						# geocoder.ca
+						$location->{geometry}{location}{lat} = $location->{latt};
+						$location->{geometry}{location}{lng} = $location->{longt};
+					}
 
-				if($location->{'standard'}{'countryname'}) {
-					# XYZ
-					$location->{'address'}{'country'} = $location->{'standard'}{'countryname'};
+					if($location->{'standard'}{'countryname'}) {
+						# XYZ
+						$location->{'address'}{'country'} = $location->{'standard'}{'countryname'};
+					}
+				}
+				if(defined($location->{geometry}{location}{lat})) {
+					$location->{geocoder} = $geocoder;
+					last;
 				}
 			}
-			$location->{geocoder} = $geocoder;
 		}
 
 		if(scalar(@rc)) {
