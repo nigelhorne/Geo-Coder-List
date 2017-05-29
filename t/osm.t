@@ -81,6 +81,8 @@ OSM: {
 		ok(scalar(@locations) > 1);
 
 		my ($maine, $oregon);
+use Data::Dumper;
+diag(Data::Dumper->new([\@locations])->Dump());
 		foreach my $state(map { $_->{'address'}->{'state'} } @locations) {
 			# diag($state);
 			if($state eq 'Maine') {

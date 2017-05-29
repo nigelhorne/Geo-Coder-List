@@ -104,6 +104,14 @@ sub geocode {
 		delete $rc->{'geocoder'};
 		return $rc;
 	}
+	if(wantarray && (my @rc = $locations{$location})) {
+		if(scalar(@rc)) {
+			foreach (@rc) {
+				delete $_->{'geocoder'};
+			}
+			return @rc;
+		}
+	}
 
 	foreach my $g(@{$self->{geocoders}}) {
 		my $geocoder = $g;
@@ -160,6 +168,7 @@ sub geocode {
 
 		if(scalar(@rc)) {
 			if(wantarray) {
+				$locations{$location} = @rc;
 				return @rc;
 			}
 			if(length($rc[0])) {
