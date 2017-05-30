@@ -104,7 +104,7 @@ sub geocode {
 		delete $rc->{'geocoder'};
 		return $rc;
 	}
-	if(wantarray && (my @rc = $locations{$location})) {
+	if(wantarray && defined($locations{$location}) && (ref($locations{$location}) eq 'ARRAY') && (my @rc = @{$locations{$location}})) {
 		if(scalar(@rc)) {
 			foreach (@rc) {
 				delete $_->{'geocoder'};
@@ -171,7 +171,7 @@ sub geocode {
 
 		if(scalar(@rc)) {
 			if(wantarray) {
-				$locations{$location} = @rc;
+				$locations{$location} = \@rc;
 				return @rc;
 			}
 			if(length($rc[0])) {
