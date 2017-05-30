@@ -132,7 +132,7 @@ sub geocode {
 			@rc = $geocoder->geocode(%params);
 		};
 		if($@) {
-			Carp::carp(ref($geocoder) . ": $@");
+			Carp::carp(ref($geocoder) . " '$location': $@");
 			next;
 		}
 		foreach my $location(@rc) {
