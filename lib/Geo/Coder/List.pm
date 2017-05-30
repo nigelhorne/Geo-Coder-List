@@ -101,7 +101,9 @@ sub geocode {
 	return unless(length($location) > 0);
 
 	if((!wantarray) && (my $rc = $locations{$location})) {
-		delete $rc->{'geocoder'};
+		if(ref($rc) eq 'HASH') {
+			delete $rc->{'geocoder'};
+		}
 		return $rc;
 	}
 	if(wantarray && defined($locations{$location}) && (ref($locations{$location}) eq 'ARRAY') && (my @rc = @{$locations{$location}})) {
