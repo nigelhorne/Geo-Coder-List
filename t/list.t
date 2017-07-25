@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 33;
+use Test::Most tests => 31;
 use Test::NoWarnings;
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
@@ -13,7 +13,7 @@ BEGIN {
 
 LIST: {
 	SKIP: {
-		skip 'Test requires Internet access', 31 unless(-e 't/online.enabled');
+		skip 'Test requires Internet access', 29 unless(-e 't/online.enabled');
 
 		eval {
 			require Test::Number::Delta;
@@ -77,7 +77,7 @@ LIST: {
 
 		$location = $geocoderlist->geocode('Wokingham, Berkshire, England');
 		delta_within($location->{geometry}{location}{lat}, 51.42, 1e-2);
-		delta_within($location->{geometry}{location}{lng}, -0.87, 1e-2);
+		delta_within($location->{geometry}{location}{lng}, -0.83, 1e-2);
 		sleep(1);	# play nicely
 
 		$location = $geocoderlist->geocode(location => '8600 Rockville Pike, Bethesda MD, 20894 USA');
@@ -91,20 +91,17 @@ LIST: {
 		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, United Kingdom' });
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
-		delta_within($location->{geometry}{location}{lat}, 51.38, 1e-2);
-		delta_within($location->{geometry}{location}{lng}, 0.54, 1e-2);
+		delta_within($location->{geometry}{location}{lat}, 51.40, 1e-2);
+		delta_within($location->{geometry}{location}{lng}, 0.49, 1e-2);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::XYZ', 'Verify XYZ encoder is used');
-		ok($location->{state} eq 'UK');
 		sleep(1);	# play nicely
 
 		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, England' });
 		ok(defined($location));
 		ok(ref($location) eq 'HASH');
-		delta_within($location->{geometry}{location}{lat}, 51.38, 1e-2);
-		delta_within($location->{geometry}{location}{lng}, 0.54, 1e-2);
+		delta_within($location->{geometry}{location}{lat}, 51.40, 1e-2);
+		delta_within($location->{geometry}{location}{lng}, 0.49, 1e-2);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::XYZ', 'Verify XYZ encoder is used');
-		ok($location->{state} eq 'UK');
-		sleep(1);	# play nicely
 
 		ok(!defined($geocoderlist->geocode()));
 		ok(!defined($geocoderlist->geocode('')));

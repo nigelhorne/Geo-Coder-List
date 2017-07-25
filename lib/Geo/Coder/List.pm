@@ -81,6 +81,13 @@ sub push {
 
 Runs geocode on all of the loaded drivers.
 See L<Geo::Coder::GooglePlaces::V3> for an explanation
+
+The name of the geocoder that gave the result is put into the geocode element of the
+return value, if the value was retrieved from the cache the value will be undefined.
+
+    if(defined($location->{'geocoder'})) {
+        print 'Location information retrieved using ', $location->{'geocoder'}, "\n";
+    }
 =cut
 
 sub geocode {
