@@ -113,12 +113,12 @@ sub geocode {
 			return $rc;
 		}
 	}
-	if(wantarray && defined($locations{$location}) && (ref($locations{$location}) eq 'ARRAY') && (my @rc = @{$locations{$location}})) {
+	if(defined($locations{$location}) && (ref($locations{$location}) eq 'ARRAY') && (my @rc = @{$locations{$location}})) {
 		if(scalar(@rc)) {
 			foreach (@rc) {
 				delete $_->{'geocoder'};
 			}
-			return @rc;
+			return (wantarray) ? @rc : $rc[0];
 		}
 	}
 
