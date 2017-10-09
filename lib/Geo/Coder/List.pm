@@ -164,10 +164,14 @@ sub geocode {
 						# geocoder.ca
 						$location->{geometry}{location}{lat} = $location->{latt};
 						$location->{geometry}{location}{lng} = $location->{longt};
+					} elsif($location->{latitude}) {
+						# postcodes.io
+						$location->{geometry}{location}{lat} = $location->{latitude};
+						$location->{geometry}{location}{lng} = $location->{longitude};
 					}
 
 					if($location->{'standard'}{'countryname'}) {
-						# XYZ
+						# geocoder.xyz
 						$location->{'address'}{'country'} = $location->{'standard'}{'countryname'};
 					}
 				}
