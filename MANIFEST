@@ -32,3 +32,4 @@ t/unused.t
 t/us.t
 t/used.t
 t/vars.t
+t/xyz.t
