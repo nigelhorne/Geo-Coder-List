@@ -122,6 +122,8 @@ sub geocode {
 		}
 	}
 
+	my $error;
+
 	foreach my $g(@{$self->{geocoders}}) {
 		my $geocoder = $g;
 		if(ref($g) eq 'HASH') {
@@ -140,6 +142,7 @@ sub geocode {
 		};
 		if($@) {
 			Carp::carp(ref($geocoder) . " '$location': $@");
+			$error = $@;
 			next;
 		}
 		foreach my $location(@rc) {
@@ -192,6 +195,9 @@ sub geocode {
 				return $rc[0];
 			}
 		}
+	}
+	if($error) {
+		return { error => $error };
 	}
 	undef;
 }

@@ -4,6 +4,7 @@ Revision history for Geo-Coder-List
 	Improve performance if asked for array first then scalar later
 	Support Geo::Coder::Postcodes
 	Verify against Geo::Code::XYZ
+	Set error
 
 0.13	Tue Jul 25 11:40:19 EDT 2017
 	Address RT#122441
