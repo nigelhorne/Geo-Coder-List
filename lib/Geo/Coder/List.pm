@@ -146,6 +146,7 @@ sub geocode {
 			next;
 		}
 		foreach my $location(@rc) {
+			next if(ref($location) ne 'HASH');
 			if($location->{'error'}) {
 				@rc = ();
 			} else {
