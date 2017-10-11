@@ -26,6 +26,7 @@ t/noplan.t
 t/osm.t
 t/pod-cm.t
 t/pod.t
+t/postcodes.t
 t/snippets.t
 t/spelling.t
 t/unused.t
