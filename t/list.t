@@ -110,6 +110,7 @@ LIST: {
 		my $log = $geocoderlist->log();
 		# diag(Data::Dumper->new([\$log])->Dump());
 		ok(defined($log));
+		$geocoderlist->flush();
 		foreach my $l(@{$log}) {
 			diag($l->{location}, ': ',  $l->{timetaken}, 's with ',  $l->{geocoder}, "\n");
 		}

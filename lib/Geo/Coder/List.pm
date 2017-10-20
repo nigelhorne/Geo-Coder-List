@@ -276,6 +276,18 @@ sub log {
 	return $self->{'log'};
 }
 
+=head2 flush
+
+Clear the log.
+
+=cut
+
+sub flush {
+	my $self = shift;
+
+	delete $self->{'log'};
+}
+
 =head1 AUTHOR
 
 Nigel Horne, C<< <njh at bandsman.co.uk> >>
