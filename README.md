@@ -10,7 +10,7 @@ Call many geocoders
 
 # VERSION
 
-Version 0.14
+Version 0.15
 
 # SYNOPSIS
 
@@ -79,6 +79,10 @@ Note that unlike Geo::Coders, there is no read method, since that would be point
 Returns the log of events to help you debug failures, optimize lookup order and fix quota breakage
 
     my @log = @{$geocoderlist->log()};
+
+## flush
+
+Clear the log.
 
 # AUTHOR
 
