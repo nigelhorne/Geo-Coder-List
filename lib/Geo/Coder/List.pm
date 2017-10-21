@@ -111,6 +111,12 @@ sub geocode {
 	if((!wantarray) && (my $rc = $locations{$location})) {
 		if(ref($rc) eq 'HASH') {
 			delete $rc->{'geocoder'};
+			my $log = {
+				location => $location,
+				timetaken => 0,
+				result => $rc
+			};
+			CORE::push @{$self->{'log'}}, $log;
 			return $rc;
 		}
 	}
