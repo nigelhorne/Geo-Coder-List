@@ -13,9 +13,9 @@ perl:
   - "5.12"
 
 before_install:
-  sudo apt-get update -q
-  sudo apt-get install -y libdevel-cover-perl
-  cpanm -n Devel::Cover::Report::Coveralls Test::Pod::Coverage Test::Pod::Spelling::CommonMistakes JSON::XS
+  - sudo apt-get update -q
+  - sudo apt-get install -y libdevel-cover-perl
+  - cpanm -n Devel::Cover::Report::Coveralls Test::Pod::Coverage Test::Pod::Spelling::CommonMistakes JSON::XS
 
 install:
   - cpanm -v --installdeps --notest .
