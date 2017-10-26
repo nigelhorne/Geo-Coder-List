@@ -1,7 +1,7 @@
 Revision history for Geo-Coder-List
 
 0.07
-	Support Geo::Coder::Ovi
+	Support Geo::Coder::Ovi and Geo::Coder::GeocodeFarm
 
 0.16	Tue Oct 24 22:40:26 EDT 2017
 	Return undef when the geocode fails

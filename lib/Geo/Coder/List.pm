@@ -205,6 +205,10 @@ sub geocode {
 						# ovi
 						$l->{geometry}{location}{lat} = $l->{properties}{geoLatitude};
 						$l->{geometry}{location}{lng} = $l->{properties}{geoLongitude};
+					} elsif($l->{'RESULTS'}) {
+						# GeoCodeFarm
+						$l->{geometry}{location}{lat} = $l->{'RESULTS'}[0]{'COORDINATES'}{'latitude'};
+						$l->{geometry}{location}{lng} = $l->{'RESULTS'}[0]{'COORDINATES'}{'longitude'};
 					}
 
 					if($l->{'standard'}{'countryname'}) {

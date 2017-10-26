@@ -16,6 +16,7 @@ t/coverage.t
 t/critic.t
 t/cv.t
 t/dist.t
+t/geofarm.t
 t/google.t
 t/googleplaces.t
 t/gv.t
