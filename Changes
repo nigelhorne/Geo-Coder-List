@@ -1,6 +1,6 @@
 Revision history for Geo-Coder-List
 
-0.07
+0.17
 	Support Geo::Coder::Ovi and Geo::Coder::GeocodeFarm
 
 0.16	Tue Oct 24 22:40:26 EDT 2017

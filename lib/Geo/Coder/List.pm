@@ -5,6 +5,9 @@ use strict;
 use Carp;
 use Time::HiRes;
 
+
+TODO: investigate Geo::Coder::RandMcnally, Geo::Coder::Mappy, Geo, Coder::ArcGIS
+
 =head1 NAME
 
 Geo::Coder::List - Call many geocoders
