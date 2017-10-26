@@ -201,6 +201,10 @@ sub geocode {
 						# postcodes.io
 						$l->{geometry}{location}{lat} = $l->{latitude};
 						$l->{geometry}{location}{lng} = $l->{longitude};
+					} elsif($l->{'properties'}{'geoLatitude'}) {
+						# ovi
+						$l->{geometry}{location}{lat} = $l->{properties}{geoLatitude};
+						$l->{geometry}{location}{lng} = $l->{properties}{geoLongitude};
 					}
 
 					if($l->{'standard'}{'countryname'}) {

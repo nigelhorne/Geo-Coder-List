@@ -24,6 +24,7 @@ t/list.t
 t/manifest.t
 t/noplan.t
 t/osm.t
+t/ovi.t
 t/pod-cm.t
 t/pod.t
 t/postcodes.t
