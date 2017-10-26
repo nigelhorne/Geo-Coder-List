@@ -5,8 +5,7 @@ use strict;
 use Carp;
 use Time::HiRes;
 
-
-TODO: investigate Geo::Coder::RandMcnally, Geo::Coder::Mappy, Geo, Coder::ArcGIS
+# TODO: investigate Geo::Coder::RandMcnally, Geo::Coder::Mappy, Geo, Coder::ArcGIS
 
 =head1 NAME
 
