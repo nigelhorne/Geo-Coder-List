@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 43;
+use Test::Most tests => 42;
 use Test::NoWarnings;
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
@@ -24,9 +24,9 @@ LIST: {
 
 			Geo::Coder::CA->import;
 
-			require Geo::Coder::Google::V3;
+			# require Geo::Coder::Google::V3;
 
-			Geo::Coder::Google::V3->import;
+			# Geo::Coder::Google::V3->import;
 
 			if($ENV{GMAP_KEY}) {
 				require Geo::Coder::GooglePlaces::V3;
@@ -52,12 +52,12 @@ LIST: {
 		if($@) {
 			diag($@);
 			diag('Not enough geocoders installed - skipping tests');
-			skip 'Not enough geocoders installed', 31;
+			skip 'Not enough geocoders installed', 41;
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List')
 			->push({ regex => qr/(Canada|USA|United States)$/, geocoder => new_ok('Geo::Coder::CA') })
 			->push(new_ok('Geo::Coder::XYZ'))
-			->push(new_ok('Geo::Coder::Google::V3'))
+			# ->push(new_ok('Geo::Coder::Google::V3'))
 			->push(new_ok('Geo::Coder::OSM'));
 
 		if(my $key = $ENV{GMAP_KEY}) {
