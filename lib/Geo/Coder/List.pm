@@ -184,7 +184,7 @@ sub geocode {
 				# Try to create a common interface, helps with HTML::GoogleMaps::V3
 				if(!defined($l->{geometry}{location}{lat})) {
 					if($l->{lat}) {
-						# OSM
+						# OSM/RandMcNalley
 						$l->{geometry}{location}{lat} = $l->{lat};
 						$l->{geometry}{location}{lng} = $l->{lon};
 					} elsif($l->{BestLocation}) {

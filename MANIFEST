@@ -29,6 +29,7 @@ t/ovi.t
 t/pod-cm.t
 t/pod.t
 t/postcodes.t
+t/rand.t
 t/snippets.t
 t/spelling.t
 t/unused.t
