@@ -211,7 +211,12 @@ sub geocode {
 						# GeoCodeFarm
 						$l->{geometry}{location}{lat} = $l->{'RESULTS'}[0]{'COORDINATES'}{'latitude'};
 						$l->{geometry}{location}{lng} = $l->{'RESULTS'}[0]{'COORDINATES'}{'longitude'};
+					} elsif(defined($l->{result}{addressMatches}[0]->{coordinates}{y})) {
+						# US Census
+						$l->{geometry}{location}{lat} = $l->{result}{addressMatches}[0]->{coordinates}{y};
+						$l->{geometry}{location}{lng} = $l->{result}{addressMatches}[0]->{coordinates}{x};
 					}
+					::diag(Data::Dumper->new([\$l])->Dump());
 
 					if($l->{'standard'}{'countryname'}) {
 						# geocoder.xyz
