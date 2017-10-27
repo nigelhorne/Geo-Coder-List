@@ -5,7 +5,7 @@ use strict;
 use Carp;
 use Time::HiRes;
 
-# TODO: investigate Geo::Coder::RandMcnally, Geo::Coder::Mappy, Geo, Coder::ArcGIS
+# TODO: investigate Geo, Coder::ArcGIS
 
 =head1 NAME
 
@@ -13,11 +13,11 @@ Geo::Coder::List - Call many geocoders
 
 =head1 VERSION
 
-Version 0.16
+Version 0.17
 
 =cut
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 our %locations;
 
 =head1 SYNOPSIS
