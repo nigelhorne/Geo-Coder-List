@@ -13,7 +13,7 @@ BEGIN {
 
 RAND: {
 	SKIP: {
-		skip 'Test requires Internet access', 10 unless(-e 't/online.enabled');
+		skip 'Test requires Internet access', 8 unless(-e 't/online.enabled');
 
 		eval {
 			require Geo::Coder::RandMcnally;
@@ -27,7 +27,7 @@ RAND: {
 
 		if($@) {
 			diag('Geo::Coder::RandMcnally not installed - skipping tests');
-			skip 'Geo::Coder::RandMcnally not installed', 10;
+			skip 'Geo::Coder::RandMcnally not installed', 8;
 		} else {
 			diag("Using Geo::Coder::RandMcnally $Geo::Coder::RandMcnally::VERSION");
 		}
