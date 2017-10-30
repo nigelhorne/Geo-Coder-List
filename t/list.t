@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 52;
+use Test::Most tests => 57;
 use Test::NoWarnings;
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
@@ -13,7 +13,7 @@ BEGIN {
 
 LIST: {
 	SKIP: {
-		skip 'Test requires Internet access', 50 unless(-e 't/online.enabled');
+		skip 'Test requires Internet access', 55 unless(-e 't/online.enabled');
 
 		eval {
 			require Test::Number::Delta;
@@ -56,7 +56,7 @@ LIST: {
 		if($@) {
 			diag($@);
 			diag('Not enough geocoders installed - skipping tests');
-			skip 'Not enough geocoders installed', 50;
+			skip 'Not enough geocoders installed', 55;
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List')
 			->push({ regex => qr/(Canada|USA|United States)$/, geocoder => new_ok('Geo::Coder::CA') })
@@ -109,8 +109,15 @@ LIST: {
 		delta_within($location->{geometry}{location}{lng}, 0.51, 1e-2);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::OSM', 'Verify OSM encoder is used');
 
+		my @locations = $geocoderlist->geocode({ location => 'Rochester, Kent, England' });
+		ok(scalar(@locations) >= 1);
+		ok(ref($location) eq 'HASH');
+		delta_within($location->{geometry}{location}{lat}, 51.39, 1e-2);
+		delta_within($location->{geometry}{location}{lng}, 0.51, 1e-2);
+		is(ref($location->{'geocoder'}), 'Geo::Coder::OSM', 'Verify list reads are not cached after scalar read');
+
 		my $count;
-		my @locations = $geocoderlist->geocode({ location => 'Allen, Indiana, USA' });
+		@locations = $geocoderlist->geocode({ location => 'Allen, Indiana, USA' });
 		$count = scalar(@locations);
 		ok($count >= 1);
 		$location = $locations[0];

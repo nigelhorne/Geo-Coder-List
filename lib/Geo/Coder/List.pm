@@ -111,6 +111,9 @@ sub geocode {
 	return unless(length($location) > 0);
 
 	if((!wantarray) && (my $rc = $locations{$location})) {
+		if(ref($rc) eq 'ARRAY') {
+			$rc = @{$rc}[0];
+		}
 		if(ref($rc) eq 'HASH') {
 			delete $rc->{'geocoder'};
 			my $log = {
