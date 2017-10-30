@@ -139,7 +139,7 @@ sub geocode {
 
 	my $error;
 
-	foreach my $g(@{$self->{geocoders}}) {
+	ENCODER: foreach my $g(@{$self->{geocoders}}) {
 		my $geocoder = $g;
 		if(ref($geocoder) eq 'HASH') {
 			my $regex = $g->{'regex'};
@@ -180,6 +180,7 @@ sub geocode {
 				};
 				CORE::push @{$self->{'log'}}, $log;
 				@rc = ();
+				next ENCODER;
 			} else {
 				# Try to create a common interface, helps with HTML::GoogleMaps::V3
 				if(!defined($l->{geometry}{location}{lat})) {
@@ -241,7 +242,7 @@ sub geocode {
 				$locations{$location} = \@rc;
 				return @rc;
 			}
-			if(length($rc[0])) {
+			if(scalar($rc[0])) {	# check it's not an empty hash
 				$locations{$location} = $rc[0];
 				return $rc[0];
 			}
