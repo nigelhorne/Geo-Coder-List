@@ -65,7 +65,7 @@ and OpenStreetMap for other places:
     my $location = $geocoderlist->geocode(location => '1600 Pennsylvania Ave NW, Washington DC, USA');
     # Only uses Geo::Coder::OSM
     if($location = $geocoderlist->geocode('10 Downing St, London, UK')) {
-        print 'The prime minister lives at co-ordinates ', 
+        print 'The prime minister lives at co-ordinates ',
             $location->{geometry}{location}{lat}, ',',
             $location->{geometry}{location}{lng}, "\n";
     }
@@ -96,7 +96,7 @@ return value, if the value was retrieved from the cache the value will be undefi
 sub geocode {
 	my $self = shift;
 	my %params;
-	
+
 	if(ref($_[0]) eq 'HASH') {
 		%params = %{$_[0]};
 	} elsif(@_ % 2 == 0) {
