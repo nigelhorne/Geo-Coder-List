@@ -2,6 +2,7 @@ Revision history for Geo-Coder-List
 
 0.18
 	Improved return value checking
+	Squash spaces
 
 0.17	Fri Oct 27 14:14:57 EDT 2017
 	Support Geo::Coder::Ovi, Geo::Coder::US::Census,

@@ -110,6 +110,8 @@ sub geocode {
 	return unless(defined($location));
 	return unless(length($location) > 0);
 
+	$location =~ s/\s\s+/ /g;
+
 	if((!wantarray) && (my $rc = $locations{$location})) {
 		if(ref($rc) eq 'ARRAY') {
 			$rc = @{$rc}[0];
