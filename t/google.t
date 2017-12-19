@@ -48,7 +48,7 @@ GOOGLE: {
 		delta_within($location->{geometry}{location}{lng}, -77.02, 1e-1);
 		is($location->{'geocoder'}, undef, 'Verify subsequent reads are cached');
 
-		$location = $geocoderlist->geocode('Plugh Hospice, Rochester, New Earth');
+		$location = $geocoderlist->geocode('Plugh Hospice, Rochester, Earth');
 		ok(!defined($location));
 
 		$location = $geocoderlist->geocode({ location => 'Rochester, Kent, England' });
