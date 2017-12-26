@@ -31,8 +31,14 @@ GOOGLE: {
 		} else {
 			diag("Using Geo::Coder::Google::V3 $Geo::Coder::Google::V3::VERSION");
 		}
+		my %gp_args;
+
+		if(my $geolocation_key = $ENV{'GMAP_KEY'}) {
+			$gp_args{'key'} = $geolocation_key;
+			$gp_args{'api_key'} = $geolocation_key;
+		}
 		my $geocoderlist = new_ok('Geo::Coder::List')
-			->push(new_ok('Geo::Coder::Google::V3'));
+			->push(new_ok('Geo::Coder::Google::V3' => [ %gp_args ]));
 
 		my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 		ok(defined($location));
