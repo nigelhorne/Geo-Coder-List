@@ -107,8 +107,8 @@ sub geocode {
 
 	my $location = $params{'location'};
 
-	return unless(defined($location));
-	return unless(length($location) > 0);
+	return if(!defined($location));
+	return if(length($location) == 0);
 
 	$location =~ s/\s\s+/ /g;
 
@@ -221,6 +221,10 @@ sub geocode {
 						# US Census
 						$l->{geometry}{location}{lat} = $l->{result}{addressMatches}[0]->{coordinates}{y};
 						$l->{geometry}{location}{lng} = $l->{result}{addressMatches}[0]->{coordinates}{x};
+					} elsif($l->{lat}) {
+						# Geo::GeoNames
+						$l->{geometry}{location}{lat} = $l->{lat};
+						$l->{geometry}{location}{lng} = $l->{lng};
 					}
 
 					if($l->{'standard'}{'countryname'}) {

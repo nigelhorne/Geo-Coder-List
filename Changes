@@ -1,5 +1,8 @@
 Revision history for Geo-Coder-List
 
+0.19
+	Support Geo::GeoNames
+
 0.18	Tue Dec 26 08:18:54 EST 2017
 	Improved return value checking
 	Squash spaces
