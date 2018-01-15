@@ -22,8 +22,10 @@ our %locations;
 
 =head1 SYNOPSIS
 
-L<Geo::Coder::All> and L<Geo::Coder::Many> are great routines but neither quite does
-what I want.
+L<Geo::Coder::All>
+and
+L<Geo::Coder::Many>
+are great routines but neither quite does what I want.
 This module's primary use is to allow many backends to be used by
 L<HTML::GoogleMaps::V3>
 
