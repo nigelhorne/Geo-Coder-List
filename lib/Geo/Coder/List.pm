@@ -125,6 +125,7 @@ sub geocode {
 			my $log = {
 				location => $location,
 				timetaken => 0,
+				wantarray => wantarray,
 				result => $rc
 			};
 			CORE::push @{$self->{'log'}}, $log;
@@ -139,6 +140,7 @@ sub geocode {
 			my $log = {
 				location => $location,
 				timetaken => 0,
+				wantarray => wantarray,
 				result => \@rc
 			};
 			CORE::push @{$self->{'log'}}, $log;
@@ -171,6 +173,7 @@ sub geocode {
 				location => $location,
 				geocoder => ref($geocoder),
 				timetaken => $timetaken,
+				wantarray => wantarray,
 				error => $@
 			};
 			CORE::push @{$self->{'log'}}, $log;
@@ -185,6 +188,7 @@ sub geocode {
 					location => $location,
 					timetaken => $timetaken,
 					geocoder => ref($geocoder),
+					wantarray => wantarray,
 					error => $l->{'error'}
 				};
 				CORE::push @{$self->{'log'}}, $log;
@@ -242,6 +246,7 @@ sub geocode {
 						location => $location,
 						timetaken => $timetaken,
 						geocoder => ref($geocoder),
+						wantarray => wantarray,
 						result => $l
 					};
 					CORE::push @{$self->{'log'}}, $log;
