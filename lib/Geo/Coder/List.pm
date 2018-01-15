@@ -22,8 +22,10 @@ our %locations;
 
 =head1 SYNOPSIS
 
-L<Geo::Coder::All> and L<Geo::Coder::Many> are great routines but neither quite does what I want.
-This module's primary use is to allow many backends to be used by L<HTML::GoogleMaps::V3>
+L<Geo::Coder::All> and L<Geo::Coder::Many> are great routines but neither quite does
+what I want.
+This module's primary use is to allow many backends to be used by
+L<HTML::GoogleMaps::V3>
 
 =head1 SUBROUTINES/METHODS
 
@@ -174,7 +176,7 @@ sub geocode {
 			$error = $@;
 			next;
 		}
-		foreach my $l(@rc) {
+		POSSIBLE_LOCATION: foreach my $l(@rc) {
 			next if(ref($l) ne 'HASH');
 			if($l->{'error'}) {
 				my $log = {
@@ -241,7 +243,7 @@ sub geocode {
 						result => $l
 					};
 					CORE::push @{$self->{'log'}}, $log;
-					last;
+					last POSSIBLE_LOCATION;
 				}
 			}
 		}
@@ -369,7 +371,7 @@ L<http://search.cpan.org/dist/Geo-Coder-List/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016-2017 Nigel Horne.
+Copyright 2016-2018 Nigel Horne.
 
 This program is released under the following licence: GPL
 
