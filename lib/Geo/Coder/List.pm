@@ -135,7 +135,9 @@ sub geocode {
 	if(defined($locations{$location}) && (ref($locations{$location}) eq 'ARRAY') && (my @rc = @{$locations{$location}})) {
 		if(scalar(@rc)) {
 			foreach (@rc) {
-				delete $_->{'geocoder'};
+				if(ref($_) eq 'HASH') {
+					delete $_->{'geocoder'};
+				}
 			}
 			my $log = {
 				location => $location,
