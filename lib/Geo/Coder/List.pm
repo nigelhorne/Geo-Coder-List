@@ -168,7 +168,7 @@ sub geocode {
 			# e.g. over QUERY LIMIT with this one
 			# TODO: remove from the list of geocoders
 			if(ref($geocoder) eq 'Geo::GeoNames') {
-				@rc = $geocoder->geocode($location});
+				@rc = $geocoder->geocode($location);
 			} else {
 				@rc = $geocoder->geocode(%params);
 			}
