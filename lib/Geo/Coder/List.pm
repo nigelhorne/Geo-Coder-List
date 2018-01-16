@@ -167,7 +167,11 @@ sub geocode {
 		eval {
 			# e.g. over QUERY LIMIT with this one
 			# TODO: remove from the list of geocoders
-			@rc = $geocoder->geocode(%params);
+			if(ref($geocoder) eq 'Geo::GeoNames') {
+				@rc = $geocoder->geocode($params{'location'});
+			} else {
+				@rc = $geocoder->geocode(%params);
+			}
 		};
 		$timetaken = Time::HiRes::time() - $timetaken;
 		if($@) {
