@@ -154,8 +154,7 @@ sub geocode {
 
 	ENCODER: foreach my $g(@{$self->{geocoders}}) {
 		my $geocoder = $g;
-		if(ref($geocoder) eq 'HASH') {
-			my $regex = $g->{'regex'};
+		if((ref($geocoder) eq 'HASH') && (my $regex = $g->{'regex'})) {
 			if($location =~ $regex) {
 				$geocoder = $g->{'geocoder'};
 			} else {
