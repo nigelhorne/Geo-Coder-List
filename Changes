@@ -4,6 +4,7 @@ Revision history for Geo-Coder-List
 	Support Geo::GeoNames
 	Explicit about which loop to finish
 	Fix ununinitialized variable
+	Fix https://github.com/Humanstate/html-googlemaps-v3/issues/17
 
 0.18	Tue Dec 26 08:18:54 EST 2017
 	Improved return value checking
