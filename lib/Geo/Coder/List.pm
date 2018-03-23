@@ -134,8 +134,10 @@ sub geocode {
 	}
 	if(defined($locations{$location}) && (ref($locations{$location}) eq 'ARRAY') && (my @rc = @{$locations{$location}})) {
 		if(scalar(@rc)) {
+			my $allempty = 1;
 			foreach (@rc) {
 				if(ref($_) eq 'HASH') {
+					$allempty = 0;
 					delete $_->{'geocoder'};
 				}
 			}
@@ -146,6 +148,9 @@ sub geocode {
 				result => \@rc
 			};
 			CORE::push @{$self->{'log'}}, $log;
+			if($allempty) {
+				return;
+			}
 			return (wantarray) ? @rc : $rc[0];
 		}
 	}
@@ -275,7 +280,11 @@ sub geocode {
 	# if($error) {
 		# return { error => $error };
 	# }
-	undef;
+	if(wantarray) {
+		$locations{$location} = ();
+		return ();
+	}
+	$locations{$location} = undef;
 }
 
 =head2 ua
