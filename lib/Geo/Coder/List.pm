@@ -225,6 +225,7 @@ sub geocode {
 						$l->{geometry}{location}{lng} = $l->{longt};
 					} elsif($l->{latitude}) {
 						# postcodes.io
+						# Geo::Coder::Free
 						$l->{geometry}{location}{lat} = $l->{latitude};
 						$l->{geometry}{location}{lng} = $l->{longitude};
 					} elsif($l->{'properties'}{'geoLatitude'}) {
