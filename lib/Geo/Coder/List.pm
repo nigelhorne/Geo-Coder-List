@@ -13,11 +13,11 @@ Geo::Coder::List - Call many geocoders
 
 =head1 VERSION
 
-Version 0.18
+Version 0.19
 
 =cut
 
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 our %locations;
 
 =head1 SYNOPSIS
@@ -103,6 +103,8 @@ sub geocode {
 
 	if(ref($_[0]) eq 'HASH') {
 		%params = %{$_[0]};
+	} elsif(ref($_[0])) {
+		Carp::croak('Usage: geocode(location => $location)');
 	} elsif(@_ % 2 == 0) {
 		%params = @_;
 	} else {
