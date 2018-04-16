@@ -1,6 +1,9 @@
 Revision history for Geo-Coder-List
 
-0.19
+0.20
+	Don't bother to test using Google if you don't have a key
+
+0.19	Mon Apr 16 13:17:49 EDT 2018
 	Support Geo::GeoNames
 	Explicit about which loop to finish
 	Fix ununinitialized variable
