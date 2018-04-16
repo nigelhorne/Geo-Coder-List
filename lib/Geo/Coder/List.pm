@@ -242,10 +242,10 @@ sub geocode {
 						# US Census
 						$l->{geometry}{location}{lat} = $l->{result}{addressMatches}[0]->{coordinates}{y};
 						$l->{geometry}{location}{lng} = $l->{result}{addressMatches}[0]->{coordinates}{x};
-					} elsif($l->{lat}) {
+					} elsif($l->[0]->{lat}) {
 						# Geo::GeoNames
-						$l->{geometry}{location}{lat} = $l->{lat};
-						$l->{geometry}{location}{lng} = $l->{lng};
+						$l->{geometry}{location}{lat} = $l->[0]->{lat};
+						$l->{geometry}{location}{lng} = $l->[0]->{lng};
 					}
 
 					if($l->{'standard'}{'countryname'}) {
