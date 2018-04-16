@@ -194,6 +194,11 @@ sub geocode {
 			next;
 		}
 		POSSIBLE_LOCATION: foreach my $l(@rc) {
+			if(ref($l) eq 'ARRAY') {
+				# Geo::GeoNames
+				# TODO: should consider all locations in the array
+				$l = $l->[0];
+			}
 			next if(ref($l) ne 'HASH');
 			if($l->{'error'}) {
 				my $log = {
@@ -209,7 +214,7 @@ sub geocode {
 			} else {
 				# Try to create a common interface, helps with HTML::GoogleMaps::V3
 				if(!defined($l->{geometry}{location}{lat})) {
-					if($l->{lat}) {
+					if($l->{lat} && defined($l->{lon})) {
 						# OSM/RandMcNalley
 						$l->{geometry}{location}{lat} = $l->{lat};
 						$l->{geometry}{location}{lng} = $l->{lon};
@@ -242,10 +247,10 @@ sub geocode {
 						# US Census
 						$l->{geometry}{location}{lat} = $l->{result}{addressMatches}[0]->{coordinates}{y};
 						$l->{geometry}{location}{lng} = $l->{result}{addressMatches}[0]->{coordinates}{x};
-					} elsif($l->[0]->{lat}) {
+					} elsif($l->{lat}) {
 						# Geo::GeoNames
-						$l->{geometry}{location}{lat} = $l->[0]->{lat};
-						$l->{geometry}{location}{lng} = $l->[0]->{lng};
+						$l->{geometry}{location}{lat} = $l->{lat};
+						$l->{geometry}{location}{lng} = $l->{lng};
 					}
 
 					if($l->{'standard'}{'countryname'}) {

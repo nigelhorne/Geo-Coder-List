@@ -2,6 +2,7 @@ Revision history for Geo-Coder-List
 
 0.20
 	Don't bother to test using Google if you don't have a key
+	Improved support for Geo::Names
 
 0.19	Sun Apr 15 20:42:05 EDT 2018
 	Support Geo::GeoNames
