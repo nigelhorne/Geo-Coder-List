@@ -13,11 +13,11 @@ Geo::Coder::List - Call many geocoders
 
 =head1 VERSION
 
-Version 0.18
+Version 0.19
 
 =cut
 
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 our %locations;
 
 =head1 SYNOPSIS
@@ -103,6 +103,8 @@ sub geocode {
 
 	if(ref($_[0]) eq 'HASH') {
 		%params = %{$_[0]};
+	} elsif(ref($_[0])) {
+		Carp::croak('Usage: geocode(location => $location)');
 	} elsif(@_ % 2 == 0) {
 		%params = @_;
 	} else {
@@ -225,6 +227,7 @@ sub geocode {
 						$l->{geometry}{location}{lng} = $l->{longt};
 					} elsif($l->{latitude}) {
 						# postcodes.io
+						# Geo::Coder::Free
 						$l->{geometry}{location}{lat} = $l->{latitude};
 						$l->{geometry}{location}{lng} = $l->{longitude};
 					} elsif($l->{'properties'}{'geoLatitude'}) {
@@ -239,10 +242,10 @@ sub geocode {
 						# US Census
 						$l->{geometry}{location}{lat} = $l->{result}{addressMatches}[0]->{coordinates}{y};
 						$l->{geometry}{location}{lng} = $l->{result}{addressMatches}[0]->{coordinates}{x};
-					} elsif($l->{lat}) {
+					} elsif($l->[0]->{lat}) {
 						# Geo::GeoNames
-						$l->{geometry}{location}{lat} = $l->{lat};
-						$l->{geometry}{location}{lng} = $l->{lng};
+						$l->{geometry}{location}{lat} = $l->[0]->{lat};
+						$l->{geometry}{location}{lng} = $l->[0]->{lng};
 					}
 
 					if($l->{'standard'}{'countryname'}) {
