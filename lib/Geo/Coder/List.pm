@@ -197,6 +197,9 @@ sub geocode {
 				die "lost username" if(!defined($geocoder->username()));
 				@rc = $geocoder->geocode($location);
 			} else {
+				if(ref($geocoder) eq 'Geo::Coder::GooglePlaces::V3') {
+					print "key: ", $geocoder->key(), "\n" if(DEBUG);
+				}
 				@rc = $geocoder->geocode(%params);
 			}
 		};
