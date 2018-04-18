@@ -65,8 +65,8 @@ For example this code uses geocode.ca for Canada and US addresses,
 and OpenStreetMap for other places:
 
     my $geocoderlist = Geo::Coder::List->new()
-        ->push({ regex => qr/(Canada|USA|United States)$/, geocoder => new_ok('Geo::Coder::CA') })
-        ->push(new_ok('Geo::Coder::OSM'));
+        ->push({ regex => qr/(Canada|USA|United States)$/, geocoder => Geo::Coder::CA->new() })
+        ->push(Geo::Coder::OSM->new());
 
     # Uses Geo::Coder::CA, and if that fails uses Geo::Coder::OSM
     my $location = $geocoderlist->geocode(location => '1600 Pennsylvania Ave NW, Washington DC, USA');
@@ -76,6 +76,9 @@ and OpenStreetMap for other places:
             $location->{geometry}{location}{lat}, ',',
             $location->{geometry}{location}{lng}, "\n";
     }
+
+    # It is also possible to limit the number of enquires used by a particular encoder
+    $geocoderlist->push({ geocoder => Geo::Coder::GooglePlaces->new(key => '1234', limit => 100) });
 
 =cut
 
@@ -168,8 +171,15 @@ sub geocode {
 
 	ENCODER: foreach my $g(@{$self->{geocoders}}) {
 		my $geocoder = $g;
-		if((ref($geocoder) eq 'HASH') && (my $regex = $g->{'regex'})) {
-			print 'Consider ', ref($g->{geocoder}), ": $regex\n" if(DEBUG);
+		if((ref($geocoder) eq 'HASH') && exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
+			print "limit: $limit\n" if(DEBUG);
+			if($limit <= 0) {
+				next ENCODER;
+			}
+			$geocoder->{'limit'}--;
+		}
+		if((ref($geocoder) eq 'HASH') && (my $regex = $geocoder->{'regex'})) {
+			print 'Consider ', ref($geocoder->{geocoder}), ": $regex\n" if(DEBUG);
 			if($location =~ $regex) {
 				$geocoder = $g->{'geocoder'};
 			} else {
@@ -184,7 +194,7 @@ sub geocode {
 			print "trying ", ref($geocoder), "\n" if(DEBUG);
 			if(ref($geocoder) eq 'Geo::GeoNames') {
 				print "username => ", $geocoder->username(), "\n" if(DEBUG);
-				die "lost username" if(!defined($geocoder->username));
+				die "lost username" if(!defined($geocoder->username()));
 				@rc = $geocoder->geocode($location);
 			} else {
 				@rc = $geocoder->geocode(%params);
