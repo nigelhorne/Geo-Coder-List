@@ -178,13 +178,21 @@ sub geocode {
 			}
 			$geocoder->{'limit'}--;
 		}
-		if((ref($geocoder) eq 'HASH') && (my $regex = $geocoder->{'regex'})) {
-			print 'Consider ', ref($geocoder->{geocoder}), ": $regex\n" if(DEBUG);
-			if($location =~ $regex) {
-				$geocoder = $g->{'geocoder'};
-			} else {
-				next;
+		if(ref($geocoder) eq 'HASH') {
+			if(exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
+				print "limit: $limit\n" if(DEBUG);
+				if($limit <= 0) {
+					next ENCODER;
+				}
+				$geocoder->{'limit'}--;
 			}
+			if(my $regex = $geocoder->{'regex'}) {
+				print 'Consider ', ref($geocoder->{geocoder}), ": $regex\n" if(DEBUG);
+				if($location !~ $regex) {
+					next;
+				}
+			}
+			$geocoder = $g->{'geocoder'};
 		}
 		my @rc;
 		my $timetaken = Time::HiRes::time();
