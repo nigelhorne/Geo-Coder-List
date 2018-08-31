@@ -78,7 +78,7 @@ and OpenStreetMap for other places:
     }
 
     # It is also possible to limit the number of enquires used by a particular encoder
-    $geo_coderlist->push({ geocoder => Geo::Coder::GooglePlaces->new(key => '1234', limit => 100) });
+    $geo_coderlist->push({ geocoder => Geo::Coder::GooglePlaces->new(key => '1234'), limit => 100) });
 
 =cut
 
