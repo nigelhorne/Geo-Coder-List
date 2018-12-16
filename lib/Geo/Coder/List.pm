@@ -125,6 +125,7 @@ sub geocode {
 	$location =~ s/\s\s+/ /g;
 	$location = decode_entities($location);
 
+	my @call_details = caller(0);
 	print "location: $location\n" if(DEBUG);
 	if((!wantarray) && (my $rc = $locations{$location})) {
 		if(ref($rc) eq 'ARRAY') {
@@ -133,6 +134,7 @@ sub geocode {
 		if(ref($rc) eq 'HASH') {
 			delete $rc->{'geocoder'};
 			my $log = {
+				line => $call_details[2],
 				location => $location,
 				timetaken => 0,
 				wantarray => wantarray,
@@ -153,6 +155,7 @@ sub geocode {
 				}
 			}
 			my $log = {
+				line => $call_details[2],
 				location => $location,
 				timetaken => 0,
 				wantarray => wantarray,
@@ -214,6 +217,7 @@ sub geocode {
 		$timetaken = Time::HiRes::time() - $timetaken;
 		if($@) {
 			my $log = {
+				line => $call_details[2],
 				location => $location,
 				geocoder => ref($geocoder),
 				timetaken => $timetaken,
@@ -233,6 +237,7 @@ sub geocode {
 			}
 			if(!defined($l)) {
 				my $log = {
+					line => $call_details[2],
 					location => $location,
 					timetaken => $timetaken,
 					geocoder => ref($geocoder),
@@ -246,6 +251,7 @@ sub geocode {
 			next if(ref($l) ne 'HASH');
 			if($l->{'error'}) {
 				my $log = {
+					line => $call_details[2],
 					location => $location,
 					timetaken => $timetaken,
 					geocoder => ref($geocoder),
@@ -306,6 +312,7 @@ sub geocode {
 					print $l->{geometry}{location}{lat}, '/', $l->{geometry}{location}{lng}, "\n" if(DEBUG);
 					$l->{geocoder} = $geocoder;
 					my $log = {
+						line => $call_details[2],
 						location => $location,
 						timetaken => $timetaken,
 						geocoder => ref($geocoder),
