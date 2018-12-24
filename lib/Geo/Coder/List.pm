@@ -6,7 +6,7 @@ use Carp;
 use Time::HiRes;
 use HTML::Entities;
 
-use constant DEBUG => 0;
+use constant DEBUG => 0;	# The higher the number, the more is debugged
 
 # TODO: investigate Geo, Coder::ArcGIS
 
@@ -202,14 +202,14 @@ sub geocode {
 		eval {
 			# e.g. over QUERY LIMIT with this one
 			# TODO: remove from the list of geocoders
-			print "trying ", ref($geocoder), "\n" if(DEBUG);
+			print 'trying ', ref($geocoder), "\n" if(DEBUG);
 			if(ref($geocoder) eq 'Geo::GeoNames') {
-				print "username => ", $geocoder->username(), "\n" if(DEBUG);
-				die "lost username" if(!defined($geocoder->username()));
+				print 'username => ', $geocoder->username(), "\n" if(DEBUG);
+				die 'lost username' if(!defined($geocoder->username()));
 				@rc = $geocoder->geocode($location);
 			} else {
 				if(ref($geocoder) eq 'Geo::Coder::GooglePlaces::V3') {
-					print "key: ", $geocoder->key(), "\n" if(DEBUG);
+					print 'key: ', $geocoder->key(), "\n" if(DEBUG);
 				}
 				@rc = $geocoder->geocode(%params);
 			}
@@ -242,6 +242,7 @@ sub geocode {
 					timetaken => $timetaken,
 					geocoder => ref($geocoder),
 					wantarray => wantarray,
+					result => 'not found',
 				};
 				CORE::push @{$self->{'log'}}, $log;
 				@rc = ();
