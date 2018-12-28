@@ -229,6 +229,19 @@ sub geocode {
 			$error = $@;
 			next;
 		}
+		if(scalar(@rc) == 0) {
+			my $log = {
+				line => $call_details[2],
+				location => $location,
+				timetaken => $timetaken,
+				geocoder => ref($geocoder),
+				wantarray => wantarray,
+				result => 'not found',
+			};
+			CORE::push @{$self->{'log'}}, $log;
+			@rc = ();
+			next ENCODER;
+		}
 		POSSIBLE_LOCATION: foreach my $l(@rc) {
 			if(ref($l) eq 'ARRAY') {
 				# Geo::GeoNames
