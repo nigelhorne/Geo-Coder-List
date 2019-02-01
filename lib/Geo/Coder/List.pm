@@ -303,6 +303,10 @@ sub geocode {
 						# ovi
 						$l->{geometry}{location}{lat} = $l->{properties}{geoLatitude};
 						$l->{geometry}{location}{lng} = $l->{properties}{geoLongitude};
+					} elsif($l->{'location'}->{'results'}[0]->{'geometry'}) {
+						# DataScienceToolkit
+						$l->{'geometry'}{'location'}{'lat'} = $location->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+						$l->{'geometry'}{'location'}{'lng'} = $location->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
 					} elsif($l->{'RESULTS'}) {
 						# GeoCodeFarm
 						$l->{geometry}{location}{lat} = $l->{'RESULTS'}[0]{'COORDINATES'}{'latitude'};
