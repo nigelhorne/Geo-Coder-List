@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use Carp;
 use Time::HiRes;
-use HTML::Entities;
+# use HTML::Entities;
 
 use constant DEBUG => 0;	# The higher the number, the more is debugged
 
