@@ -127,7 +127,7 @@ sub geocode {
 
 	my @call_details = caller(0);
 	print "location: $location\n" if(DEBUG);
-	if((!wantarray) && (my $rc = $locations{$location})) {
+	if((!wantarray) && (my $rc = $self->_cache($location))) {
 		if(ref($rc) eq 'ARRAY') {
 			$rc = @{$rc}[0];
 		}
@@ -145,7 +145,7 @@ sub geocode {
 			return $rc;
 		}
 	}
-	if(defined($locations{$location}) && (ref($locations{$location}) eq 'ARRAY') && (my @rc = @{$locations{$location}})) {
+	if(defined($self->_cache($location)) && (ref($self->_cache($location)) eq 'ARRAY') && (my @rc = @{$self->_cache($location)})) {
 		if(scalar(@rc)) {
 			my $allempty = 1;
 			foreach (@rc) {
@@ -346,11 +346,11 @@ sub geocode {
 		if(scalar(@rc)) {
 			print 'Number of matches from ', ref($geocoder), ': ', scalar(@rc), "\n" if(DEBUG);
 			if(wantarray) {
-				$locations{$location} = \@rc;
+				$self->_cache($location, \@rc);
 				return @rc;
 			}
 			if(scalar($rc[0])) {	# check it's not an empty hash
-				$locations{$location} = $rc[0];
+				$self->_cache($location, $rc[0]);
 				return $rc[0];
 			}
 		}
@@ -360,10 +360,10 @@ sub geocode {
 		# return { error => $error };
 	# }
 	if(wantarray) {
-		$locations{$location} = ();
+		$self->_cache($location, ());
 		return ();
 	}
-	$locations{$location} = undef;
+	$self->_cache($location, undef);
 }
 
 =head2 ua
@@ -419,6 +419,16 @@ sub flush {
 	my $self = shift;
 
 	delete $self->{'log'};
+}
+
+sub _cache {
+	my $self = shift;
+	my $key = shift;
+	if(my $value = shift) {
+		$locations{$key} = $value;
+	}
+
+	return $locations{$key};
 }
 
 =head1 AUTHOR
