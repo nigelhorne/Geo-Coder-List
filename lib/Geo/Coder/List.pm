@@ -21,7 +21,7 @@ Version 0.23
 =cut
 
 our $VERSION = '0.23';
-our %locations;
+our %locations;	# L1 cache, always used
 
 =head1 SYNOPSIS
 
@@ -436,9 +436,21 @@ sub flush {
 sub _cache {
 	my $self = shift;
 	my $key = shift;
+
 	if(my $value = shift) {
 		$locations{$key} = $value;
 		if($self->{'cache'}) {
+			if(ref($value) eq 'ARRAY') {
+				foreach my $item(@{$value}) {
+					foreach my $key(keys(%{$item})) {
+						delete $item->{$key} unless ($key eq 'geometry');
+					}
+				}
+			} else {
+				foreach my $key(keys(%{$value})) {
+					delete $value->{$key} unless ($key eq 'geometry');
+				}
+			}
 			$self->{'cache'}->set($key, $value, '1 month');
 		}
 	}
