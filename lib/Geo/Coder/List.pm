@@ -401,6 +401,9 @@ sub ua {
 			my $geocoder = $g;
 			if(ref($g) eq 'HASH') {
 				$geocoder = $g->{'geocoder'};
+				if(!defined($geocoder)) {
+					Carp::croak('No geocoder found');
+				}
 			}
 			$geocoder->ua($ua);
 		}
