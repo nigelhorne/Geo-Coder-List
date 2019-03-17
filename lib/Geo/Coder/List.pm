@@ -37,6 +37,19 @@ L<HTML::GoogleMaps::V3>
 =head2 new
 
 Creates a Geo::Coder::List object.
+
+Takes an optional argument 'cache' which takes an cache object that supports
+get() and set() methods.
+The licences of some geo coders,
+such as Google,
+specifically prohibit caching API calls,
+so be careful to only use with those services that allow it.
+
+    use Geo::Coder::List;
+    use CHI;
+
+    my $geocoder->new(cache => CHI->new(driver => 'Memory', global => 1));
+
 =cut
 
 sub new {
@@ -45,10 +58,9 @@ sub new {
 
 	return unless(defined($class));
 
-	# my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
+	my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
 
-	# return bless { %args, geo_coders => [] }, $class;
-	return bless { }, $class;
+	return bless { %args, geo_coders => [] }, $class;
 }
 
 =head2 push
@@ -426,9 +438,17 @@ sub _cache {
 	my $key = shift;
 	if(my $value = shift) {
 		$locations{$key} = $value;
+		if($self->{'cache'}) {
+			$self->{'cache'}->set($key, $value, '1 month');
+		}
 	}
 
-	return $locations{$key};
+	if(my $rc = $locations{$key}) {
+		return $rc;
+	}
+	if($self->{'cache'}) {
+		return $self->{'cache'}->get($key);
+	}
 }
 
 =head1 AUTHOR
@@ -481,7 +501,7 @@ L<http://search.cpan.org/dist/Geo-Coder-List/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016-2018 Nigel Horne.
+Copyright 2016-2019 Nigel Horne.
 
 This program is released under the following licence: GPL
 

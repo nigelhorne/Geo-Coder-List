@@ -1,5 +1,8 @@
 Revision history for Geo-Coder-List
 
+0.24
+	Support the cache option
+
 0.23	Fri Feb  1 20:57:05 EST 2019
 	Add the calling line to the log
 	Added support for Geo::Coder::DataScienceToolkit
