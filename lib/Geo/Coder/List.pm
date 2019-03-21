@@ -202,7 +202,7 @@ sub geocode {
 				$geocoder->{'limit'}--;
 			}
 			if(my $regex = $geocoder->{'regex'}) {
-				print 'Consider ', ref($geocoder->{geocoder}), ": $regex\n" if(DEBUG);
+				print 'consider ', ref($geocoder->{geocoder}), ": $regex\n" if(DEBUG);
 				if($location !~ $regex) {
 					next;
 				}
@@ -220,9 +220,6 @@ sub geocode {
 				die 'lost username' if(!defined($geocoder->username()));
 				@rc = $geocoder->geocode($location);
 			} else {
-				if(ref($geocoder) eq 'Geo::Coder::GooglePlaces::V3') {
-					print 'key: ', $geocoder->key(), "\n" if(DEBUG);
-				}
 				@rc = $geocoder->geocode(%params);
 			}
 		};
@@ -237,7 +234,7 @@ sub geocode {
 				error => $@
 			};
 			CORE::push @{$self->{'log'}}, $log;
-			Carp::carp(ref($geocoder) . " '$location': $@");
+			Carp::carp(ref($geocoder), " '$location': $@");
 			$error = $@;
 			next;
 		}
