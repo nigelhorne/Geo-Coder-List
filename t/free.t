@@ -61,7 +61,8 @@ FREE: {
 		cmp_deeply($location,
 			methods('lat' => num(51.38, 1e-2), 'long' => num(1.39, 1e-2)));
 
-		cmp_deeply($geo_coder_list->geocode(location => 'Herne Bay, Kent, England'),
+		my @locations = $geo_coder_list->geocode(location => 'Herne Bay, Kent, England');
+		cmp_deeply($locations[0],
 			methods('lat' => num(51.38, 1e-2), 'long' => num(1.13, 1e-2)));
 	}
 }
