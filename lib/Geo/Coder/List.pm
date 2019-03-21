@@ -257,7 +257,7 @@ sub geocode {
 		POSSIBLE_LOCATION: foreach my $l(@rc) {
 			if(ref($l) eq 'ARRAY') {
 				# Geo::GeoNames
-				# TODO: should consider all locations in the array
+				# FIXME: should consider all locations in the array
 				$l = $l->[0];
 			}
 			if(!defined($l)) {
@@ -274,6 +274,7 @@ sub geocode {
 				next ENCODER;
 			}
 			print Data::Dumper->new([\$l])->Dump() if(DEBUG >= 2);
+			last if(ref($l) eq 'Geo::Location::Point');
 			next if(ref($l) ne 'HASH');
 			if($l->{'error'}) {
 				my $log = {

@@ -2,6 +2,7 @@ Revision history for Geo-Coder-List
 
 0.24
 	Support the cache option
+	Test Geo::Coder::Free::Local
 
 0.23	Fri Feb  1 20:57:05 EST 2019
 	Add the calling line to the log
