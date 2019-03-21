@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 13;
+use Test::Most tests => 14;
 use Test::NoWarnings;
 use Test::Deep;
 
@@ -30,12 +30,34 @@ FREE: {
 
 		if($@) {
 			diag('Geo::Coder::Free not installed - skipping tests');
-			skip 'Geo::Coder::Free not installed', 11;
+			skip 'Geo::Coder::Free not installed', 12;
 		} else {
 			diag("Using Geo::Coder::Free $Geo::Coder::Free::VERSION",
 				"/Geo::Coder::Free::Local $Geo::Coder::Free::Local::VERSION");
 		}
-		my $geo_coder_list = new_ok('Geo::Coder::List');
+
+		my $cache;
+
+		eval {
+			require CHI;
+
+			CHI->import();
+		};
+
+		if($@) {
+			diag('CHI not installed');
+		} else {
+			diag("Using CHI $CHI::VERSION");
+			my $hash = {};
+			$cache = CHI->new(driver => 'Memory', datastore => $hash);
+		}
+
+		my $geo_coder_list;
+		if($cache) {
+			$geo_coder_list = new_ok('Geo::Coder::List' => [ 'cache' => $cache ]);
+		} else {
+			$geo_coder_list = new_ok('Geo::Coder::List');
+		}
 		my $geo_coder_free = new_ok('Geo::Coder::Free');
 
 		$geo_coder_list->push({ regex => qr/,\s*(USA|US|United States|Canada|Australia)\s*$/, geocoder => $geo_coder_free })
@@ -54,12 +76,20 @@ FREE: {
 		ok(defined($location));
 		cmp_deeply($location,
 			methods('lat' => num(39.27, 1e-2), 'long' => num(-87.03, 1e-2)));
-		cmp_deeply($geo_coder_list->geocode('Woolwich, London, England'),
+
+		$location = $geo_coder_list->geocode('Woolwich, London, England');
+		cmp_deeply($location,
 			methods('lat' => num(51.47, 1e-2), 'long' => num(0.20, 1e-2)));
+
 		$location = $geo_coder_list->geocode(location => 'Margate, Kent, England');
 		ok(defined($location));
 		cmp_deeply($location,
 			methods('lat' => num(51.38, 1e-2), 'long' => num(1.39, 1e-2)));
+
+		# Check cache
+		$location = $geo_coder_list->geocode('Woolwich, London, England');
+		cmp_deeply($location,
+			methods('lat' => num(51.47, 1e-2), 'long' => num(0.20, 1e-2)));
 
 		my @locations = $geo_coder_list->geocode(location => 'Herne Bay, Kent, England');
 		cmp_deeply($locations[0],

@@ -161,7 +161,7 @@ sub geocode {
 		if(scalar(@rc)) {
 			my $allempty = 1;
 			foreach (@rc) {
-				if(ref($_) eq 'HASH') {
+				if((ref($_) eq 'HASH') || (ref($_) eq 'Geo::Location::Point')) {
 					$allempty = 0;
 					delete $_->{'geocoder'};
 				}
@@ -443,17 +443,20 @@ sub _cache {
 		if($self->{'cache'}) {
 			if(ref($value) eq 'ARRAY') {
 				foreach my $item(@{$value}) {
-					foreach my $key(keys(%{$item})) {
-						delete $item->{$key} unless ($key eq 'geometry');
+					if(ref($item) eq 'HASH') {
+						foreach my $key(keys(%{$item})) {
+							delete $item->{$key} unless ($key eq 'geometry');
+						}
 					}
 				}
-			} else {
+			} elsif(ref($value) eq 'HASH') {
 				foreach my $key(keys(%{$value})) {
 					delete $value->{$key} unless ($key eq 'geometry');
 				}
 			}
 			$self->{'cache'}->set($key, $value, '1 month');
 		}
+		return $value;
 	}
 
 	if(my $rc = $locations{$key}) {
