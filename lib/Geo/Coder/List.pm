@@ -236,7 +236,7 @@ sub geocode {
 			CORE::push @{$self->{'log'}}, $log;
 			Carp::carp(ref($geocoder), " '$location': $@");
 			$error = $@;
-			next;
+			next ENCODER;
 		}
 		if(scalar(@rc) == 0) {
 			my $log = {
@@ -248,7 +248,6 @@ sub geocode {
 				result => 'not found',
 			};
 			CORE::push @{$self->{'log'}}, $log;
-			@rc = ();
 			next ENCODER;
 		}
 		POSSIBLE_LOCATION: foreach my $l(@rc) {
@@ -267,7 +266,6 @@ sub geocode {
 					result => 'not found',
 				};
 				CORE::push @{$self->{'log'}}, $log;
-				@rc = ();
 				next ENCODER;
 			}
 			print Data::Dumper->new([\$l])->Dump() if(DEBUG >= 2);
@@ -283,7 +281,6 @@ sub geocode {
 					error => $l->{'error'}
 				};
 				CORE::push @{$self->{'log'}}, $log;
-				@rc = ();
 				next ENCODER;
 			} else {
 				# Try to create a common interface, helps with HTML::GoogleMaps::V3
