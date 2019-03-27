@@ -405,9 +405,43 @@ sub ua {
 	}
 }
 
+=head2 reverse_geocode
+
+Similar to geocode except it expects a latitude/longitude parameter.
+
+    print $geocoder_list->reverse_geocode(latlng => '37.778907,-122.39732');
+
+=cut
+
+sub reverse_geocode {
+	my $self = shift;
+	my @params = @_;
+
+	foreach my $g(@{$self->{geocoders}}) {
+		if(wantarray) {
+			my @rc;
+			if(my @locs = $g->reverse_geocode(@params)) {
+				foreach my $loc(@locs) {
+					# OSM
+					if(my $name = $loc->{'display_name'}) {
+						CORE::push @rc, $name;
+					}
+				}
+			}
+			return @rc;
+		} elsif(my $rc = $g->reverse_geocode(@params)) {
+			# OSM
+			if($rc = $rc->{'display_name'}) {
+				return $rc;
+			}
+		}
+	}
+}
+
 =head2 log
 
-Returns the log of events to help you debug failures, optimize lookup order and fix quota breakage
+Returns the log of events to help you debug failures,
+optimize lookup order and fix quota breakage.
 
     my @log = @{$geocoderlist->log()};
 
@@ -476,7 +510,8 @@ L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Coder-List>.
 I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-There is no reverse_geocode() yet.
+reverse_geocode() doesn't update the logger.
+reverse_geocode() should support L<Geo::Location::Point> objects.
 
 =head1 SEE ALSO
 
