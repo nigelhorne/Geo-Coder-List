@@ -186,18 +186,11 @@ sub geocode {
 
 	ENCODER: foreach my $g(@{$self->{geocoders}}) {
 		my $geocoder = $g;
-		if((ref($geocoder) eq 'HASH') && exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
-			print "limit: $limit\n" if(DEBUG);
-			if($limit <= 0) {
-				next ENCODER;
-			}
-			$geocoder->{'limit'}--;
-		}
 		if(ref($geocoder) eq 'HASH') {
 			if(exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
 				print "limit: $limit\n" if(DEBUG);
 				if($limit <= 0) {
-					next ENCODER;
+					next;
 				}
 				$geocoder->{'limit'}--;
 			}
@@ -418,9 +411,20 @@ sub reverse_geocode {
 	my @params = @_;
 
 	foreach my $g(@{$self->{geocoders}}) {
+		my $geocoder = $g;
+		if(ref($geocoder) eq 'HASH') {
+			if(exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
+				print "limit: $limit\n" if(DEBUG);
+				if($limit <= 0) {
+					next;
+				}
+				$geocoder->{'limit'}--;
+			}
+			$geocoder = $g->{'geocoder'};
+		}
 		if(wantarray) {
 			my @rc;
-			if(my @locs = $g->reverse_geocode(@params)) {
+			if(my @locs = $geocoder->reverse_geocode(@params)) {
 				foreach my $loc(@locs) {
 					# OSM
 					if(my $name = $loc->{'display_name'}) {
@@ -429,7 +433,7 @@ sub reverse_geocode {
 				}
 			}
 			return @rc;
-		} elsif(my $rc = $g->reverse_geocode(@params)) {
+		} elsif(my $rc = $geocoder->reverse_geocode(@params)) {
 			# OSM
 			if($rc = $rc->{'display_name'}) {
 				return $rc;
