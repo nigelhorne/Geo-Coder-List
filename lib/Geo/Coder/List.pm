@@ -425,18 +425,90 @@ sub reverse_geocode {
 		if(wantarray) {
 			my @rc;
 			if(my @locs = $geocoder->reverse_geocode(@params)) {
+				print Data::Dumper->new([\@locs])->Dump() if(DEBUG >= 2);
 				foreach my $loc(@locs) {
-					# OSM
 					if(my $name = $loc->{'display_name'}) {
+						# OSM
+						CORE::push @rc, $name;
+					} elsif( $loc->{'city'}) {
+						# Geo::Coder::CA
+						my $name;
+						if(my $usa = $loc->{'usa'}) {
+							$name = $usa->{'usstnumber'};
+							if(my $staddress = $usa->{'usstaddress'}) {
+								$name .= ' ' if($name);
+								$name .= $staddress;
+							}
+							if(my $city = $usa->{'uscity'}) {
+								$name .= ', ' if($name);
+								$name .= $city;
+							}
+							if(my $state = $usa->{'state'}) {
+								$name .= ', ' if($name);
+								$name .= $state;
+							}
+							$name .= ', ' if($name);
+							$name .= 'USA';
+						} else {
+							$name = $loc->{'stnumber'};
+							if(my $staddress = $loc->{'staddress'}) {
+								$name .= ' ' if($name);
+								$name .= $staddress;
+							}
+							if(my $city = $loc->{'city'}) {
+								$name .= ', ' if($name);
+								$name .= $city;
+							}
+							if(my $state = $loc->{'prov'}) {
+								$state .= ', ' if($name);
+								$name .= $state;
+							}
+						}
 						CORE::push @rc, $name;
 					}
 				}
 			}
 			return @rc;
 		} elsif(my $rc = $geocoder->reverse_geocode(@params)) {
-			# OSM
-			if($rc = $rc->{'display_name'}) {
-				return $rc;
+			print Data::Dumper->new([$rc])->Dump() if(DEBUG >= 2);
+			if($rc->{'display_name'}) {
+				# OSM
+				return $rc->{'display_name'};
+			} elsif($rc->{'city'}) {
+				# Geo::Coder::CA
+				my $name;
+				if(my $usa = $rc->{'usa'}) {
+					$name = $usa->{'usstnumber'};
+					if(my $staddress = $usa->{'usstaddress'}) {
+						$name .= ' ' if($name);
+						$name .= $staddress;
+					}
+					if(my $city = $usa->{'uscity'}) {
+						$name .= ', ' if($name);
+						$name .= $city;
+					}
+					if(my $state = $usa->{'state'}) {
+						$name .= ', ' if($name);
+						$name .= $state;
+					}
+					$name .= ', ' if($name);
+					return "$name, USA";
+				} else {
+					$name = $rc->{'stnumber'};
+					if(my $staddress = $rc->{'staddress'}) {
+						$name .= ' ' if($name);
+						$name .= $staddress;
+					}
+					if(my $city = $rc->{'city'}) {
+						$name .= ', ' if($name);
+						$name .= $city;
+					}
+					if(my $state = $rc->{'prov'}) {
+						$state .= ', ' if($name);
+						return "$name $state";
+					}
+				}
+				return $name;
 			}
 		}
 	}
