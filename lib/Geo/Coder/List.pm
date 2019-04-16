@@ -422,6 +422,7 @@ sub reverse_geocode {
 			}
 			$geocoder = $g->{'geocoder'};
 		}
+		print 'trying ', ref($geocoder), "\n" if(DEBUG);
 		if(wantarray) {
 			my @rc;
 			if(my @locs = $geocoder->reverse_geocode(@params)) {
