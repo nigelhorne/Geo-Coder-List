@@ -492,7 +492,6 @@ sub reverse_geocode {
 						$name .= ', ' if($name);
 						$name .= $state;
 					}
-					$name .= ', ' if($name);
 					return "$name, USA";
 				} else {
 					$name = $rc->{'stnumber'};
