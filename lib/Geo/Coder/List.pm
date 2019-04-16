@@ -471,6 +471,7 @@ sub reverse_geocode {
 			}
 			return @rc;
 		} elsif(my $rc = $geocoder->reverse_geocode(@params)) {
+			return $rc if(!ref($rc));
 			print Data::Dumper->new([$rc])->Dump() if(DEBUG >= 2);
 			if($rc->{'display_name'}) {
 				# OSM
