@@ -408,7 +408,35 @@ Similar to geocode except it expects a latitude/longitude parameter.
 
 sub reverse_geocode {
 	my $self = shift;
-	my @params = @_;
+	my %params = @_;
+
+	if(ref($_[0]) eq 'HASH') {
+		%params = %{$_[0]};
+	} elsif(ref($_[0])) {
+		Carp::croak('Usage: geocode(location => $location)');
+	} elsif(@_ % 2 == 0) {
+		%params = @_;
+	} else {
+		$params{'latlng'} = shift;
+	}
+
+	my $latlng = $params{'latlng'}
+		or Carp::croak('Usage: reverse_geocode(latlng => $location)');
+
+	my $latitude;
+	my $longitude;
+
+	if($latlng) {
+		($latitude, $longitude) = split(/,/, $latlng);
+	} else {
+		$latitude //= $params{'lat'};
+		$longitude //= $params{'lon'};
+		$longitude //= $params{'long'};
+	}
+
+	if(my $rc = $self->_cache($latlng)) {
+		return $rc;
+	}
 
 	foreach my $g(@{$self->{geocoders}}) {
 		my $geocoder = $g;
@@ -425,13 +453,13 @@ sub reverse_geocode {
 		print 'trying ', ref($geocoder), "\n" if(DEBUG);
 		if(wantarray) {
 			my @rc;
-			if(my @locs = $geocoder->reverse_geocode(@params)) {
+			if(my @locs = $geocoder->reverse_geocode(%params)) {
 				print Data::Dumper->new([\@locs])->Dump() if(DEBUG >= 2);
 				foreach my $loc(@locs) {
 					if(my $name = $loc->{'display_name'}) {
 						# OSM
 						CORE::push @rc, $name;
-					} elsif( $loc->{'city'}) {
+					} elsif($loc->{'city'}) {
 						# Geo::Coder::CA
 						my $name;
 						if(my $usa = $loc->{'usa'}) {
@@ -469,13 +497,20 @@ sub reverse_geocode {
 					}
 				}
 			}
-			return @rc;
-		} elsif(my $rc = $geocoder->reverse_geocode(@params)) {
+			if(wantarray) {
+				$self->_cache($latlng, \@rc);
+				return @rc;
+			}
+			if(scalar($rc[0])) {	# check it's not an empty hash
+				$self->_cache($latlng, $rc[0]);
+				return $rc[0];
+			}
+		} elsif(my $rc = $geocoder->reverse_geocode(%params)) {
 			return $rc if(!ref($rc));
 			print Data::Dumper->new([$rc])->Dump() if(DEBUG >= 2);
-			if($rc->{'display_name'}) {
+			if(my $name = $rc->{'display_name'}) {
 				# OSM
-				return $rc->{'display_name'};
+				return $self->_cache($latlng, $name);
 			} elsif($rc->{'city'}) {
 				# Geo::Coder::CA
 				my $name;
@@ -493,7 +528,7 @@ sub reverse_geocode {
 						$name .= ', ' if($name);
 						$name .= $state;
 					}
-					return "$name, USA";
+					return $self->_cache($latlng, "$name, USA");
 				} else {
 					$name = $rc->{'stnumber'};
 					if(my $staddress = $rc->{'staddress'}) {
@@ -506,13 +541,14 @@ sub reverse_geocode {
 					}
 					if(my $state = $rc->{'prov'}) {
 						$state .= ', ' if($name);
-						return "$name $state";
+						return $self->_cache($latlng, "$name $state");
 					}
 				}
-				return $name;
+				return $self->_cache($latlng, $name);
 			}
 		}
 	}
+	return;
 }
 
 =head2 log
