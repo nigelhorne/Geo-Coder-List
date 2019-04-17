@@ -1,6 +1,6 @@
 Revision history for Geo-Coder-List
 
-0.24
+0.24	Wed 17 Apr 15:41:37 EDT 2019
 	Support the cache option
 	Test Geo::Coder::Free::Local
 	Started work on reverse_geocode()

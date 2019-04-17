@@ -16,11 +16,11 @@ Geo::Coder::List - Call many Geo-Coders
 
 =head1 VERSION
 
-Version 0.23
+Version 0.24
 
 =cut
 
-our $VERSION = '0.23';
+our $VERSION = '0.24';
 our %locations;	# L1 cache, always used
 
 =head1 SYNOPSIS
