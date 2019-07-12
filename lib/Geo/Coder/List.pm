@@ -347,11 +347,12 @@ sub geocode {
 
 		if(scalar(@rc)) {
 			print 'Number of matches from ', ref($geocoder), ': ', scalar(@rc), "\n" if(DEBUG);
-			if(wantarray) {
-				$self->_cache($location, \@rc);
-				return @rc;
-			}
-			if(scalar($rc[0])) {	# check it's not an empty hash
+			print Data::Dumper->new([\@rc])->Dump() if(DEBUG >= 2);
+			if(defined($rc[0])) {	# check it's not an empty hash
+				if(wantarray) {
+					$self->_cache($location, \@rc);
+					return @rc;
+				}
 				$self->_cache($location, $rc[0]);
 				return $rc[0];
 			}

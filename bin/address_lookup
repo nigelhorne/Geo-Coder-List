@@ -85,5 +85,6 @@ if((my $ckey = $ENV{'YAHOO_CONSUMER'}) && (my $skey = $ENV{'YAHOO_SECRET'})) {
 
 # print join(' ', @ARGV), "\n";
 my @locations = $geocoder->geocode(location => join(' ', @ARGV));
-# print Data::Dumper->new([\@locations, $geocoder->log()])->Dump();
-print Data::Dumper->new([$geocoder->log()])->Dump();
+print '-' x 40, "\n";
+print Data::Dumper->new([\@locations, $geocoder->log()])->Dump();
+# print Data::Dumper->new([$geocoder->log()])->Dump();
