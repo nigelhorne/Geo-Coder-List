@@ -543,7 +543,7 @@ sub reverse_geocode {
 						$name .= $city;
 					}
 					if(my $state = $rc->{'prov'}) {
-						$state .= ', ' if($name);
+						$state = ", $state" if($name);
 						return $self->_cache($latlng, "$name $state");
 					}
 				}
