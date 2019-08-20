@@ -3,20 +3,25 @@ os:
   - linux
   # - osx
 
+env: AUTOMATED_TESTING=1
+
 perl:
+  - "5.30"
   - "5.28"
   - "5.26"
   - "5.24"
   - "5.22"
-  - "5.20"
-  - "5.18"
-  - "5.16"
-  - "5.14"
-  - "5.12"
+  # - "5.20"
+  # - "5.18"
+  # - "5.16"
+  # - "5.14"
+  # - "5.12"
+
+sudo: false
 
 before_install:
-  - sudo apt-get update -q
-  - sudo apt-get install -y libdevel-cover-perl
+  # - sudo apt-get update -q
+  # - sudo apt-get install sqlite3 libdbi-perl libdbd-sqlite3-perl
   - cpanm -n Devel::Cover::Report::Coveralls Test::Pod::Coverage Test::Pod::Spelling::CommonMistakes JSON::XS
 
 install:
@@ -24,3 +29,18 @@ install:
 
 script:
   perl Makefile.PL && make && cover -test -report coveralls
+
+jobs:
+  include:
+    - stage: Windows
+      os: windows
+      language: shell
+      before_install:
+        - cinst -y strawberryperl
+        - export "PATH=/c/Strawberry/perl/site/bin:/c/Strawberry/perl/bin:/c/Strawberry/c/bin:$PATH"
+      install:
+        - cpanm --notest --installdeps .
+      script:
+        - perl Makefile.PL
+        - gmake
+        - gmake test
