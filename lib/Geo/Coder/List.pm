@@ -18,11 +18,11 @@ Geo::Coder::List - Call many Geo-Coders
 
 =head1 VERSION
 
-Version 0.25
+Version 0.26
 
 =cut
 
-our $VERSION = '0.25';
+our $VERSION = '0.26';
 our %locations;	# L1 cache, always used
 
 =head1 SYNOPSIS
@@ -597,15 +597,15 @@ sub _cache {
 			if(ref($value) eq 'ARRAY') {
 				foreach my $item(@{$value}) {
 					if(ref($item) eq 'HASH') {
-						foreach my $key(keys(%{$item})) {
-						# while(my($key, $value) = each %{$item}) {
+						# foreach my $key(keys(%{$item})) {
+						while(my($key, $value) = each %{$item}) {
 							delete $item->{$key} unless($key eq 'geometry');
 						}
 					}
 				}
 			} elsif(ref($value) eq 'HASH') {
-				foreach my $key(keys(%{$value})) {
-				# while(my($key, $value) = each %{$value}) {
+				# foreach my $key(keys(%{$value})) {
+				while(my($key, $value) = each %{$value}) {
 					delete $value->{$key} unless ($key eq 'geometry');
 				}
 			}
@@ -671,7 +671,7 @@ L<http://search.cpan.org/dist/Geo-Coder-List/>
 
 Copyright 2016-2019 Nigel Horne.
 
-This program is released under the following licence: GPL
+This program is released under the following licence: GPL2
 
 =cut
 
