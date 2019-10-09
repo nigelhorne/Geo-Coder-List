@@ -306,9 +306,15 @@ sub geocode {
 						$l->{geometry}{location}{lat} = $l->{properties}{geoLatitude};
 						$l->{geometry}{location}{lng} = $l->{properties}{geoLongitude};
 					} elsif($l->{'results'}[0]->{'geometry'}) {
-						# DataScienceToolkit
-						$l->{'geometry'}{'location'}{'lat'} = $l->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
-						$l->{'geometry'}{'location'}{'lng'} = $l->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+						if($l->{'results'}[0]->{'geometry'}->{'location'}) {
+							# DataScienceToolkit
+							$l->{'geometry'}{'location'}{'lat'} = $l->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+							$l->{'geometry'}{'location'}{'lng'} = $l->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+						} else {
+							# OpenCage
+							$l->{'geometry'}{'location'}{'lat'} = $l->{'results'}[0]->{'geometry'}->{'lat'};
+							$l->{'geometry'}{'location'}{'lng'} = $l->{'results'}[0]->{'geometry'}->{'lng'};
+						}
 					} elsif($l->{'RESULTS'}) {
 						# GeoCodeFarm
 						$l->{geometry}{location}{lat} = $l->{'RESULTS'}[0]{'COORDINATES'}{'latitude'};

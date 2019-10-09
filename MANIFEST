@@ -17,6 +17,7 @@ t/coverage.t
 t/critic.t
 t/cv.t
 t/dist.t
+t/free.t
 t/geofarm.t
 t/geonames.t
 t/google.t
@@ -26,6 +27,7 @@ t/kwalitee.t
 t/list.t
 t/manifest.t
 t/noplan.t
+t/opencage.t
 t/osm.t
 t/ovi.t
 t/pod-cm.t
