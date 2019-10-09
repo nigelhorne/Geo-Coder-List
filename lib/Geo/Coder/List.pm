@@ -417,12 +417,12 @@ Similar to geocode except it expects a latitude/longitude parameter.
 
 sub reverse_geocode {
 	my $self = shift;
-	my %params = @_;
+	my %params;
 
 	if(ref($_[0]) eq 'HASH') {
 		%params = %{$_[0]};
 	} elsif(ref($_[0])) {
-		Carp::croak('Usage: geocode(location => $location)');
+		Carp::croak('Usage: reverse_geocode(location => $location)');
 	} elsif(@_ % 2 == 0) {
 		%params = @_;
 	} else {
@@ -598,12 +598,14 @@ sub _cache {
 				foreach my $item(@{$value}) {
 					if(ref($item) eq 'HASH') {
 						foreach my $key(keys(%{$item})) {
-							delete $item->{$key} unless ($key eq 'geometry');
+						# while(my($key, $value) = each %{$item}) {
+							delete $item->{$key} unless($key eq 'geometry');
 						}
 					}
 				}
 			} elsif(ref($value) eq 'HASH') {
 				foreach my $key(keys(%{$value})) {
+				# while(my($key, $value) = each %{$value}) {
 					delete $value->{$key} unless ($key eq 'geometry');
 				}
 			}
@@ -637,9 +639,9 @@ reverse_geocode() should support L<Geo::Location::Point> objects.
 
 =head1 SEE ALSO
 
-L<Geo::Coder::Many>
 L<Geo::Coder::All>
 L<Geo::Coder::GooglePlaces>
+L<Geo::Coder::Many>
 
 =head1 SUPPORT
 
@@ -654,10 +656,6 @@ You can also look for information at:
 =item * RT: CPAN's request tracker
 
 L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Geo-Coder-List>
 
 =item * CPAN Ratings
 

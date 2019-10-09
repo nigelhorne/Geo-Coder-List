@@ -19,6 +19,7 @@ use Geo::Coder::Free;
 use Geo::Coder::Free::Local;
 use Geo::Coder::GooglePlaces;
 use Geo::Coder::List;
+use Geo::Coder::OpenCage;
 use Geo::Coder::OSM;
 use Geo::Coder::Ovi;
 use Geo::Coder::Postcodes;
@@ -71,6 +72,9 @@ $geocoder->push({ regex => qr/(USA|US|United States)$/i, geocoder => Geo::Coder:
 	->push(Geo::Coder::Ovi->new());
 	# ->push(Geo::Coder::GeocodeFarm->new());	# Needs GT#1 to be fixed
 
+if(my $key = $ENV{'GEO_CODER_OPENCAGE_API_KEY'}) {
+	$geocoder->push({ limit => 200, geocoder => Geo::Coder::OpenCage->new(api_key => $key) });
+}
 if(my $key = $ENV{'GMAP_KEY'}) {
 	$geocoder->push({ limit => 200, geocoder => Geo::Coder::GooglePlaces->new(key => $key, api_key => $key) });
 }
