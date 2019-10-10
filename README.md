@@ -1,8 +1,7 @@
 [![Linux Build Status](https://travis-ci.org/nigelhorne/Geo-Coder-List.svg?branch=master)](https://travis-ci.org/nigelhorne/Geo-Coder-List)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/naayd09612e10llw/branch/master?svg=true)](https://ci.appveyor.com/project/nigelhorne/geo-coder-list/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/nigelhorne/Geo-Coder-List/badge.svg?branch=master)](https://coveralls.io/github/nigelhorne/Geo-Coder-List?branch=master)
-[![Dependency Status](https://dependencyci.com/github/nigelhorne/Geo-Coder-List/badge)](https://dependencyci.com/github/nigelhorne/Geo-Coder-List)
-[![CPAN](https://img.shields.io/cpan/v/Geo-Coder-List.svg)](http://search.cpan.org/~nhorne/Geo-Coder-List/)
+[![CPAN](https://img.shields.io/cpan/v/Geo-Coder-List.svg)](https://metacpan.org/release/Geo-Coder-List)
 
 # NAME
 
@@ -118,7 +117,7 @@ Nigel Horne, `<njh at bandsman.co.uk>`
 
 Please report any bugs or feature requests to `bug-geo-coder-list at rt.cpan.org`,
 or through the web interface at
-[http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Coder-List](http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Coder-List).
+[https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Coder-List](https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Coder-List).
 I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
@@ -141,15 +140,15 @@ You can also look for information at:
 
 - RT: CPAN's request tracker
 
-    [http://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List](http://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List)
+    [https://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List](https://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List)
 
 - CPAN Ratings
 
-    [http://cpanratings.perl.org/d/Geo-Coder-List](http://cpanratings.perl.org/d/Geo-Coder-List)
+    [https://cpanratings.perl.org/d/Geo-Coder-List](https://cpanratings.perl.org/d/Geo-Coder-List)
 
-- Search CPAN
+- MetaCPAN
 
-    [http://search.cpan.org/dist/Geo-Coder-List/](http://search.cpan.org/dist/Geo-Coder-List/)
+    [https://metacpan.org/release/Geo-Coder-List](https://metacpan.org/release/Geo-Coder-List)
 
 # LICENSE AND COPYRIGHT
 
