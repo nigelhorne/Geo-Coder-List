@@ -630,7 +630,7 @@ Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 Please report any bugs or feature requests to C<bug-geo-coder-list at rt.cpan.org>,
 or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Coder-List>.
+L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geo-Coder-List>.
 I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
@@ -655,15 +655,15 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List>
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Geo-Coder-List>
+L<https://cpanratings.perl.org/d/Geo-Coder-List>
 
-=item * Search CPAN
+=item * MetaCPAN
 
-L<http://search.cpan.org/dist/Geo-Coder-List/>
+L<https://metacpan.org/release/Geo-Coder-List>
 
 =back
 
