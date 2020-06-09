@@ -1,5 +1,8 @@
 Revision history for Geo-Coder-List
 
+0.27
+	Added debug option to the construtor
+
 0.26	Wed  9 Oct 17:36:41 EDT 2019
 	Fix reverse_coding of Canada
 	Added support for OpenCage

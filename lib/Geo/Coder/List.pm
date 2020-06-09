@@ -8,7 +8,7 @@ use Carp;
 use Time::HiRes;
 use HTML::Entities;
 
-use constant DEBUG => 0;	# The higher the number, the more is debugged
+use constant DEBUG => 0;	# Default debugging level
 
 # TODO: investigate Geo, Coder::ArcGIS
 
@@ -42,6 +42,9 @@ Creates a Geo::Coder::List object.
 
 Takes an optional argument 'cache' which takes an cache object that supports
 get() and set() methods.
+Takes an optional argument 'debug',
+the higher the number,
+the more debugging.
 The licences of some geo coders,
 such as Google,
 specifically prohibit caching API calls,
@@ -62,7 +65,7 @@ sub new {
 
 	my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
 
-	return bless { %args, geo_coders => [] }, $class;
+	return bless { debug => DEBUG, %args, geo_coders => [] }, $class;
 }
 
 =head2 push
@@ -140,7 +143,7 @@ sub geocode {
 	$location = decode_entities($location);
 
 	my @call_details = caller(0);
-	print "location: $location\n" if(DEBUG);
+	print "location: $location\n" if($self->{'debug'});
 	if((!wantarray) && (my $rc = $self->_cache($location))) {
 		if(ref($rc) eq 'ARRAY') {
 			$rc = @{$rc}[0];
@@ -155,7 +158,7 @@ sub geocode {
 				result => $rc
 			};
 			CORE::push @{$self->{'log'}}, $log;
-			print "cached\n" if(DEBUG);
+			print "cached\n" if($self->{'debug'});
 			return $rc;
 		}
 	}
@@ -176,7 +179,7 @@ sub geocode {
 				result => \@rc
 			};
 			CORE::push @{$self->{'log'}}, $log;
-			print "cached\n" if(DEBUG);
+			print "cached\n" if($self->{'debug'});
 			if($allempty) {
 				return;
 			}
@@ -190,14 +193,14 @@ sub geocode {
 		my $geocoder = $g;
 		if(ref($geocoder) eq 'HASH') {
 			if(exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
-				print "limit: $limit\n" if(DEBUG);
+				print "limit: $limit\n" if($self->{'debug'});
 				if($limit <= 0) {
 					next;
 				}
 				$geocoder->{'limit'}--;
 			}
 			if(my $regex = $geocoder->{'regex'}) {
-				print 'consider ', ref($geocoder->{geocoder}), ": $regex\n" if(DEBUG);
+				print 'consider ', ref($geocoder->{geocoder}), ": $regex\n" if($self->{'debug'});
 				if($location !~ $regex) {
 					next;
 				}
@@ -209,9 +212,9 @@ sub geocode {
 		eval {
 			# e.g. over QUERY LIMIT with this one
 			# TODO: remove from the list of geocoders
-			print 'trying ', ref($geocoder), "\n" if(DEBUG);
+			print 'trying ', ref($geocoder), "\n" if($self->{'debug'});
 			if(ref($geocoder) eq 'Geo::GeoNames') {
-				print 'username => ', $geocoder->username(), "\n" if(DEBUG);
+				print 'username => ', $geocoder->username(), "\n" if($self->{'debug'});
 				die 'lost username' if(!defined($geocoder->username()));
 				@rc = $geocoder->geocode($location);
 			} else {
@@ -263,7 +266,7 @@ sub geocode {
 				CORE::push @{$self->{'log'}}, $log;
 				next ENCODER;
 			}
-			print Data::Dumper->new([\$l])->Dump() if(DEBUG >= 2);
+			print Data::Dumper->new([\$l])->Dump() if($self->{'debug'} >= 2);
 			last if(ref($l) eq 'Geo::Location::Point');
 			next if(ref($l) ne 'HASH');
 			if($l->{'error'}) {
@@ -335,7 +338,7 @@ sub geocode {
 					}
 				}
 				if(defined($l->{geometry}{location}{lat})) {
-					print $l->{geometry}{location}{lat}, '/', $l->{geometry}{location}{lng}, "\n" if(DEBUG);
+					print $l->{geometry}{location}{lat}, '/', $l->{geometry}{location}{lng}, "\n" if($self->{'debug'});
 					$l->{geocoder} = $geocoder;
 					my $log = {
 						line => $call_details[2],
@@ -352,8 +355,8 @@ sub geocode {
 		}
 
 		if(scalar(@rc)) {
-			print 'Number of matches from ', ref($geocoder), ': ', scalar(@rc), "\n" if(DEBUG);
-			print Data::Dumper->new([\@rc])->Dump() if(DEBUG >= 2);
+			print 'Number of matches from ', ref($geocoder), ': ', scalar(@rc), "\n" if($self->{'debug'});
+			print Data::Dumper->new([\@rc])->Dump() if($self->{'debug'} >= 2);
 			if(defined($rc[0])) {	# check it's not an empty hash
 				if(wantarray) {
 					$self->_cache($location, \@rc);
@@ -451,7 +454,7 @@ sub reverse_geocode {
 		my $geocoder = $g;
 		if(ref($geocoder) eq 'HASH') {
 			if(exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
-				print "limit: $limit\n" if(DEBUG);
+				print "limit: $limit\n" if($self->{'debug'});
 				if($limit <= 0) {
 					next;
 				}
@@ -459,11 +462,11 @@ sub reverse_geocode {
 			}
 			$geocoder = $g->{'geocoder'};
 		}
-		print 'trying ', ref($geocoder), "\n" if(DEBUG);
+		print 'trying ', ref($geocoder), "\n" if($self->{'debug'});
 		if(wantarray) {
 			my @rc;
 			if(my @locs = $geocoder->reverse_geocode(%params)) {
-				print Data::Dumper->new([\@locs])->Dump() if(DEBUG >= 2);
+				print Data::Dumper->new([\@locs])->Dump() if($self->{'debug'} >= 2);
 				foreach my $loc(@locs) {
 					if(my $name = $loc->{'display_name'}) {
 						# OSM
@@ -516,7 +519,7 @@ sub reverse_geocode {
 			}
 		} elsif(my $rc = $geocoder->reverse_geocode(%params)) {
 			return $rc if(!ref($rc));
-			print Data::Dumper->new([$rc])->Dump() if(DEBUG >= 2);
+			print Data::Dumper->new([$rc])->Dump() if($self->{'debug'} >= 2);
 			if(my $name = $rc->{'display_name'}) {
 				# OSM
 				return $self->_cache($latlng, $name);
@@ -669,7 +672,7 @@ L<https://metacpan.org/release/Geo-Coder-List>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016-2019 Nigel Horne.
+Copyright 2016-2020 Nigel Horne.
 
 This program is released under the following licence: GPL2
 
