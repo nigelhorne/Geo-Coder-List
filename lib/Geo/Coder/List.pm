@@ -11,6 +11,7 @@ use HTML::Entities;
 use constant DEBUG => 0;	# Default debugging level
 
 # TODO: investigate Geo, Coder::ArcGIS
+# TODO: return a Geo::Location::Point object all the time
 
 =head1 NAME
 
