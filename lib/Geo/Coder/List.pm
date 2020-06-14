@@ -596,8 +596,10 @@ sub _cache {
 	my $key = shift;
 
 	if(my $value = shift) {
+		# Put somthing into the cache
 		$locations{$key} = $value;
 		if($self->{'cache'}) {
+			my $duration;
 			if(ref($value) eq 'ARRAY') {
 				foreach my $item(@{$value}) {
 					if(ref($item) eq 'HASH') {
@@ -605,19 +607,46 @@ sub _cache {
 						while(my($key, $value) = each %{$item}) {
 							delete $item->{$key} unless($key eq 'geometry');
 						}
+						if(!defined($item->{geometry}{location}{lat})) {
+							if(defined($item->{geometry})) {
+								# Maybe a temporary lookup failure,
+								# so do a research tomorrow
+								$duration = '1 day';
+							} else {
+								# Probably the place doesn't exist
+								$duration = '1 week';
+							}
+						}
 					}
+				}
+				if(!defined($duration)) {
+					# Has matched - it won't move
+					$duration = '1 month';
 				}
 			} elsif(ref($value) eq 'HASH') {
 				# foreach my $key(keys(%{$value})) {
 				while(my($key, $value) = each %{$value}) {
 					delete $value->{$key} unless ($key eq 'geometry');
 				}
+				if(defined($value->{geometry}{location}{lat})) {
+					$duration = '1 month';	# It won't move :-)
+				} elsif(defined($value->{geometry})) {
+					# Maybe a temporary lookup failure, so do a research
+					# tomorrow
+					$duration = '1 day';
+				} else {
+					# Probably the place doesn't exist
+					$duration = '1 week';
+				}
+			} else {
+				$duration = '1 month';
 			}
 			$self->{'cache'}->set($key, $value, '1 month');
 		}
 		return $value;
 	}
 
+	# Retrieve from the cache
 	if(my $rc = $locations{$key}) {
 		return $rc;
 	}

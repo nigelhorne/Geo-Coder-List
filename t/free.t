@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 14;
+use Test::Most tests => 12;
 use Test::NoWarnings;
 use Test::Deep;
 
@@ -77,18 +77,13 @@ FREE: {
 			methods('lat' => num(51.47, 1e-2), 'long' => num(0.20, 1e-2)));
 
 		if($ENV{'OPENADDR_HOME'}) {
-			$location = $geo_coder_list->geocode('1363 Kelly Road, Coal City, Owen, Indiana, USA');
-			ok(defined($location));
-			cmp_deeply($location,
-				methods('lat' => num(39.27, 1e-2), 'long' => num(-87.03, 1e-2)));
-
 			$location = $geo_coder_list->geocode(location => 'Margate, Kent, England');
 			ok(defined($location));
 			cmp_deeply($location,
-				methods('lat' => num(51.38, 1e-2), 'long' => num(1.39, 1e-2)));
+				methods('lat' => num(51.38, 1e-2), 'long' => num(1.38, 1e-2)));
 		} else {
 			SKIP: {
-				skip('Set OPENADDR_HOME to enable extra tests', 4);
+				skip('Set OPENADDR_HOME to enable extra tests', 2);
 			}
 		}
 
