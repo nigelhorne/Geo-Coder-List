@@ -652,11 +652,14 @@ sub _cache {
 	}
 	if($self->{'cache'}) {
 		my $rc = $self->{'cache'}->get($key);
-		if(defined($rc->{geometry}{location})) {
-			return $rc;
+		if(ref($rc) eq 'HASH') {
+			if(!defined($rc->{geometry}{location})) {
+				# This data is of no use - remove it
+				$self->{'cache'}->remove($key);
+				return;
+			}
 		}
-		# This data is of no use - remove it
-		$self->{'cache'}->remove($key);
+		return $rc;
 	}
 }
 
