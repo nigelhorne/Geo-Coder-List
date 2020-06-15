@@ -167,7 +167,15 @@ sub geocode {
 		if(scalar(@rc)) {
 			my $allempty = 1;
 			foreach (@rc) {
-				if((ref($_) eq 'HASH') || (ref($_) eq 'Geo::Location::Point')) {
+				if(ref($_) eq 'HASH') {
+					if(defined($_->{geometry}{location}{lat})) {
+						$allempty = 0;
+						delete $_->{'geocoder'};
+					} else {
+						delete $_->{'geometry'};
+
+					}
+				} elsif(ref($_) eq 'Geo::Location::Point') {
 					$allempty = 0;
 					delete $_->{'geocoder'};
 				}
@@ -267,7 +275,8 @@ sub geocode {
 				CORE::push @{$self->{'log'}}, $log;
 				next ENCODER;
 			}
-			print Data::Dumper->new([\$l])->Dump() if($self->{'debug'} >= 2);
+			print ref($geocoder), ': ',
+				Data::Dumper->new([\$l])->Dump() if($self->{'debug'} >= 2);
 			last if(ref($l) eq 'Geo::Location::Point');
 			next if(ref($l) ne 'HASH');
 			if($l->{'error'}) {
@@ -600,6 +609,7 @@ sub _cache {
 		$locations{$key} = $value;
 		if($self->{'cache'}) {
 			my $duration;
+			my $rc = $value;
 			if(ref($value) eq 'ARRAY') {
 				foreach my $item(@{$value}) {
 					if(ref($item) eq 'HASH') {
@@ -616,6 +626,7 @@ sub _cache {
 								# Probably the place doesn't exist
 								$duration = '1 week';
 							}
+							$rc = undef;
 						}
 					}
 				}
@@ -634,9 +645,11 @@ sub _cache {
 					# Maybe a temporary lookup failure, so do a research
 					# tomorrow
 					$duration = '1 day';
+					$rc = undef;
 				} else {
 					# Probably the place doesn't exist
 					$duration = '1 week';
+					$rc = undef;
 				}
 			} else {
 				$duration = '1 month';
@@ -652,12 +665,8 @@ sub _cache {
 	}
 	if($self->{'cache'}) {
 		my $rc = $self->{'cache'}->get($key);
-		if(ref($rc) eq 'HASH') {
-			if(!defined($rc->{geometry}{location})) {
-				# This data is of no use - remove it
-				$self->{'cache'}->remove($key);
-				return;
-			}
+		if((ref($rc) eq 'HASH') && !defined($rc->{geometry}{location}{lat})) {
+			return;
 		}
 		return $rc;
 	}
