@@ -173,7 +173,6 @@ sub geocode {
 						delete $_->{'geocoder'};
 					} else {
 						delete $_->{'geometry'};
-
 					}
 				} elsif(ref($_) eq 'Geo::Location::Point') {
 					$allempty = 0;
