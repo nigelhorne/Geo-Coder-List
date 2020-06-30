@@ -613,8 +613,8 @@ sub _cache {
 				foreach my $item(@{$value}) {
 					if(ref($item) eq 'HASH') {
 						if(!$self->{'debug'}) {
-							while(my($key, $value) = each %{$item}) {
-								delete $item->{$key} unless($key eq 'geometry');
+							while(my($k, $v) = each %{$item}) {
+								delete $item->{$k} unless($k eq 'geometry');
 							}
 						}
 						if(!defined($item->{geometry}{location}{lat})) {
@@ -636,8 +636,8 @@ sub _cache {
 				}
 			} elsif(ref($value) eq 'HASH') {
 				if(!$self->{'debug'}) {
-					while(my($key, $value) = each %{$value}) {
-						delete $value->{$key} unless ($key eq 'geometry');
+					while(my($k, $v) = each %{$value}) {
+						delete $value->{$k} unless ($k eq 'geometry');
 					}
 				}
 				if(defined($value->{geometry}{location}{lat})) {
