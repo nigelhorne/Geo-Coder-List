@@ -612,9 +612,10 @@ sub _cache {
 			if(ref($value) eq 'ARRAY') {
 				foreach my $item(@{$value}) {
 					if(ref($item) eq 'HASH') {
-						# foreach my $key(keys(%{$item})) {
-						while(my($key, $value) = each %{$item}) {
-							delete $item->{$key} unless($key eq 'geometry');
+						if(!$self->{'debug'}) {
+							while(my($key, $value) = each %{$item}) {
+								delete $item->{$key} unless($key eq 'geometry');
+							}
 						}
 						if(!defined($item->{geometry}{location}{lat})) {
 							if(defined($item->{geometry})) {
@@ -634,9 +635,10 @@ sub _cache {
 					$duration = '1 month';
 				}
 			} elsif(ref($value) eq 'HASH') {
-				# foreach my $key(keys(%{$value})) {
-				while(my($key, $value) = each %{$value}) {
-					delete $value->{$key} unless ($key eq 'geometry');
+				if(!$self->{'debug'}) {
+					while(my($key, $value) = each %{$value}) {
+						delete $value->{$key} unless ($key eq 'geometry');
+					}
 				}
 				if(defined($value->{geometry}{location}{lat})) {
 					$duration = '1 month';	# It won't move :-)
