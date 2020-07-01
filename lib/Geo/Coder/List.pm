@@ -659,7 +659,7 @@ sub _cache {
 			} else {
 				$duration = '1 month';
 			}
-			print Data::Dumper->new([$value])->Dump();
+			print Data::Dumper->new([$value])->Dump() if($self->{'debug'});
 			$self->{'cache'}->set($key, $value, '1 month');
 		}
 		return $value;
