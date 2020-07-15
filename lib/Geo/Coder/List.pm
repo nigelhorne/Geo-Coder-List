@@ -668,19 +668,14 @@ sub _cache {
 	}
 
 	# Retrieve from the cache
-	if(my $rc = $locations{$key}) {
-		if((ref($rc) eq 'HASH') && !defined($rc->{geometry}{location}{lat})) {
-			return;
-		}
-		return $rc;
+	my $rc = $locations{$key};
+	if((!defined($rc)) && $self->{'cache'}) {
+		$rc = $self->{'cache'}->get($key);
 	}
-	if($self->{'cache'}) {
-		my $rc = $self->{'cache'}->get($key);
-		if((ref($rc) eq 'HASH') && !defined($rc->{geometry}{location}{lat})) {
-			return;
-		}
-		return $rc;
+	if(defined($rc) && (ref($rc) eq 'HASH') && !defined($rc->{geometry}{location}{lat})) {
+		return;
 	}
+	return $rc;
 }
 
 =head1 AUTHOR
