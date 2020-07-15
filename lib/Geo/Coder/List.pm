@@ -668,8 +668,8 @@ sub _cache {
 	}
 
 	# Retrieve from the cache
-	my $rc = $locations{$key};
-	if((!defined($rc)) && $self->{'cache'}) {
+	my $rc = $locations{$key};	# In the L1 cache?
+	if((!defined($rc)) && $self->{'cache'}) {	# In the L2 cache?
 		$rc = $self->{'cache'}->get($key);
 	}
 	if(defined($rc) && (ref($rc) eq 'HASH') && !defined($rc->{geometry}{location}{lat})) {
