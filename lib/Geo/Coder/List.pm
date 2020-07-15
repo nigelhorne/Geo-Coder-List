@@ -669,6 +669,9 @@ sub _cache {
 
 	# Retrieve from the cache
 	if(my $rc = $locations{$key}) {
+		if((ref($rc) eq 'HASH') && !defined($rc->{geometry}{location}{lat})) {
+			return;
+		}
 		return $rc;
 	}
 	if($self->{'cache'}) {
