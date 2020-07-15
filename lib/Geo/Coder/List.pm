@@ -664,7 +664,7 @@ sub _cache {
 			print Data::Dumper->new([$value])->Dump() if($self->{'debug'});
 			$self->{'cache'}->set($key, $value, '1 month');
 		}
-		return $value;
+		return $rc;
 	}
 
 	# Retrieve from the cache
