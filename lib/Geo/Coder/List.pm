@@ -608,9 +608,9 @@ sub _cache {
 	if(my $value = shift) {
 		# Put somthing into the cache
 		$locations{$key} = $value;
+		my $rc = $value;
 		if($self->{'cache'}) {
 			my $duration;
-			my $rc = $value;
 			if(ref($value) eq 'ARRAY') {
 				foreach my $item(@{$value}) {
 					if(ref($item) eq 'HASH') {
