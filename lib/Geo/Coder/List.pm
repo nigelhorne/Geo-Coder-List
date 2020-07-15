@@ -339,6 +339,8 @@ sub geocode {
 						# Geo::GeoNames
 						$l->{geometry}{location}{lat} = $l->{lat};
 						$l->{geometry}{location}{lng} = $l->{lng};
+					} else {
+						delete $l->{'geometry'};
 					}
 
 					if($l->{'standard'}{'countryname'}) {
