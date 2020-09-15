@@ -88,7 +88,10 @@ sub are_online
 		Timeout => 10
 	);
 	if($s) {
-		return 1 if($ENV{'PERL_MM_USE_DEFAULT'});
+		if($ENV{'PERL_MM_USE_DEFAULT'}) {
+			close($s);
+			return 1;
+		}
 
 		print <<EOF;
 
