@@ -86,6 +86,9 @@ WriteMakefile(
 
 sub are_online
 {
+	if($ENV{'PERL_MM_USE_DEFAULT'}) {
+		return ;
+	}
 	my $s = IO::Socket::INET->new(
 		PeerAddr => 'openstreetmap.org:443',
 		Timeout => 10
