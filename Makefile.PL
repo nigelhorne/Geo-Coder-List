@@ -8,18 +8,12 @@ my $online_tests;
 
 if($ENV{AUTHOR_TESTING}) {
 	$online_tests = are_online();
-} elsif($ENV{AUTOMATED_TESTING} || $ENV{NO_NETWORK_TESTING} || (!-t STDIN)) {
-	$online_tests = 0;
 } else {
 	Getopt::Long::GetOptions('online-tests!' => \$online_tests);
 
 	if(!defined($online_tests)) {
-		if($ENV{AUTHOR_TESTING}) {
-			$online_tests = are_online();
-		} else {
-			print "On-line tests have been disabled\n";
-			$online_tests = 0;
-		}
+		print "On-line tests have been disabled\n";
+		$online_tests = 0;
 	}
 }
 
@@ -86,14 +80,16 @@ WriteMakefile(
 
 sub are_online
 {
-	if($ENV{'PERL_MM_USE_DEFAULT'}) {
-		return ;
-	}
+	return 0 if($ENV{'AUTOMATED_TESTING'});
+	return 0 if($ENV{'NO_NETWORK_TESTING'});
+	return 0 if(!-t STDIN);
 	my $s = IO::Socket::INET->new(
 		PeerAddr => 'openstreetmap.org:443',
 		Timeout => 10
 	);
 	if($s) {
+		return 1 if($ENV{'PERL_MM_USE_DEFAULT'});
+
 		print <<EOF;
 
 You appear to be directly connected to the Internet.  I have some tests
