@@ -351,6 +351,8 @@ sub geocode {
 				if(defined($l->{geometry}{location}{lat})) {
 					print $l->{geometry}{location}{lat}, '/', $l->{geometry}{location}{lng}, "\n" if($self->{'debug'});
 					$l->{geocoder} = $geocoder;
+					$l->{'lat'} //= $l->{geometry}{location}{lat};
+					$l->{'lng'} //= $l->{geometry}{location}{lng};
 					my $log = {
 						line => $call_details[2],
 						location => $location,
@@ -672,8 +674,12 @@ sub _cache {
 	if((!defined($rc)) && $self->{'cache'}) {	# In the L2 cache?
 		$rc = $self->{'cache'}->get($key);
 	}
-	if(defined($rc) && (ref($rc) eq 'HASH') && !defined($rc->{geometry}{location}{lat})) {
-		return;
+	if(defined($rc)) {
+		if((ref($rc) eq 'HASH') && !defined($rc->{geometry}{location}{lat})) {
+			return;
+		}
+		$rc->{'lat'} //= $rc->{geometry}{location}{lat};
+		$rc->{'lng'} //= $rc->{geometry}{location}{lng};
 	}
 	return $rc;
 }
