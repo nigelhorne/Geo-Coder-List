@@ -616,13 +616,13 @@ sub _cache {
 			if(ref($value) eq 'ARRAY') {
 				foreach my $item(@{$value}) {
 					if(ref($item) eq 'HASH') {
-						# if($self->{'debug'}) {
+						if($self->{'debug'}) {
 							delete $item->{'geocoder'};	# It's an object, not the name
-						# } else {
-							# while(my($k, $v) = each %{$item}) {
-								# delete $item->{$k} unless($k eq 'geometry');
-							# }
-						# }
+						} else {
+							while(my($k, $v) = each %{$item}) {
+								delete $item->{$k} unless($k eq 'geometry');
+							}
+						}
 						if(!defined($item->{geometry}{location}{lat})) {
 							if(defined($item->{geometry})) {
 								# Maybe a temporary lookup failure,
@@ -641,13 +641,13 @@ sub _cache {
 					$duration = '1 month';
 				}
 			} elsif(ref($value) eq 'HASH') {
-				# if($self->{'debug'}) {
+				if($self->{'debug'}) {
 					delete $value->{'geocoder'};	# It's an object, not the name
-				# } else {
-					# while(my($k, $v) = each %{$value}) {
-						# delete $value->{$k} unless ($k eq 'geometry');
-					# }
-				# }
+				} else {
+					while(my($k, $v) = each %{$value}) {
+						delete $value->{$k} unless ($k eq 'geometry');
+					}
+				}
 				if(defined($value->{geometry}{location}{lat})) {
 					$duration = '1 month';	# It won't move :-)
 				} elsif(defined($value->{geometry})) {
@@ -675,7 +675,7 @@ sub _cache {
 		$rc = $self->{'cache'}->get($key);
 	}
 	if(defined($rc)) {
-		if(ref($rc) eq 'HASH') {
+		if(ref($rc) eq 'HASH') {	# else - it will be an array of hashes
 			if(!defined($rc->{geometry}{location}{lat})) {
 				return;
 			}
