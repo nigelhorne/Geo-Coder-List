@@ -616,9 +616,8 @@ sub _cache {
 			if(ref($value) eq 'ARRAY') {
 				foreach my $item(@{$value}) {
 					if(ref($item) eq 'HASH') {
-						if($self->{'debug'}) {
-							delete $item->{'geocoder'};	# It's an object, not the name
-						} else {
+						$item->{'geocoder'} = ref($item->{'geocoder'});	# It's an object, not the name
+						if(!$self->{'debug'}) {
 							while(my($k, $v) = each %{$item}) {
 								delete $item->{$k} unless($k eq 'geometry');
 							}
@@ -641,9 +640,8 @@ sub _cache {
 					$duration = '1 month';
 				}
 			} elsif(ref($value) eq 'HASH') {
-				if($self->{'debug'}) {
-					delete $value->{'geocoder'};	# It's an object, not the name
-				} else {
+				$value->{'geocoder'} = ref($value->{'geocoder'});	# It's an object, not the name
+				if(!$self->{'debug'}) {
 					while(my($k, $v) = each %{$value}) {
 						delete $value->{$k} unless ($k eq 'geometry');
 					}

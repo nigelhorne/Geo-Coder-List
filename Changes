@@ -2,6 +2,7 @@ Revision history for Geo-Coder-List
 
 0.28
 	Don't delete hashes when debugging
+	Store the name of the geocoder
 
 0.27	Sat Jun 20 18:48:02 EDT 2020
 	Added debug option to the constructor
