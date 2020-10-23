@@ -314,6 +314,7 @@ sub geocode {
 						# Geo::Coder::Free
 						$l->{geometry}{location}{lat} = $l->{latitude};
 						$l->{geometry}{location}{lng} = $l->{longitude};
+						$l->{'type'} = lcfirst($l->{'result'}->{'local_type'});	# e.g. village
 					} elsif($l->{'properties'}{'geoLatitude'}) {
 						# ovi
 						$l->{geometry}{location}{lat} = $l->{properties}{geoLatitude};
