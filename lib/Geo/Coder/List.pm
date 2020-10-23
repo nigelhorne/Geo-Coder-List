@@ -229,7 +229,6 @@ sub geocode {
 				@rc = $geocoder->geocode(%params);
 			}
 		};
-		$timetaken = Time::HiRes::time() - $timetaken;
 		if($@) {
 			my $log = {
 				line => $call_details[2],
@@ -239,11 +238,13 @@ sub geocode {
 				wantarray => wantarray,
 				error => $@
 			};
+			$timetaken = Time::HiRes::time() - $timetaken;
 			CORE::push @{$self->{'log'}}, $log;
 			Carp::carp(ref($geocoder), " '$location': $@");
 			$error = $@;
 			next ENCODER;
 		}
+		$timetaken = Time::HiRes::time() - $timetaken;
 		if(scalar(@rc) == 0) {
 			my $log = {
 				line => $call_details[2],
