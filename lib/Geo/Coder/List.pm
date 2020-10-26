@@ -314,7 +314,7 @@ sub geocode {
 						# Geo::Coder::Free
 						$l->{geometry}{location}{lat} = $l->{latitude};
 						$l->{geometry}{location}{lng} = $l->{longitude};
-						if(my $type = $l->{'result'}->{'local_type'}) {
+						if(my $type = $l->{'local_type'}) {
 							$l->{'type'} = lcfirst($type);	# e.g. village
 						}
 					} elsif($l->{'properties'}{'geoLatitude'}) {
