@@ -244,7 +244,8 @@ sub geocode {
 			next ENCODER;
 		}
 		$timetaken = Time::HiRes::time() - $timetaken;
-		if((scalar(@rc) == 0) || (scalar(keys %{$rc[0]}) == 0)) {
+		if((scalar(@rc) == 0) ||
+		   ((ref($rc[0]) eq 'HASH') && (scalar(keys %{$rc[0]}) == 0))) {
 			my $log = {
 				line => $call_details[2],
 				location => $location,
