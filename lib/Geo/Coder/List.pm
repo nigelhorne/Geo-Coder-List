@@ -234,11 +234,10 @@ sub geocode {
 				line => $call_details[2],
 				location => $location,
 				geocoder => ref($geocoder),
-				timetaken => $timetaken,
+				timetaken => Time::HiRes::time() - $timetaken,
 				wantarray => wantarray,
 				error => $@
 			};
-			$timetaken = Time::HiRes::time() - $timetaken;
 			CORE::push @{$self->{'log'}}, $log;
 			Carp::carp(ref($geocoder), " '$location': $@");
 			$error = $@;
@@ -388,6 +387,7 @@ sub geocode {
 	# if($error) {
 		# return { error => $error };
 	# }
+	print "No matches" if($self->{'debug'});
 	if(wantarray) {
 		$self->_cache($location, ());
 		return ();
