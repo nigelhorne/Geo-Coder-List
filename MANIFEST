@@ -5,6 +5,7 @@ lib/Geo/Coder/List.pm
 LICENSE
 Makefile.PL
 MANIFEST
+MANIFEST.SKIP
 README
 README.md
 t/00-load.t
@@ -18,6 +19,7 @@ t/coverage.t
 t/critic.t
 t/cv.t
 t/dist.t
+t/eol.t
 t/free.t
 t/geofarm.t
 t/geonames.t

@@ -12,6 +12,9 @@ if($ENV{AUTHOR_TESTING}) {
 	Getopt::Long::GetOptions('online-tests!' => \$online_tests);
 
 	if(!defined($online_tests)) {
+		$online_tests = are_online();
+	}
+	if(!$online_tests) {
 		print "On-line tests have been disabled\n";
 		$online_tests = 0;
 	}
@@ -80,7 +83,7 @@ WriteMakefile(
 
 sub are_online
 {
-	return 0 if($ENV{'AUTOMATED_TESTING'});
+	# return 0 if($ENV{'AUTOMATED_TESTING'});
 	return 0 if($ENV{'NO_NETWORK_TESTING'});
 	return 0 if(!-t STDIN);
 	my $s = IO::Socket::INET->new(
