@@ -147,7 +147,7 @@ sub geocode {
 	print "location: $location\n" if($self->{'debug'});
 	if((!wantarray) && (my $rc = $self->_cache($location))) {
 		if(ref($rc) eq 'ARRAY') {
-			$rc = @{$rc}[0];
+			$rc = $rc->[0];
 		}
 		if(ref($rc) eq 'HASH') {
 			delete $rc->{'geocoder'};
