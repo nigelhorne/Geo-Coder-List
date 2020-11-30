@@ -32,6 +32,7 @@ if($online_tests) {
 	# $test_requires->{'Geo::Coder::Google::V3'} = 0.10;
 	$test_requires->{'Geo::Coder::OSM'} = 0;
 	$test_requires->{'Geo::Coder::CA'} = 0;
+	$test_requires->{'Geo::Coder::DataScienceToolkit'} = 0;
 	$test_requires->{'Geo::Coder::OpenCage'} = 0;
 	$test_requires->{'Geo::Coder::GeocodeFarm'} = 0;
 	$test_requires->{'Geo::Coder::Ovi'} = 0;
