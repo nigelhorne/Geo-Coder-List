@@ -87,6 +87,7 @@ sub are_online
 	# return 0 if($ENV{'AUTOMATED_TESTING'});
 	return 0 if($ENV{'NO_NETWORK_TESTING'});
 	return 0 if(!-t STDIN);
+
 	my $s = IO::Socket::INET->new(
 		PeerAddr => 'openstreetmap.org:443',
 		Timeout => 10
