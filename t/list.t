@@ -15,7 +15,7 @@ LIST: {
 	SKIP: {
 		if(!-e 't/online.enabled') {
 			diag('Online tests disabled');
-			skip('Online tests disabled', 63);
+			skip('Online tests disabled', 64);
 		}
 
 		eval {
