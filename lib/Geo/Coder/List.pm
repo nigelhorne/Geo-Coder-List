@@ -399,8 +399,8 @@ sub geocode {
 
 =head2 ua
 
-Accessor method to set the UserAgent object used internally by each of the Geo-Coders. You
-can call I<env_proxy> for example, to get the proxy information from
+Accessor method to set the UserAgent object used internally by each of the Geo-Coders.
+You can call I<env_proxy> for example, to get the proxy information from
 environment variables:
 
     my $geocoder_list = Geo::Coder::List->new();

@@ -164,8 +164,8 @@ LIST: {
 			}
 		}
 
-		TODO: {
-			local $TODO = 'DSTK has stopped working';
+		SKIP: {
+			skip 'DTSK has stopped working', 9;
 
 			require_ok('Geo::Coder::DataScienceToolkit');
 

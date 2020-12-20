@@ -72,8 +72,7 @@ WriteMakefile(
 			type => 'git',
 			url => 'git://github.com/nigelhorne/Geo-Coder-List.git',
 			web => 'https://github.com/nigelhorne/Geo-Coder-List',
-    		},
-		bugtracker => {
+    		}, bugtracker => {
 			web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Geo-Coder-List',
 			mailto => 'bug-Geo-Coder-List@rt.cpan.org'
 		}
@@ -118,8 +117,7 @@ EOF
 			return 1;	# The default is 'y'
 		}
 		return $rc;
-	} else {
-		print "On-line tests disabled because I couldn't detect an Internet connexion\n";
-		return 0;
 	}
+	print "On-line tests disabled because I couldn't detect an Internet connexion\n";
+	return 0;
 }
