@@ -159,7 +159,7 @@ sub geocode {
 				result => $rc
 			};
 			CORE::push @{$self->{'log'}}, $log;
-			print "cached\n" if($self->{'debug'});
+			print __PACKAGE__, ': ', __LINE__,  ": cached\n" if($self->{'debug'});
 			return $rc;
 		}
 	}
@@ -187,7 +187,7 @@ sub geocode {
 				result => \@rc
 			};
 			CORE::push @{$self->{'log'}}, $log;
-			print "cached\n" if($self->{'debug'});
+			print __PACKAGE__, ': ', __LINE__,  ": cached\n" if($self->{'debug'});
 			if($allempty) {
 				return;
 			}
