@@ -344,6 +344,10 @@ sub geocode {
 						# Geo::GeoNames
 						$l->{geometry}{location}{lat} = $l->{lat};
 						$l->{geometry}{location}{lng} = $l->{lng};
+					} elsif($l->{features}) {
+						# Geo::Coder::Mapbox
+						$l->{geometry}{location}{lat} = $l->{features}[0]->{center}[1];
+						$l->{geometry}{location}{lng} = $l->{features}[0]->{center}[0];
 					} else {
 						delete $l->{'geometry'};
 					}
