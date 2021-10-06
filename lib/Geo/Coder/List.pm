@@ -614,7 +614,7 @@ sub _cache {
 	my $key = shift;
 
 	if(my $value = shift) {
-		# Put somthing into the cache
+		# Put something into the cache
 		$locations{$key} = $value;
 		my $rc = $value;
 		if($self->{'cache'}) {
