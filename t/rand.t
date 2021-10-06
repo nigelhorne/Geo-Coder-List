@@ -32,8 +32,7 @@ RAND: {
 			diag("Using Geo::Coder::RandMcnally $Geo::Coder::RandMcnally::VERSION");
 		}
 		my $geocoderlist = new_ok('Geo::Coder::List');
-		my $geocoder = new_ok('Geo::Coder::RandMcnally');
-		$geocoderlist->push($geocoder);
+		$geocoderlist->push(new_ok('Geo::Coder::RandMcnally'));
 
 		my $location = $geocoderlist->geocode(location => '8600 Rockville Pike, Bethesda MD, 20894 USA');
 		ok(defined($location));
