@@ -682,7 +682,7 @@ sub _cache {
 				$duration = '1 month';
 			}
 			print Data::Dumper->new([$value])->Dump() if($self->{'debug'});
-			$self->{'cache'}->set($key, $value, '1 month');
+			$self->{'cache'}->set($key, $value, $duration);
 		}
 		return $rc;
 	}
@@ -751,7 +751,7 @@ L<https://metacpan.org/release/Geo-Coder-List>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016-2021 Nigel Horne.
+Copyright 2016-2022 Nigel Horne.
 
 This program is released under the following licence: GPL2
 

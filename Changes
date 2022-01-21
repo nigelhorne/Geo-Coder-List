@@ -4,6 +4,7 @@ Revision history for Geo-Coder-List
 	Don't delete hashes when debugging
 	Start to popluate the 'type' member of the returned hash
 	Added support for Geo::Coder::Mapbox
+	Temporarily invalid locations were being cached too long
 
 0.27	Sat Jun 20 18:48:02 EDT 2020
 	Added debug option to the constructor
