@@ -8,7 +8,7 @@ Geo::Coder::List - Call many Geo-Coders
 
 # VERSION
 
-Version 0.28
+Version 0.29
 
 # SYNOPSIS
 
