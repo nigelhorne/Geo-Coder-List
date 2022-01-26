@@ -45,7 +45,7 @@ GEOCODEFARM: {
 
 		ok(!defined($geocoderlist->geocode()));
 
-		if(!defined($ENV{'AUTOMATED_TESTING'})) {
+		if(!$ENV{'AUTOMATED_TESTING'}) {
 			my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
 			ok(defined($location));
 			ok(ref($location) eq 'HASH');
