@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 use LWP;
-use Test::Most tests => 11;
+use Test::Most tests => 10;
 use Test::NoWarnings
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
@@ -16,7 +16,14 @@ BEGIN {
 
 UA: {
 	SKIP: {
-		if(require_ok('Geo::Coder::CA')) {
+		# Don't use require_ok as it could legitimately fail
+		eval {
+			require Geo::Coder::CA;
+		};
+		if($@) {
+			diag('Geo::Coder::CA not installed - skipping tests');
+			skip('Geo::Coder::CA not installed', 7);
+		} else {
 			Geo::Coder::CA->import();
 
 			my $geocoderlist = new_ok('Geo::Coder::List');
@@ -34,9 +41,6 @@ UA: {
 
 			my $location = $geocoderlist->geocode(location => '9235 Main St, Richibucto, New Brunswick, Canada');
 			cmp_ok($ua->count(), '==', 1, 'Used the correct ua');
-		} else {
-			diag('Geo::Coder::CA not installed - skipping tests');
-			skip('Geo::Coder::CA not installed', 8);
 		}
 	}
 }
