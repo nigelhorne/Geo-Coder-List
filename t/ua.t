@@ -57,16 +57,6 @@ sub new {
 	return bless { count => 0 }, $class;
 }
 
-# sub send_request {
-	# my $self = shift;
-# 
-	# $self->{count}++;
-	# return bless { }, __PACKAGE__;
-# }
-
-# sub code { return 0; }
-# sub header { return 0; }	# http://www.cpantesters.org/cpan/report/55bb4f64-8d7e-11ec-adcf-8cefa471f67a
-# sub redirects { return 0; }
 sub is_error { return 0 }
 sub decoded_content { return '{}' }
 
