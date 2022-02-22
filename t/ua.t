@@ -32,7 +32,7 @@ UA: {
 
 			my $ua = new_ok('Tester');
 			$geocoderlist->ua($ua);
-			ok($ca->ua() eq $ua);
+			cmp_ok($ca->ua(), 'eq', $ua, 'Setting UA works');
 
 			cmp_ok($ua->count(), '==', 0, 'Initialised correctly');
 
