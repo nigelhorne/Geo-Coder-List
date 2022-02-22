@@ -22,7 +22,7 @@ UA: {
 		};
 		if($@) {
 			diag('Geo::Coder::CA not installed - skipping tests');
-			skip('Geo::Coder::CA not installed', 7);
+			skip('Geo::Coder::CA not installed', 8);
 		} else {
 			Geo::Coder::CA->import();
 
