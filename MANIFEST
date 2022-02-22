@@ -44,6 +44,7 @@ t/pod.t
 t/postcodes.t
 t/rand.t
 t/snippets.t
+t/ua.t
 t/unused.t
 t/us.t
 t/used.t
