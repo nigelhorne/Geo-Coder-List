@@ -19,11 +19,11 @@ Geo::Coder::List - Call many Geo-Coders
 
 =head1 VERSION
 
-Version 0.27
+Version 0.29
 
 =cut
 
-our $VERSION = '0.27';
+our $VERSION = '0.29';
 our %locations;	# L1 cache, always used
 
 =head1 SYNOPSIS
@@ -62,7 +62,12 @@ sub new {
 	my $proto = shift;
 	my $class = ref($proto) || $proto;
 
-	return unless(defined($class));
+	if(!defined($class)) {
+		# Using Geo::Coder::List::new(), not Geo::Coder::List->new()
+		# carp(__PACKAGE__, ' use ->new() not ::new() to instantiate');
+		# return;
+		$class = __PACKAGE__;
+	}
 
 	my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
 
@@ -422,7 +427,7 @@ environment variables:
     $ua->env_proxy(1);
     $geocoder_list->ua($ua);
 
-Note that unlike Geo::Coders, there is no read method, since that would be pointless.
+Note that unlike Geo::Coders there is no read method since that would be pointless.
 
 =cut
 
@@ -440,6 +445,7 @@ sub ua {
 			}
 			$geocoder->ua($ua);
 		}
+		return $ua;
 	}
 }
 
