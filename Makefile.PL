@@ -50,7 +50,7 @@ WriteMakefile(
     NAME		=> 'Geo::Coder::List',
     AUTHOR		=> q{Nigel Horne <njh@bandsman.co.uk>},
     VERSION_FROM	=> 'lib/Geo/Coder/List.pm',
-    ABSTRACT_FROM       => 'lib/Geo/Coder/List.pm',
+    ABSTRACT_FROM	=> 'lib/Geo/Coder/List.pm',
     ((defined($ExtUtils::MakeMaker::VERSION) &&
      ($ExtUtils::MakeMaker::VERSION >= 6.3002))
       ? ('LICENSE'=> 'GPL')
@@ -66,13 +66,13 @@ WriteMakefile(
     dist		=> { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean		=> { FILES => 'Geo::Coder::List-*' },
     META_MERGE		=> {
-    	'meta-spec' => { version => 2 },
-    	resources => {
-    		repository => {
+	'meta-spec' => { version => 2 },
+	resources => {
+		repository => {
 			type => 'git',
 			url => 'git://github.com/nigelhorne/Geo-Coder-List.git',
 			web => 'https://github.com/nigelhorne/Geo-Coder-List',
-    		}, bugtracker => {
+		}, bugtracker => {
 			web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Geo-Coder-List',
 			mailto => 'bug-Geo-Coder-List@rt.cpan.org'
 		}
