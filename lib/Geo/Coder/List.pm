@@ -133,7 +133,7 @@ sub geocode {
 	if(ref($_[0]) eq 'HASH') {
 		%params = %{$_[0]};
 	} elsif(ref($_[0])) {
-		Carp::croak('Usage: geocode(location => $location)');
+		Carp::croak(__PACKAGE__, ' usage: geocode(location => $location) given ', ref($_[0]));
 	} elsif(@_ % 2 == 0) {
 		%params = @_;
 	} else {
@@ -408,7 +408,7 @@ sub geocode {
 	# if($error) {
 		# return { error => $error };
 	# }
-	print "No matches" if($self->{'debug'});
+	print "No matches\n" if($self->{'debug'});
 	if(wantarray) {
 		$self->_cache($location, ());
 		return ();
