@@ -47,6 +47,10 @@ GEOCODEFARM: {
 
 		if(!$ENV{'AUTOMATED_TESTING'}) {
 			my $location = $geocoderlist->geocode('Silver Spring, MD, USA');
+
+			if($ENV{'TEST_VERBOSE'}) {
+				diag(Data::Dumper->new([$location])->Dump());
+			}
 			ok(defined($location));
 			ok(ref($location) eq 'HASH');
 
