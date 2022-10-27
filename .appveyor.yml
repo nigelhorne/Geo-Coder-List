@@ -1,10 +1,10 @@
+---
 version: 1.0.{build}
 
 image:
   - Visual Studio 2015
   - Visual Studio 2017
   - Visual Studio 2019
-  - ubuntu1604
   - ubuntu1804
   - Ubuntu
 
