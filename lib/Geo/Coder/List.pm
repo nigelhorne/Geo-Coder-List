@@ -62,14 +62,17 @@ sub new {
 	my $proto = shift;
 	my $class = ref($proto) || $proto;
 
+	my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
+
 	if(!defined($class)) {
 		# Using Geo::Coder::List::new(), not Geo::Coder::List->new()
 		# carp(__PACKAGE__, ' use ->new() not ::new() to instantiate');
 		# return;
 		$class = __PACKAGE__;
+	} elsif(ref($class)) {
+		# clone the given object
+		return bless { %{$class}, %args }, ref($class);
 	}
-
-	my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
 
 	return bless { debug => DEBUG, %args, geo_coders => [] }, $class;
 }
@@ -745,10 +748,6 @@ You can also look for information at:
 
 L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List>
 
-=item * CPAN Ratings
-
-L<https://cpanratings.perl.org/d/Geo-Coder-List>
-
 =item * MetaCPAN
 
 L<https://metacpan.org/release/Geo-Coder-List>
@@ -757,7 +756,7 @@ L<https://metacpan.org/release/Geo-Coder-List>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016-2022 Nigel Horne.
+Copyright 2016-2023 Nigel Horne.
 
 This program is released under the following licence: GPL2
 
