@@ -569,6 +569,7 @@ sub reverse_geocode {
 				# Geo::Coder::CA
 				my $name;
 				if(my $usa = $rc->{'usa'}) {
+					# TODO: Use Lingua::Conjunction
 					$name = $usa->{'usstnumber'};
 					if(my $staddress = $usa->{'usstaddress'}) {
 						$name .= ' ' if($name);
@@ -584,6 +585,7 @@ sub reverse_geocode {
 					}
 					return $self->_cache($latlng, "$name, USA");
 				} else {
+					# TODO: Use Lingua::Conjunction
 					$name = $rc->{'stnumber'};
 					if(my $staddress = $rc->{'staddress'}) {
 						$name .= ' ' if($name);
