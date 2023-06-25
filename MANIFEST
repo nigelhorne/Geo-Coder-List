@@ -13,6 +13,7 @@ t/10-new.t
 t/bing.t
 t/boiler.t
 t/canada.t
+t/carp.t
 t/census.t
 t/changes.t
 t/comment-spelling.t

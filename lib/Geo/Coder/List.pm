@@ -145,8 +145,10 @@ sub geocode {
 
 	my $location = $params{'location'};
 
-	return if(!defined($location));
-	return if(length($location) == 0);
+	if((!defined($location)) || (length($location) == 0)) {
+		Carp::croak(__PACKAGE__, ' usage: geocode(location => $location)');
+		return;
+	}
 
 	$location =~ s/\s\s+/ /g;
 	$location = decode_entities($location);
