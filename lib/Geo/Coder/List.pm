@@ -559,7 +559,7 @@ sub reverse_geocode {
 				$self->_cache($latlng, $rc[0]);
 				return $rc[0];
 			}
-		} elsif(my $rc = $geocoder->reverse_geocode(%params)) {
+		} elsif(my $rc = $self->_cache($latlng) // $geocoder->reverse_geocode(%params)) {
 			return $rc if(!ref($rc));
 			print Data::Dumper->new([$rc])->Dump() if($self->{'debug'} >= 2);
 			if(my $name = $rc->{'display_name'}) {
