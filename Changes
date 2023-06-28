@@ -1,6 +1,6 @@
 Revision history for Geo-Coder-List
 
-0.30
+0.30	Tue Jun 27 20:53:14 EDT 2023
 	Better error message on wrong parameter
 	Fix count if not enough installers installed in t/list.t
 	Calling new on an object now returns a clone
