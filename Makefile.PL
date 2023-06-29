@@ -23,6 +23,7 @@ if($ENV{AUTHOR_TESTING}) {
 my $test_requires = {
 	'Test::Deep' => 0,
 	'Test::Most' => 0,
+	'Test::Number::Delta' => 0,	# Always needed since used in free.t
 	'Test::NoWarnings' => 0,
 };
 
@@ -38,7 +39,6 @@ if($online_tests) {
 	$test_requires->{'Geo::Coder::Ovi'} = 0;
 	$test_requires->{'Geo::Coder::Postcodes'} = 0;
 	# $test_requires->{'Geo::Coder::XYZ'} = 0.06;
-	$test_requires->{'Test::Number::Delta'} = 0;
 	$test_requires->{'Test::LWP::UserAgent'} = 0;
 	$test_requires->{'Test::Carp'} = 0;
 	$test_requires->{'LWP::UserAgent::Throttled'} = 0.04;
