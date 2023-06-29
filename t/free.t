@@ -2,8 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 12;
-use Test::NoWarnings;
+use Test::Most tests => 11;
 use Test::Deep;
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
@@ -30,7 +29,7 @@ FREE: {
 
 		if($@) {
 			diag('Geo::Coder::Free not installed - skipping tests');
-			skip 'Geo::Coder::Free not installed', 10;
+			skip('Geo::Coder::Free not installed', 9);
 		} else {
 			diag("Using Geo::Coder::Free $Geo::Coder::Free::VERSION",
 				"/Geo::Coder::Free::Local $Geo::Coder::Free::Local::VERSION");

@@ -136,7 +136,8 @@ sub geocode {
 	if(ref($_[0]) eq 'HASH') {
 		%params = %{$_[0]};
 	} elsif(ref($_[0])) {
-		Carp::croak(__PACKAGE__, ' usage: geocode(location => $location) given ', ref($_[0]));
+		Carp::carp(__PACKAGE__, ' usage: geocode(location => $location) given ', ref($_[0]));
+		return;
 	} elsif(@_ % 2 == 0) {
 		%params = @_;
 	} else {
@@ -146,7 +147,7 @@ sub geocode {
 	my $location = $params{'location'};
 
 	if((!defined($location)) || (length($location) == 0)) {
-		Carp::croak(__PACKAGE__, ' usage: geocode(location => $location)');
+		Carp::carp(__PACKAGE__, ' usage: geocode(location => $location)');
 		return;
 	}
 
