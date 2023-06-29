@@ -31,6 +31,7 @@ GeocodeFarm
 geocoder
 GeoNames
 GoogleMaps
+Lingua
 Mapbox
 OpenCage
 OSM

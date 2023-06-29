@@ -29,7 +29,7 @@ FREE: {
 
 		if($@) {
 			diag('Geo::Coder::Free not installed - skipping tests');
-			skip('Geo::Coder::Free not installed', 9);
+			skip('Geo::Coder::Free not installed', 11);
 		} else {
 			diag("Using Geo::Coder::Free $Geo::Coder::Free::VERSION",
 				"/Geo::Coder::Free::Local $Geo::Coder::Free::Local::VERSION");
