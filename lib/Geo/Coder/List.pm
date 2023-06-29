@@ -19,11 +19,11 @@ Geo::Coder::List - Call many Geo-Coders
 
 =head1 VERSION
 
-Version 0.30
+Version 0.31
 
 =cut
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 our %locations;	# L1 cache, always used
 
 =head1 SYNOPSIS
@@ -119,10 +119,11 @@ sub push {
 =head2 geocode
 
 Runs geocode on all of the loaded drivers.
-See L<Geo::Coder::GooglePlaces::V3> for an explanation
+See L<Geo::Coder::GooglePlaces::V3> for an explanation.
 
 The name of the Geo-Coder that gave the result is put into the geocode element of the
-return value, if the value was retrieved from the cache the value will be undefined.
+return value,
+if the value was retrieved from the cache the value will be undefined.
 
     if(defined($location->{'geocoder'})) {
         print 'Location information retrieved using ', $location->{'geocoder'}, "\n";
@@ -153,9 +154,9 @@ sub geocode {
 
 	$location =~ s/\s\s+/ /g;
 	$location = decode_entities($location);
+	print "location: $location\n" if($self->{'debug'});
 
 	my @call_details = caller(0);
-	print "location: $location\n" if($self->{'debug'});
 	if((!wantarray) && (my $rc = $self->_cache($location))) {
 		if(ref($rc) eq 'ARRAY') {
 			$rc = $rc->[0];
@@ -425,8 +426,9 @@ sub geocode {
 =head2 ua
 
 Accessor method to set the UserAgent object used internally by each of the Geo-Coders.
-You can call I<env_proxy> for example, to get the proxy information from
-environment variables:
+You can call I<env_proxy>,
+for example,
+to set the proxy information from environment variables:
 
     my $geocoder_list = Geo::Coder::List->new();
     my $ua = LWP::UserAgent->new();

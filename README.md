@@ -9,7 +9,7 @@ Geo::Coder::List - Call many Geo-Coders
 
 # VERSION
 
-Version 0.30
+Version 0.31
 
 # SYNOPSIS
 
@@ -73,10 +73,11 @@ and OpenStreetMap for other places:
 ## geocode
 
 Runs geocode on all of the loaded drivers.
-See [Geo::Coder::GooglePlaces::V3](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AGooglePlaces%3A%3AV3) for an explanation
+See [Geo::Coder::GooglePlaces::V3](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AGooglePlaces%3A%3AV3) for an explanation.
 
 The name of the Geo-Coder that gave the result is put into the geocode element of the
-return value, if the value was retrieved from the cache the value will be undefined.
+return value,
+if the value was retrieved from the cache the value will be undefined.
 
     if(defined($location->{'geocoder'})) {
         print 'Location information retrieved using ', $location->{'geocoder'}, "\n";
@@ -85,8 +86,9 @@ return value, if the value was retrieved from the cache the value will be undefi
 ## ua
 
 Accessor method to set the UserAgent object used internally by each of the Geo-Coders.
-You can call _env\_proxy_ for example, to get the proxy information from
-environment variables:
+You can call _env\_proxy_,
+for example,
+to set the proxy information from environment variables:
 
     my $geocoder_list = Geo::Coder::List->new();
     my $ua = LWP::UserAgent->new();
