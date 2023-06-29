@@ -23,7 +23,7 @@ jobs:
         uses: egor-tensin/setup-cygwin@master
         with:
           platform: x64
-          packages: perl_base perl-ExtUtils-MakeMaker make gcc-g++ libcrypt-devel libnsl-devel bash
+          packages: perl_base perl-ExtUtils-MakeMaker make gcc-g++ libcrypt-devel libnsl-devel bash perl-LWP-Protocol-https
       - uses: actions/checkout@main
         with:
           submodules: recursive
