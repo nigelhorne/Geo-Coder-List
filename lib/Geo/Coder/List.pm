@@ -167,7 +167,8 @@ sub geocode {
 				line => $call_details[2],
 				location => $location,
 				timetaken => 0,
-				wantarray => wantarray,
+				gecoder => 'cached',
+				wantarray => 0,
 				result => $rc
 			};
 			CORE::push @{$self->{'log'}}, $log;
@@ -195,6 +196,7 @@ sub geocode {
 				line => $call_details[2],
 				location => $location,
 				timetaken => 0,
+				gecoder => 'cached',
 				wantarray => wantarray,
 				result => \@rc
 			};
