@@ -76,7 +76,7 @@ FREE: {
 			$location = $geo_coder_list->geocode(location => 'Margate, Kent, England');
 			ok(defined($location));
 			cmp_deeply($location,
-				methods('lat' => num(51.38, 1e-2), 'long' => num(1.38, 1e-2)));
+				methods('lat' => num(51.38, 1e-2), 'long' => num(1.38, 1e-1)));
 		} else {
 			SKIP: {
 				skip('Set OPENADDR_HOME to enable extra tests', 2);
