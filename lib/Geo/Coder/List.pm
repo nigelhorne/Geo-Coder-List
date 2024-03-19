@@ -74,7 +74,7 @@ sub new {
 		return bless { %{$class}, %args }, ref($class);
 	}
 
-	return bless { debug => DEBUG, %args, geo_coders => [] }, $class;
+	return bless { debug => DEBUG, geo_coders => [], %args }, $class;
 }
 
 =head2 push
