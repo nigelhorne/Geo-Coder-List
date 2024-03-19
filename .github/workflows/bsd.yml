@@ -16,9 +16,10 @@ jobs:
       fail-fast: false
       matrix:
         os:
+          # HTML::Entities is part of HTML::Parser
           - name: freebsd
             version: '13.0'
-            pkginstall: pkg install -y p5-ExtUtils-MakeMaker p5-Test-Deep p5-Test-Most p5-Test-Needs p5-Test-NoWarnings p5-Test-Number-Delta p5-LWP-Protocol-https
+            pkginstall: pkg install -y p5-ExtUtils-MakeMaker p5-Test-Deep p5-Test-Most p5-Test-Needs p5-Test-NoWarnings p5-Test-Number-Delta p5-LWP-Protocol-https p5-HTML-Parser
           # - name: openbsd
             # version: '7.1'
             # pkginstall: pkg_add p5-List-MoreUtils p5-Log-Any
@@ -36,9 +37,8 @@ jobs:
           run: |
             sudo hostname example.com
             sudo ${{ matrix.os.pkginstall }}
-            sudo cpan -iT HTML::Entities
             curl -L https://cpanmin.us | sudo perl - --notest --installdeps --with-configure --with-develop .
             sudo chown -R runner:runner .
-            perl Makefile.PL
-            make
-            prove -wlmb t
+            AUTOMATED_TESTING=1 perl Makefile.PL
+            AUTOMATED_TESTING=1 make
+            AUTOMATED_TESTING=1 prove -wlmb t
