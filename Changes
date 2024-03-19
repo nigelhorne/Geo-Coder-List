@@ -3,6 +3,7 @@ Revision history for Geo-Coder-List
 0.33
 	Fix test count in t/googleplaces.t
 	Don't test t/ua.t when network testing disabled
+	Use Test::Needs
 
 0.32	Sat Oct  7 10:07:45 EDT 2023
 	Set "geocoder" to "cached" when the values have been retrieved from the L2 cache
