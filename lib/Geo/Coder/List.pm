@@ -183,13 +183,16 @@ sub geocode {
 				if(ref($_) eq 'HASH') {
 					if(defined($_->{geometry}{location}{lat})) {
 						$allempty = 0;
-						delete $_->{'geocoder'};
+						$_->{'geocoder'} = 'cached';
 					} else {
 						delete $_->{'geometry'};
 					}
 				} elsif(ref($_) eq 'Geo::Location::Point') {
 					$allempty = 0;
-					delete $_->{'geocoder'};
+					$_->{'geocoder'} = 'cached';
+				} else {
+					print STDERR Data::Dumper->new([\@rc])->Dump();
+					Carp::croak(ref($self), " '$location': unexpected item in the cache");
 				}
 			}
 			my $log = {
@@ -209,7 +212,7 @@ sub geocode {
 		}
 	}
 
-	my $error;
+	# my $error;
 
 	ENCODER: foreach my $g(@{$self->{geocoders}}) {
 		my $geocoder = $g;
@@ -254,7 +257,7 @@ sub geocode {
 			};
 			CORE::push @{$self->{'log'}}, $log;
 			Carp::carp(ref($geocoder), " '$location': $@");
-			$error = $@;
+			# $error = $@;
 			next ENCODER;
 		}
 		$timetaken = Time::HiRes::time() - $timetaken;

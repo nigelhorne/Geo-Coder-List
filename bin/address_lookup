@@ -11,6 +11,7 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 use CHI;
 use File::Basename;
+use File::HomeDir;
 use File::Spec;
 use Geo::Coder::Bing;
 use Geo::Coder::CA;
