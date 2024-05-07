@@ -407,6 +407,9 @@ sub geocode {
 			print 'Number of matches from ', ref($geocoder), ': ', scalar(@rc), "\n" if($self->{'debug'});
 			print Data::Dumper->new([\@rc])->Dump() if($self->{'debug'} >= 2);
 			if(defined($rc[0])) {	# check it's not an empty hash
+				if(defined($rc[0]->{'long'}) && !defined($rc[0]->{'lng'})) {
+					$rc[0]->{'lng'} = $rc[0]->{'long'};
+				}
 				if((!defined($rc[0]->{lat})) || (!defined($rc[0]->{lng}))) {
 					# ::diag(Data::Dumper->new([\@rc])->Dump());
 					warn Data::Dumper->new([\@rc])->Dump();
