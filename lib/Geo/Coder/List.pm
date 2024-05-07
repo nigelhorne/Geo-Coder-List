@@ -408,7 +408,8 @@ sub geocode {
 			print Data::Dumper->new([\@rc])->Dump() if($self->{'debug'} >= 2);
 			if(defined($rc[0])) {	# check it's not an empty hash
 				if((!defined($rc[0]->{lat})) || (!defined($rc[0]->{lng}))) {
-					::diag(Data::Dumper->new([\@rc])->Dump());
+					# ::diag(Data::Dumper->new([\@rc])->Dump());
+					warn Data::Dumper->new([\@rc])->Dump();
 					Carp::croak("BUG: '$location': HASH exists but is not sensible");
 				}
 				if(wantarray) {
