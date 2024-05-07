@@ -261,6 +261,20 @@ sub geocode {
 			next ENCODER;
 		}
 		$timetaken = Time::HiRes::time() - $timetaken;
+		if((ref($geocoder) eq 'Geo::Coder::US::Census') &&
+		   !(defined($rc[0]->{result}{addressMatches}[0]->{coordinates}{y}))) {
+		   	# Looks like Geo::Coder::US::Census sometimes says it's worked when it hasn't
+			my $log = {
+				line => $call_details[2],
+				location => $location,
+				timetaken => $timetaken,
+				geocoder => 'Geo::Coder::US::Census',
+				wantarray => wantarray,
+				result => 'not found',
+			};
+			CORE::push @{$self->{'log'}}, $log;
+			next ENCODER;
+		}
 		if((scalar(@rc) == 0) ||
 		   ((ref($rc[0]) eq 'HASH') && (scalar(keys %{$rc[0]}) == 0)) ||
 		   ((ref($rc[0]) eq 'ARRAY') && (scalar(keys %{$rc[0][0]}) == 0))) {
@@ -281,6 +295,7 @@ sub geocode {
 				# FIXME: should consider all locations in the array
 				$l = $l->[0];
 			}
+			$l->{'geocoder'} = ref($geocoder);
 			if(!defined($l)) {
 				my $log = {
 					line => $call_details[2],
@@ -318,18 +333,22 @@ sub geocode {
 						# ($lat, $long) = $l->{'lat', 'lon'};
 						$lat = $l->{lat};
 						$long = $l->{lon};
+						$l->{'debug'} = __LINE__;
 					} elsif($l->{BestLocation}) {
 						# Bing
 						$lat = $l->{BestLocation}->{Coordinates}->{Latitude};
 						$long = $l->{BestLocation}->{Coordinates}->{Longitude};
+						$l->{'debug'} = __LINE__;
 					} elsif($l->{point}) {
 						# Bing
 						$lat = $l->{point}->{coordinates}[0];
 						$long = $l->{point}->{coordinates}[1];
+						$l->{'debug'} = __LINE__;
 					} elsif($l->{latt}) {
 						# geocoder.ca
 						$lat = $l->{latt};
 						$long = $l->{longt};
+						$l->{'debug'} = __LINE__;
 					} elsif($l->{latitude}) {
 						# postcodes.io
 						# Geo::Coder::Free
@@ -338,38 +357,48 @@ sub geocode {
 						if(my $type = $l->{'local_type'}) {
 							$l->{'type'} = lcfirst($type);	# e.g. village
 						}
+						$l->{'debug'} = __LINE__;
 					} elsif($l->{'properties'}{'geoLatitude'}) {
 						# ovi
 						$lat = $l->{properties}{geoLatitude};
 						$long = $l->{properties}{geoLongitude};
+						$l->{'debug'} = __LINE__;
 					} elsif($l->{'results'}[0]->{'geometry'}) {
 						if($l->{'results'}[0]->{'geometry'}->{'location'}) {
 							# DataScienceToolkit
 							$lat = $l->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
 							$long = $l->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+							$l->{'debug'} = __LINE__;
 						} else {
 							# OpenCage
 							$lat = $l->{'results'}[0]->{'geometry'}->{'lat'};
 							$long = $l->{'results'}[0]->{'geometry'}->{'lng'};
+							$l->{'debug'} = __LINE__;
 						}
 					} elsif($l->{'RESULTS'}) {
 						# GeoCodeFarm
 						$lat = $l->{'RESULTS'}[0]{'COORDINATES'}{'latitude'};
 						$long = $l->{'RESULTS'}[0]{'COORDINATES'}{'longitude'};
+						$l->{'debug'} = __LINE__;
 					} elsif(defined($l->{result}{addressMatches}[0]->{coordinates}{y})) {
 						# US Census
 						# This would have been nice, but it doesn't compile
 						# ($lat, $long) = $l->{result}{addressMatches}[0]->{coordinates}{y, x};
 						$lat = $l->{result}{addressMatches}[0]->{coordinates}{y};
 						$long = $l->{result}{addressMatches}[0]->{coordinates}{x};
+						$l->{'debug'} = __LINE__;
 					} elsif($l->{lat}) {
 						# Geo::GeoNames
 						$lat = $l->{lat};
 						$long = $l->{lng};
+						$l->{'debug'} = __LINE__;
 					} elsif($l->{features}) {
 						# Geo::Coder::Mapbox
 						$lat = $l->{features}[0]->{center}[1];
 						$long = $l->{features}[0]->{center}[0];
+						$l->{'debug'} = __LINE__;
+					} else {
+						$l->{'debug'} = __LINE__;
 					}
 
 					if(defined($lat) && defined($long)) {
@@ -405,6 +434,7 @@ sub geocode {
 
 		if(scalar(@rc)) {
 			print 'Number of matches from ', ref($geocoder), ': ', scalar(@rc), "\n" if($self->{'debug'});
+			$Data::Dumper::Maxdepth = 10;
 			print Data::Dumper->new([\@rc])->Dump() if($self->{'debug'} >= 2);
 			if(defined($rc[0])) {	# check it's not an empty hash
 				if(defined($rc[0]->{'long'}) && !defined($rc[0]->{'lng'})) {
