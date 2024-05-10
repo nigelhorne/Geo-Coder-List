@@ -20,9 +20,9 @@ jobs:
           - name: freebsd
             version: '13.0'
             pkginstall: pkg install -y p5-ExtUtils-MakeMaker p5-Test-Deep p5-Test-Most p5-Test-Needs p5-Test-NoWarnings p5-Test-Number-Delta p5-LWP-Protocol-https p5-HTML-Parser
-          # - name: openbsd
-            # version: '7.1'
-            # pkginstall: pkg_add p5-List-MoreUtils p5-Log-Any
+          - name: openbsd
+            version: '7.1'
+            pkginstall: pkg_add p5-List-MoreUtils p5-Log-Any
 
     steps:
       - uses: actions/checkout@main
