@@ -104,7 +104,7 @@ and OpenStreetMap for other places:
     }
 
     # It is also possible to limit the number of enquires used by a particular encoder
-    $geo_coderlist->push({ geocoder => Geo::Coder::GooglePlaces->new(key => '1234'), limit => 100) });
+    $geo_coderlist->push({ geocoder => Geo::Coder::GooglePlaces->new(key => '1234', limit => 100) });
 
 =cut
 
@@ -162,12 +162,12 @@ sub geocode {
 			$rc = $rc->[0];
 		}
 		if(ref($rc) eq 'HASH') {
-			delete $rc->{'geocoder'};
+			$rc->{'geocoder'} = 'cache';
 			my $log = {
 				line => $call_details[2],
 				location => $location,
 				timetaken => 0,
-				gecoder => 'cached',
+				gecoder => 'cache',
 				wantarray => 0,
 				result => $rc
 			};
@@ -183,13 +183,13 @@ sub geocode {
 				if(ref($_) eq 'HASH') {
 					if(defined($_->{geometry}{location}{lat})) {
 						$allempty = 0;
-						$_->{'geocoder'} = 'cached';
+						$_->{'geocoder'} = 'cache';
 					} else {
 						delete $_->{'geometry'};
 					}
 				} elsif(ref($_) eq 'Geo::Location::Point') {
 					$allempty = 0;
-					$_->{'geocoder'} = 'cached';
+					$_->{'geocoder'} = 'cache';
 				} else {
 					print STDERR Data::Dumper->new([\@rc])->Dump();
 					Carp::croak(ref($self), " '$location': unexpected item in the cache");
@@ -199,7 +199,7 @@ sub geocode {
 				line => $call_details[2],
 				location => $location,
 				timetaken => 0,
-				gecoder => 'cached',
+				gecoder => 'cache',
 				wantarray => wantarray,
 				result => \@rc
 			};
@@ -295,8 +295,7 @@ sub geocode {
 				# FIXME: should consider all locations in the array
 				$l = $l->[0];
 			}
-			$l->{'geocoder'} = ref($geocoder);
-			if(!defined($l)) {
+			if((!defined($l)) || ($l eq '')) {
 				my $log = {
 					line => $call_details[2],
 					location => $location,
@@ -308,6 +307,7 @@ sub geocode {
 				CORE::push @{$self->{'log'}}, $log;
 				next ENCODER;
 			}
+			$l->{'geocoder'} = ref($geocoder);
 			print ref($geocoder), ': ',
 				Data::Dumper->new([\$l])->Dump() if($self->{'debug'} >= 2);
 			last if(ref($l) eq 'Geo::Location::Point');
