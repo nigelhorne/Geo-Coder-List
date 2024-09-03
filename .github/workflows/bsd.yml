@@ -11,17 +11,17 @@ on:
   pull_request:
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         os:
           # HTML::Entities is part of HTML::Parser
           - name: freebsd
-            version: '13.0'
+            version: '13.3'
             pkginstall: pkg install -y p5-ExtUtils-MakeMaker p5-Test-Deep p5-Test-Most p5-Test-Needs p5-Test-NoWarnings p5-Test-Number-Delta p5-LWP-Protocol-https p5-HTML-Parser
           - name: openbsd
-            version: '7.1'
+            version: '7.5'
             pkginstall: pkg_add p5-List-MoreUtils p5-Log-Any
 
     steps:
@@ -42,3 +42,7 @@ jobs:
             AUTOMATED_TESTING=1 perl Makefile.PL
             AUTOMATED_TESTING=1 make
             AUTOMATED_TESTING=1 prove -wlmb t
+          env:
+            AUTOMATED_TESTING=1
+            AUTHOR_TESTING=1
+            NO_NETWORK_TESTING=1

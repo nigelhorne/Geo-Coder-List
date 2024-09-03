@@ -9,6 +9,8 @@ on:
     tags-ignore:
       - '*'
   pull_request:
+  schedule:
+    - cron: '12 23 4 * *'
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -17,12 +19,9 @@ jobs:
       matrix:
         os:
           - macos-latest
-          - macos-11
           - ubuntu-latest
-          - ubuntu-20.04
           - windows-latest
-          - windows-2019
-        perl: ['5.36', '5.34', '5.32', '5.30', '5.28', '5.22']
+        perl: ['5.38', '5.36', '5.34', '5.32', '5.30', '5.28', '5.22']
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +35,20 @@ jobs:
           cpanm -iqn --skip-satisfied File::Spec ExtUtils::MakeMaker
           cpanm -iqn --skip-satisfied Test::Script Test::Pod::Spelling::CommonMistakes Test::Portability::Files Test::Taint Test::Carp Test::Pod::Coverage
           cpanm -iqn --skip-satisfied --installdeps --notest .
+      - name: Make Module
+        run: |
+          # find . -name build.log | xargs cat
+          perl Makefile.PL
+          make
       - name: Run Tests
-        run: prove -l -b t
+        # run: prove -l -b t
+        run: |
+          cover -test
+          cover -report codecov
+          curl -Os https://uploader.codecov.io/latest/macos/codecov
+          chmod +x codecov
+          ./codecov -t ${{ secrets.CODECOV_TOKEN }}
         env:
           AUTHOR_TESTING: 1
+          AUTOMATED_TESTING: 1
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
