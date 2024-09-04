@@ -38,6 +38,9 @@ jobs:
       - run:
           name: Make Module
           command: sudo chown -R circleci . && perl Makefile.PL && make
+          environment:
+            AUTOMATED_TESTING: 1
+            AUTHOR_TESTING: 1
       - run:
           name: Run tests
           environment:
