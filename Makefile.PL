@@ -22,6 +22,7 @@ if($ENV{AUTHOR_TESTING}) {
 
 my $test_requires = {
 	'Test::Deep' => 0,
+	'Test::DescribeMe' => 0,
 	'Test::Most' => 0,
 	'Test::Needs' => 0,
 	'Test::NoWarnings' => 0,
@@ -47,6 +48,15 @@ if($online_tests) {
 	unlink('t/online.enabled');
 }
 
+my $dist = {
+	COMPRESS => 'gzip -9f',
+	SUFFIX => 'gz'
+};
+
+if($^O eq 'darwin') {
+	$dist->{'TAR'} = 'gtar';
+}
+
 WriteMakefile(
     NAME		=> 'Geo::Coder::List',
     AUTHOR		=> q{Nigel Horne <njh@bandsman.co.uk>},
@@ -63,8 +73,7 @@ WriteMakefile(
 	'LWP::Protocol::https' => 0,
 	'Time::HiRes' => 0,
 	'HTML::Entities' => 0,
-    },
-    dist		=> { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    }, dist => $dist,
     clean		=> { FILES => 'Geo::Coder::List-*' },
     META_MERGE		=> {
 	'meta-spec' => { version => 2 },
@@ -84,7 +93,7 @@ WriteMakefile(
 
 sub are_online
 {
-	return 0 if($ENV{'NO_NETWORK_TESTING'} || $ENV{'TRAVIS_PERL_VERSION'}) || $ENV{'AUTOMATED_TESTING'} || (!-t STDIN);
+	return 0 if($ENV{'NO_NETWORK_TESTING'} || $ENV{'CIRCLECI'} || $ENV{'TRAVIS_PERL_VERSION'} || $ENV{'AUTOMATED_TESTING'} || $ENV{'NONINTERACTIVE_TESTING'} || (!-t STDIN));
 
 	if(my $s = IO::Socket::INET->new(
 		PeerAddr => 'openstreetmap.org:443',
