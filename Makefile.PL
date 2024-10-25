@@ -70,9 +70,10 @@ WriteMakefile(
     TEST_REQUIRES => $test_requires,
     PREREQ_PM => {
 	'Carp' => 0,
-	'LWP::Protocol::https' => 0,
-	'Time::HiRes' => 0,
 	'HTML::Entities' => 0,
+	'LWP::Protocol::https' => 0,
+	'Scalar::Util' => 0,
+	'Time::HiRes' => 0
     }, dist => $dist,
     clean		=> { FILES => 'Geo::Coder::List-*' },
     META_MERGE		=> {

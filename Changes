@@ -3,6 +3,8 @@ Revision history for Geo-Coder-List
 0.34
 	Turn off on-line tests for smokers
 	Use Test::DescribeMe to simplify tests
+	new(): Use Scalar::Util to verify it's an object
+	Added support for Geo::Coder::ApifyKey
 
 0.33	Thu May 16 09:28:54 EDT 2024
 	Fix test count in t/googleplaces.t
