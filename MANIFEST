@@ -31,7 +31,6 @@ t/google.t
 t/googleplaces.t
 t/gv.t
 t/kwalitee.t
-t/links.t
 t/list.t
 t/manifest.t
 t/mapbox.t
@@ -41,6 +40,7 @@ t/opencage.t
 t/osm.t
 t/ovi.t
 t/pod-cm.t
+t/pod-links.t
 t/pod-snippets.t
 t/pod-spelling.t
 t/pod-synopsis.t
