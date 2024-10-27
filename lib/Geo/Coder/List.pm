@@ -20,11 +20,11 @@ Geo::Coder::List - Call many Geo-Coders
 
 =head1 VERSION
 
-Version 0.33
+Version 0.34
 
 =cut
 
-our $VERSION = '0.33';
+our $VERSION = '0.34';
 our %locations;	# L1 cache, always used
 
 =head1 SYNOPSIS
@@ -770,13 +770,14 @@ sub _get_params
 
 	# Populate %rc based on the number and type of arguments
 	if(($num_args == 1) && (defined $default)) {
-		%rc = ($default => shift);
+		# %rc = ($default => shift);
+		return { $default => shift };
 	} elsif(($num_args % 2) == 0) {
 		%rc = @_;
 	} elsif($num_args == 1) {
-		Carp::croak("Usage: ", __PACKAGE__, "->", (caller(1))[3], "()");
+		Carp::croak('Usage: ', __PACKAGE__, '->', (caller(1))[3], '()');
 	} elsif($num_args == 0 && defined $default) {
-		Carp::croak("Usage: ", __PACKAGE__, "->", (caller(1))[3], "($default => \$val)");
+		Carp::croak('Usage: ', __PACKAGE__, '->', (caller(1))[3], '($default => \$val)');
 	}
 
 	return \%rc;
