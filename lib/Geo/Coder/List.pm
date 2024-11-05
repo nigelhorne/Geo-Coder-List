@@ -396,12 +396,16 @@ sub geocode {
 							$lat = $l->{'features'}[0]{'geometry'}{'coordinates'}[1];
 							$long = $l->{'features'}[0]{'geometry'}{'coordinates'}[0];
 							$l->{'debug'} = __LINE__;
+						} else {
+							# GeoApify doesn't give an error if a location is not found
+							next ENCODER;
 						}
 					} else {
 						$l->{'debug'} = __LINE__;
 					}
 
 					if(defined($lat) && defined($long)) {
+						print __LINE__, "\n";
 						$l->{geometry}{location}{lat} = $lat;
 						$l->{geometry}{location}{lng} = $long;
 					} else {
@@ -414,6 +418,7 @@ sub geocode {
 					}
 				}
 				if(defined($l->{geometry}{location}{lat})) {
+						print __LINE__, "\n";
 					print $l->{geometry}{location}{lat}, '/', $l->{geometry}{location}{lng}, "\n" if($self->{'debug'});
 					$l->{geocoder} = $geocoder;
 					$l->{'lat'} //= $l->{geometry}{location}{lat};
@@ -429,6 +434,7 @@ sub geocode {
 					CORE::push @{$self->{'log'}}, $log;
 					last POSSIBLE_LOCATION;
 				}
+						print __LINE__, "\n";
 			}
 		}
 

@@ -1,5 +1,8 @@
 Revision history for Geo-Coder-List
 
+0.35
+	GeoApify doesn't give an error if a location is not found
+
 0.34	Sat Oct 26 20:42:57 EDT 2024
 	Turn off on-line tests for smokers
 	Use Test::DescribeMe to simplify tests
