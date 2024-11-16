@@ -405,7 +405,6 @@ sub geocode {
 					}
 
 					if(defined($lat) && defined($long)) {
-						print __LINE__, "\n";
 						$l->{geometry}{location}{lat} = $lat;
 						$l->{geometry}{location}{lng} = $long;
 					} else {
@@ -418,7 +417,6 @@ sub geocode {
 					}
 				}
 				if(defined($l->{geometry}{location}{lat})) {
-						print __LINE__, "\n";
 					print $l->{geometry}{location}{lat}, '/', $l->{geometry}{location}{lng}, "\n" if($self->{'debug'});
 					$l->{geocoder} = $geocoder;
 					$l->{'lat'} //= $l->{geometry}{location}{lat};
