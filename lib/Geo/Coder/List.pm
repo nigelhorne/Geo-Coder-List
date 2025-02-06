@@ -42,7 +42,7 @@ L<HTML::GoogleMaps::V3>
 
 Creates a Geo::Coder::List object.
 
-Takes an optional argument 'cache' which takes an cache object that supports
+Takes an optional argument 'cache' which takes a cache object that supports
 get() and set() methods.
 Takes an optional argument 'debug',
 the higher the number,
@@ -50,7 +50,7 @@ the more debugging.
 The licences of some geo coders,
 such as Google,
 specifically prohibit caching API calls,
-so be careful to only use with those services that allow it.
+so be careful to only use those services that allow it.
 
     use Geo::Coder::List;
     use CHI;
@@ -82,7 +82,7 @@ sub new
 
 =head2 push
 
-Add an encoder to list of encoders.
+Add an encoder to the list of encoders.
 
     use Geo::Coder::List;
     use Geo::Coder::GooglePlaces;
@@ -90,7 +90,7 @@ Add an encoder to list of encoders.
     my $list = Geo::Coder::List->new()->push(Geo::Coder::GooglePlaces->new());
 
 Different encoders can be preferred for different locations.
-For example this code uses geocode.ca for Canada and US addresses,
+For example, this code uses geocode.ca for Canada and US addresses,
 and OpenStreetMap for other places:
 
     my $geo_coderlist = Geo::Coder::List->new()
@@ -763,7 +763,8 @@ sub _cache {
 	return $rc;
 }
 
-# Helper routine to parse the arguments given to a function,
+# Helper routine to parse the arguments given to a function.
+# Processes arguments passed to methods and ensures they are in a usable format,
 #	allowing the caller to call the function in anyway that they want
 #	e.g. foo('bar'), foo(arg => 'bar'), foo({ arg => 'bar' }) all mean the same
 #	when called _get_params('arg', @_);
@@ -773,7 +774,7 @@ sub _get_params
 	my $default = shift;
 
 	# Directly return hash reference if the first parameter is a hash reference
-	return $_[0] if ref $_[0] eq 'HASH';
+	return $_[0] if(ref $_[0] eq 'HASH');
 
 	my %rc;
 	my $num_args = scalar @_;
@@ -782,16 +783,21 @@ sub _get_params
 	if(($num_args == 1) && (defined $default)) {
 		# %rc = ($default => shift);
 		return { $default => shift };
-	} elsif(($num_args % 2) == 0) {
-		%rc = @_;
 	} elsif($num_args == 1) {
 		Carp::croak('Usage: ', __PACKAGE__, '->', (caller(1))[3], '()');
-	} elsif($num_args == 0 && defined $default) {
-		Carp::croak('Usage: ', __PACKAGE__, '->', (caller(1))[3], '($default => \$val)');
+	} elsif(($num_args == 0) && (defined($default))) {
+		Carp::croak('Usage: ', __PACKAGE__, '->', (caller(1))[3], "($default => \$val)");
+	} elsif(($num_args % 2) == 0) {
+		%rc = @_;
+	} elsif($num_args == 0) {
+		return;
+	} else {
+		Carp::croak('Usage: ', __PACKAGE__, '->', (caller(1))[3], '()');
 	}
 
 	return \%rc;
 }
+
 
 =head1 AUTHOR
 

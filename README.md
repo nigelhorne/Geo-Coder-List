@@ -2,6 +2,8 @@
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/naayd09612e10llw/branch/master?svg=true)](https://ci.appveyor.com/project/nigelhorne/geo-coder-list/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/nigelhorne/Geo-Coder-List/badge.svg?branch=master)](https://coveralls.io/github/nigelhorne/Geo-Coder-List?branch=master)
 [![CPAN](https://img.shields.io/cpan/v/Geo-Coder-List.svg)](https://metacpan.org/release/Geo-Coder-List)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nigelhorne/geo-coder-list/test.yml?branch=master)
+![Perl Version](https://img.shields.io/badge/perl-5.10.1+-blue)
 
 # NAME
 
