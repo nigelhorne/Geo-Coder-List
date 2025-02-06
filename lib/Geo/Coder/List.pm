@@ -42,8 +42,7 @@ L<HTML::GoogleMaps::V3>
 
 Creates a Geo::Coder::List object.
 
-Takes an optional argument 'cache' which takes a cache object that supports
-get() and set() methods.
+Takes an optional argument 'cache' which is a reference to a HASH or an object that supports C<get()> and C<set()> methods.
 Takes an optional argument 'debug',
 the higher the number,
 the more debugging.
@@ -741,7 +740,11 @@ sub _cache {
 				$duration = '1 month';
 			}
 			print Data::Dumper->new([$value])->Dump() if($self->{'debug'});
-			$self->{'cache'}->set($key, $value, $duration);
+			if(ref($self->{'cache'}) eq 'HASH') {
+				$self->{'cache'}->{$key} = $value;
+			} else {
+				$self->{'cache'}->set($key, $value, $duration);
+			}
 		}
 		return $rc;
 	}
@@ -749,7 +752,11 @@ sub _cache {
 	# Retrieve from the cache
 	my $rc = $locations{$key};	# In the L1 cache?
 	if((!defined($rc)) && $self->{'cache'}) {	# In the L2 cache?
-		$rc = $self->{'cache'}->get($key);
+		if(ref($self->{'cache'}) eq 'HASH') {
+			$rc = $self->{'cache'}->{$key};
+		} else {
+			$rc = $self->{'cache'}->get($key);
+		}
 	}
 	if(defined($rc)) {
 		if(ref($rc) eq 'HASH') {	# else - it will be an array of hashes
