@@ -412,8 +412,13 @@ sub geocode {
 					if(defined($lat) && defined($long)) {
 						$l->{geometry}{location}{lat} = $lat;
 						$l->{geometry}{location}{lng} = $long;
+						# Compatibility
+						$l->{'lat'} = $lat;
+						$l->{'lon'} = $long;
 					} else {
 						delete $l->{'geometry'};
+						delete $l->{'lat'};
+						delete $l->{'lon'};
 					}
 
 					if($l->{'standard'}{'countryname'}) {
