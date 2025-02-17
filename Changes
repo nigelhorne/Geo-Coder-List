@@ -4,7 +4,7 @@ Revision history for Geo-Coder-List
 	GeoApify doesn't give an error if a location is not found
 	geocode(): croak when input is just a set of numbers
 	Allow a ref to a HASH to be used as the cache
-	Added lat and lon to the output HASH for easier compatbility
+	Added lat and lon to the output HASH for easier compatibility
 
 0.34	Sat Oct 26 20:42:57 EDT 2024
 	Turn off on-line tests for smokers

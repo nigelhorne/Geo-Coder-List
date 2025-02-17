@@ -431,6 +431,7 @@ sub geocode {
 					$l->{geocoder} = $geocoder;
 					$l->{'lat'} //= $l->{geometry}{location}{lat};
 					$l->{'lng'} //= $l->{geometry}{location}{lng};
+					$l->{'lon'} //= $l->{geometry}{location}{lng};
 					my $log = {
 						line => $call_details[2],
 						location => $location,
@@ -770,6 +771,7 @@ sub _cache {
 			}
 			$rc->{'lat'} //= $rc->{geometry}{location}{lat};
 			$rc->{'lng'} //= $rc->{geometry}{location}{lng};
+			$rc->{'lon'} //= $rc->{geometry}{location}{lng};
 		}
 	}
 	return $rc;
