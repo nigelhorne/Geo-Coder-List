@@ -20,11 +20,11 @@ Geo::Coder::List - Call many Geo-Coders
 
 =head1 VERSION
 
-Version 0.34
+Version 0.35
 
 =cut
 
-our $VERSION = '0.34';
+our $VERSION = '0.35';
 our %locations;	# L1 cache, always used
 
 =head1 SYNOPSIS
@@ -856,7 +856,7 @@ L<https://metacpan.org/release/Geo-Coder-List>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016-2024 Nigel Horne.
+Copyright 2016-2025 Nigel Horne.
 
 This program is released under the following licence: GPL2
 

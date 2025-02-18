@@ -11,7 +11,7 @@ Geo::Coder::List - Call many Geo-Coders
 
 # VERSION
 
-Version 0.34
+Version 0.35
 
 # SYNOPSIS
 
@@ -28,15 +28,14 @@ This module's primary use is to allow many backends to be used by
 
 Creates a Geo::Coder::List object.
 
-Takes an optional argument 'cache' which takes an cache object that supports
-get() and set() methods.
+Takes an optional argument 'cache' which is a reference to a HASH or an object that supports `get()` and `set()` methods.
 Takes an optional argument 'debug',
 the higher the number,
 the more debugging.
 The licences of some geo coders,
 such as Google,
 specifically prohibit caching API calls,
-so be careful to only use with those services that allow it.
+so be careful to only use those services that allow it.
 
     use Geo::Coder::List;
     use CHI;
@@ -45,7 +44,7 @@ so be careful to only use with those services that allow it.
 
 ## push
 
-Add an encoder to list of encoders.
+Add an encoder to the list of encoders.
 
     use Geo::Coder::List;
     use Geo::Coder::GooglePlaces;
@@ -53,7 +52,7 @@ Add an encoder to list of encoders.
     my $list = Geo::Coder::List->new()->push(Geo::Coder::GooglePlaces->new());
 
 Different encoders can be preferred for different locations.
-For example this code uses geocode.ca for Canada and US addresses,
+For example, this code uses geocode.ca for Canada and US addresses,
 and OpenStreetMap for other places:
 
     my $geo_coderlist = Geo::Coder::List->new()
@@ -156,6 +155,6 @@ You can also look for information at:
 
 # LICENSE AND COPYRIGHT
 
-Copyright 2016-2024 Nigel Horne.
+Copyright 2016-2025 Nigel Horne.
 
 This program is released under the following licence: GPL2
