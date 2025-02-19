@@ -44,6 +44,7 @@ if($online_tests) {
 	# $test_requires->{'Geo::Coder::XYZ'} = 0.06;
 	$test_requires->{'Test::LWP::UserAgent'} = 0;
 	$test_requires->{'Test::Carp'} = 0;
+	$test_requires->{'Test::RequiresInternet'} = 0;
 	$test_requires->{'LWP::UserAgent::Throttled'} = 0.04;
 } else {
 	unlink('t/online.enabled');

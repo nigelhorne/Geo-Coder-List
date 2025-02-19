@@ -6,7 +6,7 @@ use warnings;
 use Test::Most tests => 21;
 use Test::Needs 'Geo::Coder::GeoApify';
 use Test::NoWarnings;
-use Test::RequiresInternet('api.geoapify.com' => 443);
+use Test::RequiresInternet('api.geoapify.com' => 'https');
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
 
