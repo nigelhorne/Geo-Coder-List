@@ -47,7 +47,7 @@ CANADA: {
 
 		like($geocoderlist->reverse_geocode('39.00,-77.10'), qr/Bethesda/i, 'test reverse geocode');
 
-		ok(!defined($geocoderlist->geocode()));
+		throws_ok( sub { $geocoderlist->geocode() }, qr/^Usage: /, 'No arguments gets usage message');
 		ok(!defined($geocoderlist->geocode('')));
 
 		$location = $geocoderlist->geocode(location => 'Allen, Maryland, USA');
