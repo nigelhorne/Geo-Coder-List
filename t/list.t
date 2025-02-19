@@ -151,7 +151,7 @@ LIST: {
 		delta_within($location->{geometry}{location}{lng}, 1.42, 1e-2);
 		is(ref($location->{'geocoder'}), 'Geo::Coder::Postcodes', 'Verify Postcodes encoder is used');
 
-		ok(!defined($geocoderlist->geocode()));
+		throws_ok( sub { $geocoderlist->geocode() }, qr/^Usage: /, 'No arguments gets usage message');
 		ok(!defined($geocoderlist->geocode('')));
 
 		my $log = $geocoderlist->log();
