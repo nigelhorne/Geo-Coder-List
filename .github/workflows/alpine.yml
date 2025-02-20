@@ -26,7 +26,7 @@ jobs:
           apk add perl perl-app-cpanminus make gzip git
           apk add perl-test-most perl-test-nowarnings perl-http-message
           apk add perl-lwp-protocol-https perl-html-parser perl-test-needs
-          apk add perl-test-number-delta perl-test-mockmodule perl-test-requiresinternet
+          apk add perl-test-number-delta perl-test-mockmodule perl-test-requiresinternet perl-test-mockobject
           perl -V
           # cpanm -iqn ExtUtils::MakeMaker File::Spec Test::Most
           # cpanm -iqn Sub::Identify Log::Any
