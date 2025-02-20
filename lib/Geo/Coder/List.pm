@@ -34,22 +34,30 @@ and
 L<Geo::Coder::Many>
 are great routines but neither quite does what I want.
 This module's primary use is to allow many backends to be used by
-L<HTML::GoogleMaps::V3>
+L<HTML::OSM> or L<HTML::GoogleMaps::V3>.
+
+C<Geo::Coder::List> is designed to simplify geocoding tasks by aggregating multiple geocoding services into a single, unified interface.
+It allows developers to chain and prioritize various geocoding backends (such as Google Places, OpenStreetMap, and GeoNames)
+based on specific conditions,
+such as location or usage limits.
+The module features built-in caching mechanisms to optimize performance and reduce redundant API calls,
+while also normalizing responses from different providers into a consistent format for easier integration with mapping systems like L<HTML::OSM>.
 
 =head1 SUBROUTINES/METHODS
 
 =head2 new
 
-Creates a Geo::Coder::List object.
+Creates a C<Geo::Coder::List> object.
 
-Takes an optional argument 'cache' which is a reference to a HASH or an object that supports C<get()> and C<set()> methods.
-Takes an optional argument 'debug',
-the higher the number,
-the more debugging.
+Takes an optional argument C<cache> which is a reference to a HASH or an object that supports C<get()> and C<set()> methods.
 The licences of some geo coders,
 such as Google,
 specifically prohibit caching API calls,
 so be careful to only use those services that allow it.
+
+Takes an optional argument C<debug>,
+the higher the number,
+the more debugging.
 
     use Geo::Coder::List;
     use CHI;
@@ -63,12 +71,27 @@ sub new
 	my $class = shift;
 
 	# Handle hash or hashref arguments
-	my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
+	my %args;
+	if((@_ == 1) && (ref $_[0] eq 'HASH')) {
+		# If the first argument is a hash reference, dereference it
+		%args = %{$_[0]};
+	} elsif((scalar(@_) % 2) == 0) {
+		# If there is an even number of arguments, treat them as key-value pairs
+		%args = @_;
+	} else {
+		# If there is an odd number of arguments, treat it as an error
+		carp(__PACKAGE__, ': Invalid arguments passed to new()');
+		return;
+	}
 
 	if(!defined($class)) {
-		# Using Geo::Coder::List::new(), not Geo::Coder::List->new()
-		# carp(__PACKAGE__, ' use ->new() not ::new() to instantiate');
-		# return;
+		if((scalar keys %args) > 0) {
+			# Using Geo::Coder::List::new(), not Geo::Coder::List->new()
+			carp(__PACKAGE__, ' use ->new() not ::new() to instantiate');
+			return;
+		}
+
+		# FIXME: this only works when no arguments are given
 		$class = __PACKAGE__;
 	} elsif(Scalar::Util::blessed($class)) {
 		# If $class is an object, clone it with new arguments

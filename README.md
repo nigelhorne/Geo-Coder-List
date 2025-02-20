@@ -20,22 +20,30 @@ and
 [Geo::Coder::Many](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AMany)
 are great routines but neither quite does what I want.
 This module's primary use is to allow many backends to be used by
-[HTML::GoogleMaps::V3](https://metacpan.org/pod/HTML%3A%3AGoogleMaps%3A%3AV3)
+[HTML::GoogleMaps::V3](https://metacpan.org/pod/HTML%3A%3AGoogleMaps%3A%3AV3).
+
+`Geo::Coder::List` is designed to simplify geocoding tasks by aggregating multiple geocoding services into a single, unified interface.
+It allows developers to chain and prioritize various geocoding backends (such as Google Places, OpenStreetMap, and GeoNames)
+based on specific conditions,
+such as location or usage limits.
+The module features built-in caching mechanisms to optimize performance and reduce redundant API calls,
+while also normalizing responses from different providers into a consistent format for easier integration with mapping systems like [HTML::OSM](https://metacpan.org/pod/HTML%3A%3AOSM).
 
 # SUBROUTINES/METHODS
 
 ## new
 
-Creates a Geo::Coder::List object.
+Creates a `Geo::Coder::List` object.
 
-Takes an optional argument 'cache' which is a reference to a HASH or an object that supports `get()` and `set()` methods.
-Takes an optional argument 'debug',
-the higher the number,
-the more debugging.
+Takes an optional argument `cache` which is a reference to a HASH or an object that supports `get()` and `set()` methods.
 The licences of some geo coders,
 such as Google,
 specifically prohibit caching API calls,
 so be careful to only use those services that allow it.
+
+Takes an optional argument `debug`,
+the higher the number,
+the more debugging.
 
     use Geo::Coder::List;
     use CHI;
