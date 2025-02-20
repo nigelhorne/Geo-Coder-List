@@ -35,6 +35,7 @@ t/kwalitee.t
 t/list.t
 t/manifest.t
 t/mapbox.t
+t/mock.t
 t/no404s.t
 t/noplan.t
 t/opencage.t
