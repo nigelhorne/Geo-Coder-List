@@ -30,6 +30,7 @@ my $test_requires = {
 	'Test::NoWarnings' => 0,
 	'Test::Number::Delta' => 0,	# Always needed since used in free.t
 	'Test::RequiresInternet' => 0,
+	'Test::Without::Module' => 0,
 };
 
 if($online_tests) {
