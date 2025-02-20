@@ -33,15 +33,13 @@ L<Geo::Coder::All>
 and
 L<Geo::Coder::Many>
 are great routines but neither quite does what I want.
-This module's primary use is to allow many backends to be used by
-L<HTML::OSM> or L<HTML::GoogleMaps::V3>.
 
 C<Geo::Coder::List> is designed to simplify geocoding tasks by aggregating multiple geocoding services into a single, unified interface.
 It allows developers to chain and prioritize various geocoding backends (such as Google Places, OpenStreetMap, and GeoNames)
 based on specific conditions,
 such as location or usage limits.
 The module features built-in caching mechanisms to optimize performance and reduce redundant API calls,
-while also normalizing responses from different providers into a consistent format for easier integration with mapping systems like L<HTML::OSM>.
+while also normalizing responses from different providers into a consistent format for easier integration with mapping systems such as L<HTML::OSM> and <L<HTML::GoogleMaps::V3>.
 
 =head1 SUBROUTINES/METHODS
 
