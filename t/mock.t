@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use Test::MockingBird;
+use Test::Mockingbird;
 use Test::Most;
 
 BEGIN { use_ok('Geo::Coder::List') }
