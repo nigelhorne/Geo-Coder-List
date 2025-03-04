@@ -6,6 +6,7 @@ use warnings;
 use strict;
 use Carp;
 use HTML::Entities;
+use Params::Get;
 use Time::HiRes;
 use Scalar::Util;
 
@@ -156,7 +157,7 @@ if the value was retrieved from the cache the value will be undefined.
 
 sub geocode {
 	my $self = shift;
-	my $params = $self->_get_params('location', @_);
+	my $params = Params::Get::get_params('location', @_);
 
 	my $location = $params->{'location'};
 
@@ -543,12 +544,12 @@ Similar to geocode except it expects a latitude/longitude parameter.
 
 sub reverse_geocode {
 	my $self = shift;
-	my $params = $self->_get_params('latlng', @_);
+	my $params = Params::Get::get_params('latlng', @_);
 
 	my $latlng = $params->{'latlng'}
 		or Carp::croak('Usage: reverse_geocode(latlng => $location)');
 
-	my ($latitude, $longitude) = split(/,/, $latlng);
+	my ($latitude, $longitude);
 	if($latlng) {
 		($latitude, $longitude) = split(/,/, $latlng);
 		$params->{'lat'} //= $latitude;
@@ -797,42 +798,6 @@ sub _cache {
 	}
 	return $rc;
 }
-
-# Helper routine to parse the arguments given to a function.
-# Processes arguments passed to methods and ensures they are in a usable format,
-#	allowing the caller to call the function in anyway that they want
-#	e.g. foo('bar'), foo(arg => 'bar'), foo({ arg => 'bar' }) all mean the same
-#	when called _get_params('arg', @_);
-sub _get_params
-{
-	shift;  # Discard the first argument (typically $self)
-	my $default = shift;
-
-	# Directly return hash reference if the first parameter is a hash reference
-	return $_[0] if(ref $_[0] eq 'HASH');
-
-	my %rc;
-	my $num_args = scalar @_;
-
-	# Populate %rc based on the number and type of arguments
-	if(($num_args == 1) && (defined $default)) {
-		# %rc = ($default => shift);
-		return { $default => shift };
-	} elsif($num_args == 1) {
-		Carp::croak('Usage: ', __PACKAGE__, '->', (caller(1))[3], '()');
-	} elsif(($num_args == 0) && (defined($default))) {
-		Carp::croak('Usage: ', __PACKAGE__, '->', (caller(1))[3], "($default => \$val)");
-	} elsif(($num_args % 2) == 0) {
-		%rc = @_;
-	} elsif($num_args == 0) {
-		return;
-	} else {
-		Carp::croak('Usage: ', __PACKAGE__, '->', (caller(1))[3], '()');
-	}
-
-	return \%rc;
-}
-
 
 =head1 AUTHOR
 

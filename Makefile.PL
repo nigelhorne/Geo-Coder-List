@@ -77,6 +77,7 @@ WriteMakefile(
 	'Carp' => 0,
 	'HTML::Entities' => 0,
 	'LWP::Protocol::https' => 0,
+	'Params::Get' => 0,
 	'Scalar::Util' => 0,
 	'Time::HiRes' => 0
     }, dist => $dist,
