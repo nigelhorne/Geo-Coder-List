@@ -6,7 +6,7 @@ use warnings;
 use strict;
 use Carp;
 use HTML::Entities;
-use Params::Get;
+use Params::Get 0.04;
 use Time::HiRes;
 use Scalar::Util;
 
@@ -68,23 +68,10 @@ the more debugging.
 sub new
 {
 	my $class = shift;
-
-	# Handle hash or hashref arguments
-	my %args;
-	if((@_ == 1) && (ref $_[0] eq 'HASH')) {
-		# If the first argument is a hash reference, dereference it
-		%args = %{$_[0]};
-	} elsif((scalar(@_) % 2) == 0) {
-		# If there is an even number of arguments, treat them as key-value pairs
-		%args = @_;
-	} else {
-		# If there is an odd number of arguments, treat it as an error
-		carp(__PACKAGE__, ': Invalid arguments passed to new()');
-		return;
-	}
+	my $params = Params::Get::get_params(undef, @_) || {};
 
 	if(!defined($class)) {
-		if((scalar keys %args) > 0) {
+		if((scalar keys %{$params}) > 0) {
 			# Using Geo::Coder::List::new(), not Geo::Coder::List->new()
 			carp(__PACKAGE__, ' use ->new() not ::new() to instantiate');
 			return;
@@ -94,11 +81,11 @@ sub new
 		$class = __PACKAGE__;
 	} elsif(Scalar::Util::blessed($class)) {
 		# If $class is an object, clone it with new arguments
-		return bless { %{$class}, %args }, ref($class);
+		return bless { %{$class}, %{$params} }, ref($class);
 	}
 
 	# Return the blessed object
-	return bless { debug => DEBUG, geo_coders => [], %args }, $class;
+	return bless { debug => DEBUG, geo_coders => [], %{$params} }, $class;
 }
 
 =head2 push
