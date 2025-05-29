@@ -3,10 +3,9 @@
 use strict;
 use warnings;
 
-use Test::Most tests => 21;
-use Test::Needs 'Geo::Coder::GeoApify';
-use Test::NoWarnings;
+use Test::Most;
 use Test::RequiresInternet('api.geoapify.com' => 'https');
+use Test::Needs 'Geo::Coder::GeoApify';
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
 
@@ -76,3 +75,5 @@ GEOAPIFY: {
 		}
 	}
 }
+
+done_testing();

@@ -4,6 +4,7 @@ Revision history for Geo-Coder-List
 	Invalid option now throws error rather than returning undef
 	Added t/mock.t
 	Use Params::Get
+	Clean up NO_NETWORK_TESTING setting
 
 0.35	Mon Feb 17 20:27:10 EST 2025
 	GeoApify doesn't give an error if a location is not found

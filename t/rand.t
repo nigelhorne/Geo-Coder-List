@@ -7,7 +7,10 @@ use Test::RequiresInternet('a2ageo.rmservers.com' => 'https');
 
 eval 'use autodie qw(:all)';	# Test for open/close failures
 
-BEGIN { use_ok('Geo::Coder::List') }
+BEGIN {
+	use_ok('Geo::Coder::List');
+	$ENV{'NO_NETWORK_TESTING'} = 1 unless(-e 't/online.enabled')
+}
 
 RAND: {
 	SKIP: {
