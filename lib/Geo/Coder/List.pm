@@ -85,7 +85,7 @@ sub new
 	}
 
 	# Return the blessed object
-	return bless { debug => DEBUG, geo_coders => [], %{$params} }, $class;
+	return bless { debug => DEBUG, geocoders => [], %{$params} }, $class;
 }
 
 =head2 push
@@ -105,7 +105,7 @@ and OpenStreetMap for other places:
         ->push({ regex => qr/(Canada|USA|United States)$/, geocoder => Geo::Coder::CA->new() })
         ->push(Geo::Coder::OSM->new());
 
-    # Uses Geo::Coder::CA, and if that fails uses Geo::Coder::OSM
+    # Uses Geo::Coder::CA, and if that fails, uses Geo::Coder::OSM
     my $location = $geo_coderlist->geocode(location => '1600 Pennsylvania Ave NW, Washington DC, USA');
     # Only uses Geo::Coder::OSM
     if($location = $geo_coderlist->geocode('10 Downing St, London, UK')) {
