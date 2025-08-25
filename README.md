@@ -48,6 +48,12 @@ the more debugging.
 
     my $geocoder->new(cache => CHI->new(driver => 'Memory', global => 1));
 
+The class can be configured at runtime using environments and configuration files,
+for example,
+setting `$ENV{'GEO__CODER__LIST__carp_on_warn'}` causes warnings to use [Carp](https://metacpan.org/pod/Carp).
+For more information about runtime configuration,
+see [Object::Configure](https://metacpan.org/pod/Object%3A%3AConfigure).
+
 ## push
 
 Add an encoder to the list of encoders.
@@ -65,7 +71,7 @@ and OpenStreetMap for other places:
         ->push({ regex => qr/(Canada|USA|United States)$/, geocoder => Geo::Coder::CA->new() })
         ->push(Geo::Coder::OSM->new());
 
-    # Uses Geo::Coder::CA, and if that fails uses Geo::Coder::OSM
+    # Uses Geo::Coder::CA, and if that fails, uses Geo::Coder::OSM
     my $location = $geo_coderlist->geocode(location => '1600 Pennsylvania Ave NW, Washington DC, USA');
     # Only uses Geo::Coder::OSM
     if($location = $geo_coderlist->geocode('10 Downing St, London, UK')) {
@@ -139,11 +145,14 @@ reverse\_geocode() should support [Geo::Location::Point](https://metacpan.org/po
 
 # SEE ALSO
 
-[Geo::Coder::All](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AAll)
-[Geo::Coder::GooglePlaces](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AGooglePlaces)
-[Geo::Coder::Many](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AMany)
+- [Geo::Coder::All](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AAll)
+- [Geo::Coder::GooglePlaces](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AGooglePlaces)
+- [Geo::Coder::Many](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AMany)
+- [Object::Configure](https://metacpan.org/pod/Object%3A%3AConfigure)
 
 # SUPPORT
+
+This module is provided as-is without any warranty.
 
 You can find documentation for this module with the perldoc command.
 

@@ -7,6 +7,7 @@ use strict;
 use Carp;
 use HTML::Entities;
 use Params::Get 0.04;
+use Object::Configure 0.13;
 use Time::HiRes;
 use Scalar::Util;
 
@@ -26,7 +27,6 @@ Version 0.35
 =cut
 
 our $VERSION = '0.35';
-our %locations;	# L1 cache, always used
 
 =head1 SYNOPSIS
 
@@ -63,6 +63,12 @@ the more debugging.
 
     my $geocoder->new(cache => CHI->new(driver => 'Memory', global => 1));
 
+The class can be configured at runtime using environments and configuration files,
+for example,
+setting C<$ENV{'GEO__CODER__LIST__carp_on_warn'}> causes warnings to use L<Carp>.
+For more information about configuring object constructors at runtime,
+see L<Object::Configure>.
+
 =cut
 
 sub new
@@ -84,8 +90,11 @@ sub new
 		return bless { %{$class}, %{$params} }, ref($class);
 	}
 
+	$params = Object::Configure::configure($class, $params);
+
 	# Return the blessed object
-	return bless { debug => DEBUG, geocoders => [], %{$params} }, $class;
+	# Locations is an L1 cache that is always used
+	return bless { debug => DEBUG, locations => {}, geocoders => [], log => [], %{$params} }, $class;
 }
 
 =head2 push
@@ -120,9 +129,10 @@ and OpenStreetMap for other places:
 =cut
 
 sub push {
-	my($self, $geocoder) = @_;
+	my $self = shift;
+	my $params = Params::Get::get_params('geocoder', \@_);
 
-	push @{$self->{geocoders}}, $geocoder;
+	push @{$self->{geocoders}}, $params->{'geocoder'};
 
 	return $self;
 }
@@ -702,7 +712,7 @@ sub _cache {
 
 	if(my $value = shift) {
 		# Put something into the cache
-		$locations{$key} = $value;
+		$self->{locations}->{$key} = $value;
 		my $rc = $value;
 		if($self->{'cache'}) {
 			my $duration;
@@ -765,7 +775,7 @@ sub _cache {
 	}
 
 	# Retrieve from the cache
-	my $rc = $locations{$key};	# In the L1 cache?
+	my $rc = $self->{'locations'}->{$key};	# In the L1 cache?
 	if((!defined($rc)) && $self->{'cache'}) {	# In the L2 cache?
 		if(ref($self->{'cache'}) eq 'HASH') {
 			$rc = $self->{'cache'}->{$key};
@@ -803,11 +813,23 @@ reverse_geocode() should support L<Geo::Location::Point> objects.
 
 =head1 SEE ALSO
 
-L<Geo::Coder::All>
-L<Geo::Coder::GooglePlaces>
-L<Geo::Coder::Many>
+=over 4
+
+=item * L<Geo::Coder::All>
+
+=item * L<Geo::Coder::GooglePlaces>
+
+=item * L<Geo::Coder::Many>
+
+=item * L<Object::Configure>
+
+=back
+
+=cut
 
 =head1 SUPPORT
+
+This module is provided as-is without any warranty.
 
 You can find documentation for this module with the perldoc command.
 
