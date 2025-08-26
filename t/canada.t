@@ -43,7 +43,7 @@ CANADA: {
 		delta_within($location->{geometry}{location}{lat}, 46.68, 1e-1);
 		delta_within($location->{geometry}{location}{lng}, -64.86, 1e-1);
 
-		sleep(1);	# Be nice to the server
+		sleep(2);	# Be nice to the server
 
 		like($geocoderlist->reverse_geocode('39.00,-77.10'), qr/Bethesda/i, 'test reverse geocode');
 
