@@ -129,10 +129,9 @@ and OpenStreetMap for other places:
 =cut
 
 sub push {
-	my $self = shift;
-	my $params = Params::Get::get_params('geocoder', \@_);
+	my($self, $geocoder) = @_;
 
-	push @{$self->{geocoders}}, $params->{'geocoder'};
+	push @{$self->{geocoders}}, $geocoder;
 
 	return $self;
 }
