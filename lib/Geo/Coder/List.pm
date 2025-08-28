@@ -128,13 +128,13 @@ and OpenStreetMap for other places:
 
 =cut
 
-sub push {
-	my $self = shift;
-	my $params = Params::Get::get_params('geocoder', @_);
+sub push
+{
+        my($self, $geocoder) = @_;	# Don't use Params::Get or else the regex will be lost
 
-	push @{$self->{geocoders}}, $params->{'geocoder'};
+        push @{$self->{geocoders}}, $geocoder;
 
-	return $self;
+        return $self;
 }
 
 =head2 geocode
