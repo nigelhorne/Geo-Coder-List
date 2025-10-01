@@ -473,6 +473,9 @@ sub geocode {
 				if(defined($rc[0]->{'long'}) && !defined($rc[0]->{'lng'})) {
 					$rc[0]->{'lng'} = $rc[0]->{'long'};
 				}
+				if(defined($rc[0]->{'long'}) && !defined($rc[0]->{'lon'})) {
+					$rc[0]->{'lon'} = $rc[0]->{'long'};
+				}
 				if((!defined($rc[0]->{lat})) || (!defined($rc[0]->{lng}))) {
 					# ::diag(Data::Dumper->new([\@rc])->Dump());
 					warn Data::Dumper->new([\@rc])->Dump();
@@ -766,7 +769,7 @@ sub _cache {
 			print Data::Dumper->new([$value])->Dump() if($self->{'debug'});
 			if(ref($self->{'cache'}) eq 'HASH') {
 				$self->{'cache'}->{$key} = $value;
-			} else {
+			} elsif(!ref($value)) {
 				$self->{'cache'}->set($key, $value, $duration);
 			}
 		}
