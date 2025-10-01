@@ -130,11 +130,11 @@ and OpenStreetMap for other places:
 
 sub push
 {
-        my($self, $geocoder) = @_;	# Don't use Params::Get or else the regex will be lost
+	my($self, $geocoder) = @_;	# Don't use Params::Get or else the regex will be lost
 
-        push @{$self->{geocoders}}, $geocoder;
+	push @{$self->{geocoders}}, $geocoder;
 
-        return $self;
+	return $self;
 }
 
 =head2 geocode
@@ -462,7 +462,6 @@ sub geocode {
 					CORE::push @{$self->{'log'}}, $log;
 					last POSSIBLE_LOCATION;
 				}
-						print __LINE__, "\n";
 			}
 		}
 
