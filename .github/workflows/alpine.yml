@@ -36,7 +36,7 @@ jobs:
           cd $RUNNER_WORKSPACE
           git clone --recurse-submodules $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git
           cd $GITHUB_WORKSPACE
-          cpanm -iqn File::Spec ExtUtils::MakeMaker
+          cpanm -iqn File::Spec ExtUtils::MakeMaker Object::Configure
           cpanm -iqn HTML::Entities Test::DescribeMe
           cpanm -iqn --installdeps .
       - name: Make module

@@ -63,10 +63,10 @@ if($^O eq 'darwin') {
 }
 
 WriteMakefile(
-    NAME		=> 'Geo::Coder::List',
-    AUTHOR		=> q{Nigel Horne <njh@bandsman.co.uk>},
-    VERSION_FROM	=> 'lib/Geo/Coder/List.pm',
-    ABSTRACT_FROM	=> 'lib/Geo/Coder/List.pm',
+	NAME		=> 'Geo::Coder::List',
+	AUTHOR		=> q{Nigel Horne <njh@nigelhorne.com>},
+	VERSION_FROM	=> 'lib/Geo/Coder/List.pm',
+	ABSTRACT_FROM	=> 'lib/Geo/Coder/List.pm',
     ((defined($ExtUtils::MakeMaker::VERSION) &&
      ($ExtUtils::MakeMaker::VERSION >= 6.3002))
       ? ('LICENSE'=> 'GPL')
