@@ -142,6 +142,8 @@ sub push
 {
 	my($self, $geocoder) = @_;	# Don't use Params::Get or else the regex will be lost
 
+	croak(__PACKAGE__, '::push: Usage: ($geocoder)') unless(defined($geocoder));
+
 	push @{$self->{geocoders}}, $geocoder;
 
 	return $self;
