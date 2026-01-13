@@ -839,6 +839,8 @@ reverse_geocode() should support L<Geo::Location::Point> objects.
 
 =over 4
 
+=item * Test coverage report: L<https://nigelhorne.github.io/Geo-Coder-List/coverage/>
+
 =item * L<Geo::Coder::All>
 
 =item * L<Geo::Coder::GooglePlaces>

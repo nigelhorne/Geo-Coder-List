@@ -102,7 +102,7 @@ if the value was retrieved from the cache the value will be undefined.
         print 'Location information retrieved using ', $location->{'geocoder'}, "\n";
     }
 
-## push($self, $ua)
+## ua($self, $ua)
 
 Accessor method to set the UserAgent object used internally by each of the Geo-Coders.
 You can call _env\_proxy_,
@@ -157,6 +157,7 @@ reverse\_geocode() should support [Geo::Location::Point](https://metacpan.org/po
 
 # SEE ALSO
 
+- Test coverage report: [https://nigelhorne.github.io/Geo-Coder-List/coverage/](https://nigelhorne.github.io/Geo-Coder-List/coverage/)
 - [Geo::Coder::All](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AAll)
 - [Geo::Coder::GooglePlaces](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AGooglePlaces)
 - [Geo::Coder::Many](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AMany)

@@ -9,6 +9,7 @@ Revision history for Geo-Coder-List
 	Don't try to store an object in the cache
 	Also set lon in the results
 	Check that the argument is given to push()
+	Added the test dashboard
 
 0.35	Mon Feb 17 20:27:10 EST 2025
 	GeoApify doesn't give an error if a location is not found
