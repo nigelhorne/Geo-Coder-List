@@ -82,7 +82,7 @@ WriteMakefile(
 	'Scalar::Util' => 0,
 	'Time::HiRes' => 0
     }, dist => $dist,
-    clean		=> { FILES => 'Geo::Coder::List-*' },
+    clean		=> { FILES => 'Geo-Coder-List-*' },
     META_MERGE		=> {
 	'meta-spec' => { version => 2 },
 	resources => {
