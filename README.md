@@ -102,7 +102,7 @@ if the value was retrieved from the cache the value will be undefined.
         print 'Location information retrieved using ', $location->{'geocoder'}, "\n";
     }
 
-## ua
+## push($self, $ua)
 
 Accessor method to set the UserAgent object used internally by each of the Geo-Coders.
 You can call _env\_proxy_,
@@ -116,6 +116,12 @@ to set the proxy information from environment variables:
 
 Note that unlike Geo::Coders,
 there is no read method since that would be pointless.
+
+### Parameters
+
+- `$ua` object (optional)
+
+    Useragent object.
 
 ## reverse\_geocode
 

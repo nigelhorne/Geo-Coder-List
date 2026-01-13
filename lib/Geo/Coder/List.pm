@@ -514,7 +514,7 @@ sub geocode {
 	$self->_cache($location, undef);
 }
 
-=head2 ua
+=head2 push($self, $ua)
 
 Accessor method to set the UserAgent object used internally by each of the Geo-Coders.
 You can call I<env_proxy>,
@@ -528,6 +528,16 @@ to set the proxy information from environment variables:
 
 Note that unlike Geo::Coders,
 there is no read method since that would be pointless.
+
+=head3 Parameters
+
+=over 4
+
+=item * C<$ua> object (optional)
+
+Useragent object.
+
+=back
 
 =cut
 
