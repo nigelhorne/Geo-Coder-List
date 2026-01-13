@@ -11,7 +11,7 @@ Geo::Coder::List - Call many Geo-Coders
 
 # VERSION
 
-Version 0.35
+Version 0.36
 
 # SYNOPSIS
 
@@ -183,6 +183,6 @@ You can also look for information at:
 
 # LICENSE AND COPYRIGHT
 
-Copyright 2016-2025 Nigel Horne.
+Copyright 2016-2026 Nigel Horne.
 
 This program is released under the following licence: GPL2
