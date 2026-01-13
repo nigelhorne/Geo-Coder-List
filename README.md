@@ -51,10 +51,10 @@ the more debugging.
 The class can be configured at runtime using environments and configuration files,
 for example,
 setting `$ENV{'GEO__CODER__LIST__carp_on_warn'}` causes warnings to use [Carp](https://metacpan.org/pod/Carp).
-For more information about runtime configuration,
+For more information about configuring object constructors at runtime,
 see [Object::Configure](https://metacpan.org/pod/Object%3A%3AConfigure).
 
-## push
+## push($self, $geocoder)
 
 Add an encoder to the list of encoders.
 
@@ -82,6 +82,12 @@ and OpenStreetMap for other places:
 
     # It is also possible to limit the number of enquires used by a particular encoder
     $geo_coderlist->push({ geocoder => Geo::Coder::GooglePlaces->new(key => '1234', limit => 100) });
+
+### Parameters
+
+- `$geocoder` hashref (required)
+
+    Hashref containing a regex and a geocoding object.
 
 ## geocode
 

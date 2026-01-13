@@ -1,5 +1,6 @@
 bin/address_lookup
 Changes
+cpanfile
 ignore.txt
 lib/Geo/Coder/List.pm
 LICENSE
