@@ -97,7 +97,7 @@ sub new
 	return bless { debug => DEBUG, locations => {}, geocoders => [], log => [], %{$params} }, $class;
 }
 
-=head2 push
+=head2 push($self, $geocoder)
 
 Add an encoder to the list of encoders.
 
@@ -125,6 +125,16 @@ and OpenStreetMap for other places:
 
     # It is also possible to limit the number of enquires used by a particular encoder
     $geo_coderlist->push({ geocoder => Geo::Coder::GooglePlaces->new(key => '1234', limit => 100) });
+
+=head3 Parameters
+
+=over 4
+
+=item * C<$geocoder> hashref (required)
+
+Hashref containing a regex and a geocoding object.
+
+=back
 
 =cut
 
