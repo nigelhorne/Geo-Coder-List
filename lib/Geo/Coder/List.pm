@@ -705,8 +705,7 @@ sub reverse_geocode {
 
 =head2 log
 
-Returns the log of events to help you debug failures,
-optimize lookup order and fix quota breakage.
+Returns the log of events as an arrayref.
 
     my @log = @{$geocoderlist->log()};
 
