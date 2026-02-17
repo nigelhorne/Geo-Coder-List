@@ -705,9 +705,21 @@ sub reverse_geocode {
 
 =head2 log
 
-Returns the log of events as an arrayref.
+Returns an arrayref of the log of events.
 
     my @log = @{$geocoderlist->log()};
+
+=head3 API SPECIFICATION
+
+=head4 INPUT
+
+None.
+
+=head4 OUTPUT
+
+  {
+    type => 'arrayref'
+  }
 
 =cut
 
@@ -838,7 +850,7 @@ reverse_geocode() should support L<Geo::Location::Point> objects.
 
 =over 4
 
-=item * Test coverage report: L<https://nigelhorne.github.io/Geo-Coder-List/coverage/>
+=item * L<Test Dashboard|https://nigelhorne.github.io/Geo-Coder-List/coverage/>
 
 =item * L<Geo::Coder::All>
 

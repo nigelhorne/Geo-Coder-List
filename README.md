@@ -131,10 +131,21 @@ Similar to geocode except it expects a latitude/longitude parameter.
 
 ## log
 
-Returns the log of events to help you debug failures,
-optimize lookup order and fix quota breakage.
+Returns an arrayref of the log of events.
 
     my @log = @{$geocoderlist->log()};
+
+### API SPECIFICATION
+
+#### INPUT
+
+None.
+
+#### OUTPUT
+
+    {
+      type => 'arrayref'
+    }
 
 ## flush
 
@@ -142,7 +153,7 @@ Clear the log.
 
 # AUTHOR
 
-Nigel Horne, `<njh at bandsman.co.uk>`
+Nigel Horne, `<njh at nigelhorne.com>`
 
 # BUGS
 
@@ -157,7 +168,7 @@ reverse\_geocode() should support [Geo::Location::Point](https://metacpan.org/po
 
 # SEE ALSO
 
-- Test coverage report: [https://nigelhorne.github.io/Geo-Coder-List/coverage/](https://nigelhorne.github.io/Geo-Coder-List/coverage/)
+- [Test Dashboard](https://nigelhorne.github.io/Geo-Coder-List/coverage/)
 - [Geo::Coder::All](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AAll)
 - [Geo::Coder::GooglePlaces](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AGooglePlaces)
 - [Geo::Coder::Many](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AMany)
