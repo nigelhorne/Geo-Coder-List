@@ -144,28 +144,28 @@ https://pjcj.net
 <tr><td class="h"><a id="L690">690</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (my $state = $rc-&gt;{&#39;prov&#39;})</td></tr>
 <tr><td class="h"><a id="L691">691</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $name</td></tr>
 <tr><td class="h"><a id="L697">697</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($rc-&gt;{&#39;features&#39;})</td></tr>
-<tr><td class="h"><a id="L737">737</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $value = shift())</td></tr>
-<tr><td class="h"><a id="L741">741</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($self-&gt;{&#39;cache&#39;})</td></tr>
-<tr><td class="h"><a id="L743">743</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (ref $value eq &#39;ARRAY&#39;) { }</td></tr>
+<tr><td class="h"><a id="L736">736</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $value = shift())</td></tr>
+<tr><td class="h"><a id="L740">740</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($self-&gt;{&#39;cache&#39;})</td></tr>
+<tr><td class="h"><a id="L742">742</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (ref $value eq &#39;ARRAY&#39;) { }</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">elsif (ref $value eq &#39;HASH&#39;) { }</td></tr>
-<tr><td class="h"><a id="L745">745</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (ref $item eq &quot;HASH&quot;)</td></tr>
-<tr><td class="h"><a id="L747">747</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless ($self-&gt;{&#39;debug&#39;})</td></tr>
-<tr><td class="h"><a id="L749">749</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless $k eq &quot;geometry&quot;</td></tr>
-<tr><td class="h"><a id="L752">752</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless (defined $item-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;})</td></tr>
-<tr><td class="h"><a id="L753">753</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (defined $item-&gt;{&#39;geometry&#39;}) { }</td></tr>
-<tr><td class="h"><a id="L765">765</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless (defined $duration)</td></tr>
-<tr><td class="h"><a id="L771">771</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">unless ($self-&gt;{&#39;debug&#39;})</td></tr>
-<tr><td class="h"><a id="L773">773</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $k eq &quot;geometry&quot;</td></tr>
-<tr><td class="h"><a id="L776">776</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (defined $value-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;}) { }</td></tr>
+<tr><td class="h"><a id="L744">744</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (ref $item eq &quot;HASH&quot;)</td></tr>
+<tr><td class="h"><a id="L746">746</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless ($self-&gt;{&#39;debug&#39;})</td></tr>
+<tr><td class="h"><a id="L748">748</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless $k eq &quot;geometry&quot;</td></tr>
+<tr><td class="h"><a id="L751">751</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless (defined $item-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;})</td></tr>
+<tr><td class="h"><a id="L752">752</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (defined $item-&gt;{&#39;geometry&#39;}) { }</td></tr>
+<tr><td class="h"><a id="L764">764</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless (defined $duration)</td></tr>
+<tr><td class="h"><a id="L770">770</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">unless ($self-&gt;{&#39;debug&#39;})</td></tr>
+<tr><td class="h"><a id="L772">772</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $k eq &quot;geometry&quot;</td></tr>
+<tr><td class="h"><a id="L775">775</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (defined $value-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;}) { }</td></tr>
 <tr><td class="h"></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">elsif (defined $value-&gt;{&#39;geometry&#39;}) { }</td></tr>
-<tr><td class="h"><a id="L791">791</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
-<tr><td class="h"><a id="L792">792</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (ref $self-&gt;{&#39;cache&#39;} eq &#39;HASH&#39;) { }</td></tr>
+<tr><td class="h"><a id="L790">790</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
+<tr><td class="h"><a id="L791">791</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (ref $self-&gt;{&#39;cache&#39;} eq &#39;HASH&#39;) { }</td></tr>
 <tr><td class="h"></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">elsif (not ref $value) { }</td></tr>
-<tr><td class="h"><a id="L803">803</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not defined $rc and $self-&gt;{&#39;cache&#39;})</td></tr>
-<tr><td class="h"><a id="L804">804</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (ref $self-&gt;{&#39;cache&#39;} eq &#39;HASH&#39;) { }</td></tr>
-<tr><td class="h"><a id="L810">810</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $rc)</td></tr>
-<tr><td class="h"><a id="L811">811</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (ref $rc eq &quot;HASH&quot;)</td></tr>
-<tr><td class="h"><a id="L812">812</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless (defined $rc-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;})</td></tr>
+<tr><td class="h"><a id="L802">802</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not defined $rc and $self-&gt;{&#39;cache&#39;})</td></tr>
+<tr><td class="h"><a id="L803">803</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (ref $self-&gt;{&#39;cache&#39;} eq &#39;HASH&#39;) { }</td></tr>
+<tr><td class="h"><a id="L809">809</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $rc)</td></tr>
+<tr><td class="h"><a id="L810">810</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (ref $rc eq &quot;HASH&quot;)</td></tr>
+<tr><td class="h"><a id="L811">811</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless (defined $rc-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;})</td></tr>
 </table>
 </body>
 </html>
