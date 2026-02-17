@@ -561,6 +561,22 @@ Similar to geocode except it expects a latitude/longitude parameter.
 
     print $geocoder_list->reverse_geocode(latlng => '37.778907,-122.39732');
 
+=head3 API SPECIFICATION
+
+=head4 INPUT
+
+  {
+    latlng => {
+      type => 'string',
+      matches => qr/^\s*([-+]?(?:\d*\.?\d+|\d+\.?\d*))\s*,\s*([-+]?(?:\d*\.?\d+|\d+\.?\d*))\s*$/	# Two numbers separated by a comma
+  }
+
+=head4 OUTPUT
+
+  {
+    type => 'string'
+  }
+
 =cut
 
 sub reverse_geocode {
