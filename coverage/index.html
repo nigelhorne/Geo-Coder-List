@@ -153,7 +153,7 @@
 
 <tbody>
 
-<tr class="low"><td><a href="blib-lib-Geo-Coder-List-pm.html" title="View coverage line by line" target="_blank">blib/lib/Geo/Coder/List.pm</a> <a href="https://github.com/nigelhorne/Geo-Coder-List/blob/e481499aa41b1c6e3a5fc46e2c2d26a4c8fde75c/blib/lib/Geo/Coder/List.pm" class="icon-link" title="View source on GitHub">&#128269;</a><canvas class="sparkline" width="80" height="20" data-points="35.8,35.8,35.8,35.8,35.8"></canvas></td><td>42.4</td><td>23.4</td><td>35.9</td><td>83.3</td><td><span class="coverage-badge badge-bad" title="Needs improvement">35.8%</span></td><td class="neutral" title="Previous: 35.8%">&#9679; 0.0%</td></tr>
+<tr class="low"><td><a href="blib-lib-Geo-Coder-List-pm.html" title="View coverage line by line" target="_blank">blib/lib/Geo/Coder/List.pm</a> <a href="https://github.com/nigelhorne/Geo-Coder-List/blob/c6b7529c20386f649a101c089040ffa4ee9165c2/blib/lib/Geo/Coder/List.pm" class="icon-link" title="View source on GitHub">&#128269;</a><canvas class="sparkline" width="80" height="20" data-points="35.8,35.8,35.8,35.8,35.8,35.8"></canvas></td><td>42.4</td><td>23.4</td><td>35.9</td><td>83.3</td><td><span class="coverage-badge badge-bad" title="Needs improvement">35.8%</span></td><td class="neutral" title="Previous: 35.8%">&#9679; 0.0%</td></tr>
 <tr class="summary-row nosort"><td colspan="2"><strong>Summary</strong></td><td colspan="2">1 files</td><td colspan="3">Avg: 35%, Low: 1</td></tr>
 <tr class="low nosort"><td><strong>Total</strong></td><td>42.4</td><td>23.4</td><td>35.9</td><td>83.3</td><td colspan="2"><strong>35.8</strong></td></tr>
 </tbody></table>
@@ -205,7 +205,8 @@ function linearRegression(data) {
 const dataPoints = [ { x: "2026-01-13T07:45:34-05:00", y: 35.8133669609079, delta: 0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/4c69b86", label: "2026-01-13T07:45:34-05:00", pointBackgroundColor: "gray", comment: "Added the test dashboard" },
 { x: "2026-01-13T08:21:10-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/1b8eea2", label: "2026-01-13T08:21:10-05:00", pointBackgroundColor: "gray", comment: "Fix distclean" },
 { x: "2026-02-17T09:49:44-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/5287ce1", label: "2026-02-17T09:49:44-05:00", pointBackgroundColor: "gray", comment: "Document better what log() returns" },
-{ x: "2026-02-17T14:17:46-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/5592040", label: "2026-02-17T14:17:46-05:00", pointBackgroundColor: "gray", comment: "Added more fuzz testers" } ];
+{ x: "2026-02-17T14:17:46-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/5592040", label: "2026-02-17T14:17:46-05:00", pointBackgroundColor: "gray", comment: "Added more fuzz testers" },
+{ x: "2026-03-23T08:16:03-04:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/e481499", label: "2026-03-23T08:16:03-04:00", pointBackgroundColor: "gray", comment: "Merge pull request #12 from nigelhorne/dependabot/github_actions/nigelhorne/App-GHGen-5" } ];
 
 const regressionPoints = linearRegression(dataPoints);
 // Try to register the zoom plugin (handles different UMD builds)
@@ -459,37 +460,12 @@ function refresh(){
 <p><center>Use mouse wheel or pinch to zoom; drag to pan</center></p>
 <p>No issues active on <a href="https://rt.cpan.org/Public/Dist/Display.html?Name=Geo-Coder-List">RT</a></p>
 <h2>CPAN Testers Failures for Geo-Coder-List 0.36</h2>
-<p class="notice perl-version-cliff">
-Fails on Perl &leq; 5.8.9; passes on Perl &geq; 5.10.1. 
-<a href="https://perldoc.perl.org/perl5100delta" target="_blank">See perldelta for this release</a>
- <span class="coverage-badge badge-bad" title="0 fails, 1 passes">Weak confidence</span></p>
 <h3>Failure Summary</h3>
 <ul>
 <li><b>Perl 5.8.x</b>: 1 failures</li>
-<p><em>100% of failures occur on Perl 5.8.x</em></p>
-<li><b>freebsd</b>: 1 failures</li>
+<li><b>linux</b>: 1 failures</li>
 <li><b>5.8 / freebsd</b>: 1 failures</li>
 </ul>
-<h3>Likely Root Causes</h3>
-<table class="root-causes">
-<thead>
-<tr>
-	<th>Cause</th>
-	<th>Confidence</th>
-	<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-
-<tr class="high">
-	<td halign="center"><strong>Perl version regression (Perl &lt; 5.10.1) (<a href="https://perldoc.perl.org/perldelta5.10.1" target="_blank">perldelta</a>)</strong></td>
-	<td halign="center">Strong (100%)</td>
-	<td halign="center"><ul><li>All failures on Perl &leq; 5.8.9</li><li>All passes on Perl &geq; 5.10.1</li></ul></td>
-</tr>
-
-</tbody>
-</table>
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 	const toggleFail = document.getElementById('toggleFail');
@@ -576,12 +552,14 @@ document.addEventListener("DOMContentLoaded", () => {
 </thead>
 <tbody>
 
+<tr class="cpan-fail"><td>2026-03-27T15:59:00Z</td><td>linux</td><td>5.40.0</td><td>Nigel Horne</td><td></td>
+				<td><a href="https://www.cpantesters.org/cpan/report/edf452c2-29f5-11f1-80aa-f85fba4f96f2" target="_blank">View</a></td></tr>
 <tr class="cpan-na"><td>2026-01-15T19:23:00Z</td><td>freebsd</td><td>5.8.9</td><td>Slaven Rezi&#x107;</td><td></td>
 				<td><a href="https://www.cpantesters.org/cpan/report/bb3e08c2-f247-11f0-9803-34376e8775ea" target="_blank">View</a></td></tr>
 </tbody></table>
 <footer>
 	<p>Project: <a href="https://github.com/nigelhorne/Geo-Coder-List">Geo-Coder-List</a></p>
-	<p><em>Last updated: 2026-03-23 12:32:42 - <a href="https://github.com/nigelhorne/Geo-Coder-List/commit/e481499aa41b1c6e3a5fc46e2c2d26a4c8fde75c">commit <code>e481499</code></a></em></p>
+	<p><em>Last updated: 2026-04-02 12:22:14 - <a href="https://github.com/nigelhorne/Geo-Coder-List/commit/c6b7529c20386f649a101c089040ffa4ee9165c2">commit <code>c6b7529</code></a></em></p>
 </footer>
 
 </body>
