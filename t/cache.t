@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use Test::MockModule;
+use Test::Mockingbird;
 use Test::Most;
 use Test::Needs 'Geo::Coder::Free';
 
@@ -13,8 +13,10 @@ BEGIN { use_ok('Geo::Coder::List') }
 
 my $cache = {}; # Simple in-memory cache for testing
 
-my $mock = Test::MockModule->new('Geo::Coder::Free');
-$mock->mock('geocode', sub { return { lat => 34.0522, lon => -118.2437 } });
+Test::Mockingbird::mock('Geo::Coder::Free', 'geocode', sub {
+	shift;	# Discard $self
+	return { lat => 34.0522, lon => -118.2437 };
+});
 
 my $list = Geo::Coder::List->new(cache => $cache)->push(new_ok('Geo::Coder::Free'));
 
