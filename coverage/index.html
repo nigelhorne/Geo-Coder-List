@@ -134,7 +134,7 @@
 	<a href="https://github.com/nigelhorne/Geo-Coder-List">
 		<img src="https://img.shields.io/github/stars/nigelhorne/Geo-Coder-List?style=social" alt="GitHub stars">
 	</a>
-	<img src="https://img.shields.io/badge/coverage-35%25-red" alt="Coverage badge">
+	<img src="https://img.shields.io/badge/coverage-40%25-red" alt="Coverage badge">
 </div>
 <h1>Geo::Coder::List</h1><h2>Coverage Report</h2>
 <table data-sort-col="0" data-sort-order="asc">
@@ -153,9 +153,9 @@
 
 <tbody>
 
-<tr class="low"><td><a href="blib-lib-Geo-Coder-List-pm.html" title="View coverage line by line" target="_blank">blib/lib/Geo/Coder/List.pm</a> <a href="https://github.com/nigelhorne/Geo-Coder-List/blob/b49725192ab76e6ae86949c3adb1f67fe87ad86a/blib/lib/Geo/Coder/List.pm" class="icon-link" title="View source on GitHub">&#128269;</a><canvas class="sparkline" width="80" height="20" data-points="35.8,35.8,35.8,35.8,35.8,35.8,35.8,35.8"></canvas></td><td>42.4</td><td>23.4</td><td>35.9</td><td>83.3</td><td><span class="coverage-badge badge-bad" title="Needs improvement">35.8%</span></td><td class="neutral" title="Previous: 35.8%">&#9679; 0.0%</td></tr>
-<tr class="summary-row nosort"><td colspan="2"><strong>Summary</strong></td><td colspan="2">1 files</td><td colspan="3">Avg: 35%, Low: 1</td></tr>
-<tr class="low nosort"><td><strong>Total</strong></td><td>42.4</td><td>23.4</td><td>35.9</td><td>83.3</td><td colspan="2"><strong>35.8</strong></td></tr>
+<tr class="low"><td><a href="blib-lib-Geo-Coder-List-pm.html" title="View coverage line by line" target="_blank">lib/Geo/Coder/List.pm</a> <a href="https://github.com/nigelhorne/Geo-Coder-List/blob/4a577388aebf3cf07b5238d024c5c486676e56b3/lib/Geo/Coder/List.pm" class="icon-link" title="View source on GitHub">&#128269;</a><canvas class="sparkline" width="80" height="20" data-points="35.8,35.8,35.8,35.8,35.8,35.8,35.8,35.8,35.8"></canvas></td><td>47.3</td><td>28.8</td><td>34.7</td><td>82.6</td><td><span class="coverage-badge badge-bad" title="Needs improvement">40.8%</span></td><td class="neutral" title="Previous (sparkline): 35.8%">&#9679; 0.0%</td></tr>
+<tr class="summary-row nosort"><td colspan="2"><strong>Summary</strong></td><td colspan="2">1 files</td><td colspan="3">Avg: 40%, Low: 1</td></tr>
+<tr class="low nosort"><td><strong>Total</strong></td><td>47.3</td><td>28.8</td><td>34.7</td><td>82.6</td><td colspan="2"><strong>40.8</strong></td></tr>
 </tbody></table>
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1em;">
 	<div>
@@ -172,12 +172,11 @@
 		<button id="resetZoomBtn" type="button">Reset Zoom</button>
 	</div>
 </div>
-
 <canvas id="coverageTrend" width="600" height="300"></canvas>
 <!-- Zoom controls for the trend chart -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Add chartjs-plugin-zoom (required for wheel/pinch/drag zoom & pan) -->
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.1.1/dist/chartjs-plugin-zoom.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom\@2.1.1/dist/chartjs-plugin-zoom.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 <script>
 function linearRegression(data) {
@@ -190,7 +189,7 @@ function linearRegression(data) {
 	const sumXY = xs.reduce((acc, val, i) => acc + val * ys[i], 0);
 	const sumX2 = xs.reduce((acc, val) => acc + val * val, 0);
 
-	if (n < 2 || (n * sumX2 - sumX * sumX) === 0) {
+	if(n < 2 || (n * sumX2 - sumX * sumX) === 0) {
 		return [];
 	}
 	const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
@@ -202,21 +201,22 @@ function linearRegression(data) {
 	}));
 }
 
-const dataPoints = [ { x: "2026-01-13T07:45:34-05:00", y: 35.8133669609079, delta: 0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/4c69b86", label: "2026-01-13T07:45:34-05:00", pointBackgroundColor: "gray", comment: "Added the test dashboard" },
-{ x: "2026-01-13T08:21:10-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/1b8eea2", label: "2026-01-13T08:21:10-05:00", pointBackgroundColor: "gray", comment: "Fix distclean" },
-{ x: "2026-02-17T09:49:44-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/5287ce1", label: "2026-02-17T09:49:44-05:00", pointBackgroundColor: "gray", comment: "Document better what log() returns" },
-{ x: "2026-02-17T14:17:46-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/5592040", label: "2026-02-17T14:17:46-05:00", pointBackgroundColor: "gray", comment: "Added more fuzz testers" },
-{ x: "2026-03-23T08:16:03-04:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/e481499", label: "2026-03-23T08:16:03-04:00", pointBackgroundColor: "gray", comment: "Merge pull request #12 from nigelhorne/dependabot/github_actions/nigelhorne/App-GHGen-5" },
-{ x: "2026-04-02T07:56:04-04:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/c6b7529", label: "2026-04-02T07:56:04-04:00", pointBackgroundColor: "gray", comment: "Merge pull request #13 from nigelhorne/dependabot/github_actions/codecov/codecov-action-6" },
-{ x: "2026-06-02T21:18:39-04:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/57ca013", label: "2026-06-02T21:18:39-04:00", pointBackgroundColor: "gray", comment: "Latest pod and kwalitee" } ];
 
+const dataPoints = [ { x: "2026-01-13T07:45:34-05:00", y: 35.8133669609079, delta: 0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/4c69b86910db2d03e0e700b444b061dfc07dfc9a", label: "2026-01-13T07:45:34-05:00", pointBackgroundColor: "gray", comment: "Added the test dashboard" },
+{ x: "2026-01-13T08:21:10-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/1b8eea2764faba2f36a4c7f733754dee71b4a35d", label: "2026-01-13T08:21:10-05:00", pointBackgroundColor: "gray", comment: "Fix distclean" },
+{ x: "2026-02-17T09:49:44-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/5287ce15fdd30bc1b61ce0609d3725a54c7781e4", label: "2026-02-17T09:49:44-05:00", pointBackgroundColor: "gray", comment: "Document better what log() returns" },
+{ x: "2026-02-17T14:17:46-05:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/55920400f83743632a3aee6cb3688611875b1f9f", label: "2026-02-17T14:17:46-05:00", pointBackgroundColor: "gray", comment: "Added more fuzz testers" },
+{ x: "2026-03-23T08:16:03-04:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/e481499aa41b1c6e3a5fc46e2c2d26a4c8fde75c", label: "2026-03-23T08:16:03-04:00", pointBackgroundColor: "gray", comment: "Merge pull request #12 from nigelhorne/dependabot/github_actions/nigelhorne/App-GHGen-5" },
+{ x: "2026-04-02T07:56:04-04:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/c6b7529c20386f649a101c089040ffa4ee9165c2", label: "2026-04-02T07:56:04-04:00", pointBackgroundColor: "gray", comment: "Merge pull request #13 from nigelhorne/dependabot/github_actions/codecov/codecov-action-6" },
+{ x: "2026-06-02T21:18:39-04:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/57ca01338697583d59d52691fc22fc03ec99c96c", label: "2026-06-02T21:18:39-04:00", pointBackgroundColor: "gray", comment: "Latest pod and kwalitee" },
+{ x: "2026-06-02T21:58:20-04:00", y: 35.8133669609079, delta: 0.0, url: "https://github.com/nigelhorne/Geo-Coder-List/commit/b49725192ab76e6ae86949c3adb1f67fe87ad86a", label: "2026-06-02T21:58:20-04:00", pointBackgroundColor: "gray", comment: "Use Test::Mockingbird in t/cache.t" } ];
 const regressionPoints = linearRegression(dataPoints);
 // Try to register the zoom plugin (handles different UMD builds)
 (function registerZoomPlugin(){
 	try {
 		const candidates = ['chartjsPluginZoom','ChartZoom','zoomPlugin','chartjs_plugin_zoom','ChartjsPluginZoom','chartjsPluginZoom'];
-		for (const name of candidates) {
-			if (window[name]) {
+		for(const name of candidates) {
+			if(window[name]) {
 				try { Chart.register(window[name]); console.log('Registered zoom plugin:', name); return; } catch(e) { console.warn('zoom register failed for', name, e); }
 			}
 		}
@@ -301,7 +301,7 @@ const chart = new Chart(ctx, {
 			}
 		}, onClick: (e) => {
 			const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
-			if (points.length) {
+			if(points.length) {
 				const url = chart.data.datasets[0].data[points[0].index].url;
 				window.open(url, '_blank');
 			}
@@ -318,10 +318,10 @@ document.getElementById('toggleTrend').addEventListener('change', function(e) {
 
 // Reset Zoom button handler (calls plugin API if available)
 const resetBtn = document.getElementById('resetZoomBtn');
-if (resetBtn) {
+if(resetBtn) {
 	resetBtn.addEventListener('click', function() {
 		try {
-			if (chart && typeof chart.resetZoom === 'function') {
+			if(chart && typeof chart.resetZoom === 'function') {
 				chart.resetZoom();
 			} else {
 				console.warn('resetZoom not available; zoom plugin may not be registered.');
@@ -334,7 +334,7 @@ if (resetBtn) {
 
 function sortTable(th, colIndex) {
 	const table = th.closest("table");
-	if (!table || !table.tBodies.length) return;
+	if(!table || !table.tBodies.length) return;
 
 	const tbody = table.tBodies[0];
 	const rows = Array.from(tbody.rows);
@@ -352,7 +352,7 @@ function sortTable(th, colIndex) {
 		let x = a.cells[colIndex]?.innerText.trim() || "";
 		let y = b.cells[colIndex]?.innerText.trim() || "";
 
-		if (isNumeric) {
+		if(isNumeric) {
 			x = Date.parse(x) || 0;
 			y = Date.parse(y) || 0;
 		} else {
@@ -360,8 +360,8 @@ function sortTable(th, colIndex) {
 			y = y.toLowerCase();
 		}
 
-		if (x < y) return asc ? -1 : 1;
-		if (x > y) return asc ? 1 : -1;
+		if(x < y) return asc ? -1 : 1;
+		if(x > y) return asc ? 1 : -1;
 		return 0;
 	});
 
@@ -370,11 +370,11 @@ function sortTable(th, colIndex) {
 
 	// Update arrows
 	const headers = table.tHead.rows[0].cells;
-	for (let i = 0; i < headers.length; i++) {
+	for(let i = 0; i < headers.length; i++) {
 		const arrow = headers[i].querySelector(".arrow");
-		if (!arrow) continue;
+		if(!arrow) continue;
 
-		if (i === colIndex) {
+		if(i === colIndex) {
 			arrow.textContent = asc ? "▲" : "▼";
 			arrow.classList.add("active");
 		} else {
@@ -392,14 +392,14 @@ function sortTable(th, colIndex) {
 // The table has been set up sorted in ascending order on the filename; reflect that in the GUI
 document.addEventListener("DOMContentLoaded", () => {
 	const table = document.querySelector("table");
-	if (!table) return;
+	if(!table) return;
 
 	const headers = table.tHead.rows[0].cells;
-	for (let i = 0; i < headers.length; i++) {
+	for(let i = 0; i < headers.length; i++) {
 		const arrow = headers[i].querySelector(".arrow");
-		if (!arrow) continue;
+		if(!arrow) continue;
 
-		if (i === 0) {
+		if(i === 0) {
 			arrow.textContent = "▲";
 			arrow.classList.add("active");
 		} else {
@@ -412,7 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
 	document.querySelectorAll("canvas.sparkline").forEach(canvas => {
 		const raw = canvas.getAttribute("data-points");
-		if (!raw) return;
+		if(!raw) return;
 		const points = raw.split(",").map(v => parseFloat(v));
 
 		new Chart(canvas.getContext("2d"), {
@@ -462,9 +462,9 @@ function refresh(){
 <p><center>Use mouse wheel or pinch to zoom; drag to pan</center></p>
 <p>No issues active on <a href="https://rt.cpan.org/Public/Dist/Display.html?Name=Geo-Coder-List">RT</a></p>
 <h2>CPAN Testers Failures for Geo-Coder-List 0.36</h2>
-<h3>Failure Summary</h3>
+<h3>Failure Summary (all reports)</h3>
 <ul>
-<li><b>Perl 5.8.x</b>: 1 failures</li>
+<li><b>Perl 5.40.x</b>: 1 failures</li>
 <li><b>freebsd</b>: 1 failures</li>
 <li><b>5.40 / linux</b>: 1 failures</li>
 </ul>
@@ -478,7 +478,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	function update() {
 		document.querySelectorAll('tr').forEach(row => {
 			// Skip header rows
-			if (row.querySelector('th')) return;
+			if(row.querySelector('th')) return;
 
 			// Determine row status
 			const isFail = row.classList.contains('cpan-fail');
@@ -489,24 +489,24 @@ document.addEventListener("DOMContentLoaded", function () {
 			// Decide whether to show the row
 			let show = true;
 
-			if (toggleFail && !toggleFail.checked && isFail) show = false;
-			if (toggleUnknown && !toggleUnknown.checked && isUnknown) show = false;
-			if (toggleNA && !toggleNA.checked && isNA) show = false;
-			if (toggleNew && toggleNew.checked && !isNew) show = false;
+			if(toggleFail && !toggleFail.checked && isFail) show = false;
+			if(toggleUnknown && !toggleUnknown.checked && isUnknown) show = false;
+			if(toggleNA && !toggleNA.checked && isNA) show = false;
+			if(toggleNew && toggleNew.checked && !isNew) show = false;
 
 			row.style.display = show ? '' : 'none';
 		});
 	}
 
 	[toggleFail, toggleUnknown, toggleNA, toggleNew].forEach(cb => {
-		if (cb) cb.addEventListener('change', update);
+		if(cb) cb.addEventListener('change', update);
 	});
 
 	update();
 });
 document.addEventListener("DOMContentLoaded", () => {
 	const th = document.querySelector("table.sortable-table th");
-	if (th) sortTable(th, 0);
+	if(th) sortTable(th, 0);
 });
 </script>
 
@@ -524,7 +524,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		<input type="checkbox" id="toggleNA">
 		NA
 	</label>
-	<label style="margin-left: 1em;">
 	<label style="margin-left: 1em;">
 		<input type="checkbox" id="toggleNew">
 		NEW only
@@ -554,15 +553,45 @@ document.addEventListener("DOMContentLoaded", () => {
 </thead>
 <tbody>
 
-<tr class="cpan-na"><td>2026-01-15T19:23:00Z</td><td>freebsd</td><td>5.8.9</td><td>Slaven Rezi&#x107;</td><td></td>
-				<td><a href="https://www.cpantesters.org/cpan/report/bb3e08c2-f247-11f0-9803-34376e8775ea" target="_blank">View</a></td></tr>
 <tr class="cpan-fail"><td>2026-03-27T15:59:00Z</td><td>linux</td><td>5.40.0</td><td>Nigel Horne</td><td></td>
 				<td><a href="https://www.cpantesters.org/cpan/report/edf452c2-29f5-11f1-80aa-f85fba4f96f2" target="_blank">View</a></td></tr>
+<tr class="cpan-na"><td>2026-01-15T19:23:00Z</td><td>freebsd</td><td>5.8.9</td><td>Slaven Rezi&#x107;</td><td></td>
+				<td><a href="https://www.cpantesters.org/cpan/report/bb3e08c2-f247-11f0-9803-34376e8775ea" target="_blank">View</a></td></tr>
 </tbody></table>
+<h2>Mutation Report</h2>
+<h3>Mutation Summary</h3>
+<ul>
+<li><b>Score</b>: 100%</li>
+<li><b>Total</b>: 0</li>
+<li><b>Killed</b>: 
+0
+</li>
+<li><b>Survived</b>: 
+0
+</li>
+</ul>
+<h3>Mutation Files</h3>
+
+<table border='1' cellpadding='5'>
+
+<tr><th>File</th><th>Total</th><th>Killed</th><th>Survivors</th><th>Skipped</th><th>Score%</th><th>Complexity</th><th title="TER1=Statement, TER2=Branch, TER3=LCSAJ Path">TER1 / TER2 / TER3</th></tr>
+
+</table>
+
+<h2>Structural Coverage (Approximate)</h2>
+<div class='summary'>
+Statement Coverage: 47.26% (190 / 402)<br>
+Branch Coverage: 28.80% (72 / 250)<br>
+<em>Approximate LCSAJ derived from branch and statement coverage.</em>
+</div>
+<h2>Executive Summary</h2>
+<div class='summary'>
+Tests execute 47.26% of the code. No mutation data available yet — trigger the mutation workflow for fault detection analysis.
+</div>
 <footer>
 	<p>Project: <a href="https://github.com/nigelhorne/Geo-Coder-List">Geo-Coder-List</a></p>
-	<p><em>Last updated: 2026-06-03 02:06:45 - <a href="https://github.com/nigelhorne/Geo-Coder-List/commit/b49725192ab76e6ae86949c3adb1f67fe87ad86a">commit <code>b497251</code></a></em></p>
+	<p><em>Last updated: 2026-06-03 12:17:13 - <a href="https://github.com/nigelhorne/Geo-Coder-List/commit/4a577388aebf3cf07b5238d024c5c486676e56b3">commit <code>4a57738</code></a></em></p>
+	<p style="float: right; font-size: 0.85em; color: #999;">Powered by <a href="https://metacpan.org/dist/App-Test-Generator">App::Test::Generator 0.38</a></p>
 </footer>
-
 </body>
 </html>
