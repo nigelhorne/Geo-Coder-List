@@ -5,8 +5,9 @@ use strict;
 
 use Test::Most tests => 2;
 
+# Test::Most exports explain() which helps inspect $@ (the eval error)
 BEGIN {
-	use_ok('Geo::Coder::List') or BAIL_OUT("Cannot load Geo::Coder::List: $@");
+	    use_ok('Geo::Coder::List') or bail_on_fail && diag explain $@;
 }
 
 require_ok('Geo::Coder::List') || do {
