@@ -171,8 +171,9 @@ sub new
 		# FIXME: cloning does not work when called as ::new() with arguments
 		$class = __PACKAGE__;
 	} elsif(blessed($class)) {
-		# Called on an instance: return a shallow clone merged with new params
-		return bless { %{$class}, %{$params} }, ref($class);
+		# Shallow clone merged with new params; log is always fresh so the
+		# clone starts with an empty event history independent of the original
+		return bless { %{$class}, %{$params}, log => [] }, ref($class);
 	}
 
 	# Let Object::Configure overlay defaults from environment / config files
@@ -355,9 +356,10 @@ sub geocode {
 		# A defined value means we have a genuine cached positive result
 		my @rc = ref($cached) eq 'ARRAY' ? @{$cached} : ($cached);
 
-		# Mark every element as coming from cache
+		# Mark every element as coming from cache; covers plain HASHREFs and
+		# blessed objects such as Geo::Location::Point equally
 		for my $r (@rc) {
-			$r->{'geocoder'} = $CACHE_SOURCE if ref($r) eq 'HASH';
+			$r->{'geocoder'} = $CACHE_SOURCE if ref($r);
 		}
 
 		# Scalar context: return the first (and usually only) element
@@ -537,8 +539,30 @@ sub geocode {
 				Data::Dumper->new([\$l])->Dump() if($self->{'debug'} >= 2);
 
 			# Geo::Location::Point objects carry their own accessors;
-			# record as the winning result and exit the inner loop
+			# upgrade the geocoder field and populate the canonical geometry
+			# structure so callers can rely on geometry.location.{lat,lng}
 			if(ref($l) eq 'Geo::Location::Point') {
+				$l->{'geocoder'} = $geocoder;
+
+				# Populate canonical geometry structure from the GLP's own fields
+				if(!defined($l->{geometry}{location}{lat}) && defined($l->{lat})) {
+					$l->{geometry}{location}{lat} = $l->{lat};
+					$l->{geometry}{location}{lng} = $l->{lng} // $l->{lon};
+				}
+
+				# Convenience aliases (idempotent if already set by GLP)
+				$l->{'lat'} //= $l->{geometry}{location}{lat};
+				$l->{'lng'} //= $l->{geometry}{location}{lng};
+				$l->{'lon'} //= $l->{geometry}{location}{lng};
+
+				CORE::push @{$self->{'log'}}, {
+					line      => $call_details[2],
+					location  => $location,
+					timetaken => $timetaken,
+					geocoder  => ref($geocoder),
+					wantarray => wantarray,
+					result    => $l,
+				};
 				$good_result = $l;
 				last POSSIBLE_LOCATION;
 			}
@@ -1183,6 +1207,12 @@ sub _cache {
 
 			if(ref($value) eq 'ARRAY') {
 				foreach my $item (@{$value}) {
+					# Blessed objects (e.g. Geo::Location::Point) may hold
+					# unserializable handles; stringify their geocoder field too
+					if(blessed($item) && ref($item->{'geocoder'})) {
+						$item->{'geocoder'} = ref($item->{'geocoder'});
+					}
+
 					next unless ref($item) eq 'HASH';
 
 					# Serialise the geocoder object to its class name for storage
@@ -1229,7 +1259,12 @@ sub _cache {
 					$rc = undef;
 				}
 			} else {
-				# Scalar (e.g. a reverse-geocode address string)
+				# Scalar string or a blessed object (e.g. Geo::Location::Point).
+				# Blessed objects may hold unserializable handles; stringify the
+				# geocoder field so CHI (Storable) can freeze the value safely.
+				if(ref($value) && ref($value->{'geocoder'})) {
+					$value->{'geocoder'} = ref($value->{'geocoder'});
+				}
 				$duration = $self->{'cache_hit_duration'};
 			}
 
