@@ -1,9 +1,26 @@
 Revision history for Geo-Coder-List
 
 0.37
+	[ Enhancements ]
+	Add Readonly constants and %config hash for configurable cache TTLs
+	Add logging to reverse_geocode()
+	Add full POD API specifications and Z-notation formal specs to all public methods
+
+	[ Testing ]
 	Latest testing dashboard
 	Added fuzz testing
 	Use Test::Mockingbird in t/cache.t
+
+	[ Bug fixes ]
+	Extract _build_ca_address() helper; fix $state/.= bug in CA address builder
+	Fix 'gecoder' typo in log entries (now correctly 'geocoder')
+	Fix flush() to reset log to [] and return $self for chaining
+	Fix _cache() write-path detection to correctly handle undef not-found values
+	Fix $Data::Dumper::Maxdepth global side-effect (now uses local)
+	Fix return CORE::push bug in reverse_geocode list context (returned count not address)
+	Fix geocode() to return $good_result not blindly $rc[0] after last POSSIBLE_LOCATION
+	Replace warn with Carp::carp throughout
+	Add use autodie qw(:all), use Data::Dumper, use Readonly
 
 0.36	Tue Jan 13 08:17:40 EST 2026
 	Invalid option now throws error rather than returning undef

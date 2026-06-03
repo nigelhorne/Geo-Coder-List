@@ -78,6 +78,7 @@ WriteMakefile(
 	'LWP::Protocol::https' => 0,
 	'Object::Configure' => 0.13,
 	'Params::Get' => 0.04,
+	'Readonly' => 0,
 	'Scalar::Util' => 0,
 	'Time::HiRes' => 0
     }, dist => $dist,
