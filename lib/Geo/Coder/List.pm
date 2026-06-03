@@ -1364,7 +1364,7 @@ L<https://metacpan.org/release/Geo-Coder-List>
     debug     = params?.debug ∣ DEBUG_DEFAULT
     cache     = params?.cache ∣ ⊥
 
-=head3 new
+=head3 push
 
     push
     ──────────────────────────────────────────────────────

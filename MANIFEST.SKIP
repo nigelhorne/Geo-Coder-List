@@ -70,3 +70,4 @@ Geo-.*
 t/online.enabled
 CLAUDE.md
 \.claude
+mutation.json

@@ -54,6 +54,7 @@ t/pod.t
 t/postcodes.t
 t/rand.t
 t/ua.t
+t/unit.t
 t/unused.t
 t/us.t
 t/used.t
