@@ -337,6 +337,8 @@ sub geocode {
 	# Collapse runs of whitespace and expand any HTML entities
 	$location =~ s/\s\s+/ /g;
 	$location = decode_entities($location);
+	# Propagate the cleaned-up string so geocoders also receive the decoded form
+	$params->{'location'} = $location;
 
 	print "location: $location\n" if($self->{'debug'});
 
@@ -1112,19 +1114,20 @@ sub _build_ca_address
 	if(my $usa = $loc->{'usa'}) {
 		# US address layout inside a CA result
 		$name  = $usa->{'usstnumber'} // '';
-		$name .= ' '  . $usa->{'usstaddress'} if $usa->{'usstaddress'};
-		$name .= ', ' . $usa->{'uscity'}       if $usa->{'uscity'};
-		$name .= ', ' . $usa->{'state'}        if $usa->{'state'};
+		# Street name follows number with a space; if no number, no leading space
+		$name .= ($name ? ' ' : '') . $usa->{'usstaddress'} if $usa->{'usstaddress'};
+		# City, state, country each separated by ', '; skip separator if name empty
+		$name .= ($name ? ', ' : '') . $usa->{'uscity'}     if $usa->{'uscity'};
+		$name .= ($name ? ', ' : '') . $usa->{'state'}      if $usa->{'state'};
 		# Country is always appended for the US branch
 		$name .= ($name ? ', ' : '') . 'USA';
 	} else {
 		# Canadian address layout
 		$name  = $loc->{'stnumber'} // '';
-		$name .= ' '  . $loc->{'staddress'}  if $loc->{'staddress'};
-		$name .= ', ' . $loc->{'city'}        if $loc->{'city'};
-		# Fix: original code had "$state .= ',' if $name" which modified
-		# $state instead of appending to $name
-		$name .= ', ' . $loc->{'prov'}        if $loc->{'prov'};
+		# Street name follows number with a space; if no number, no leading space
+		$name .= ($name ? ' ' : '') . $loc->{'staddress'}   if $loc->{'staddress'};
+		$name .= ($name ? ', ' : '') . $loc->{'city'}        if $loc->{'city'};
+		$name .= ($name ? ', ' : '') . $loc->{'prov'}        if $loc->{'prov'};
 	}
 
 	return $name;

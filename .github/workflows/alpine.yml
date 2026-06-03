@@ -37,7 +37,7 @@ jobs:
           git clone --recurse-submodules $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git
           cd $GITHUB_WORKSPACE
           cpanm -iqn Test::DescribeMe XML::PP Config::Abstraction Object::Configure
-          cpanm -iqn HTML::Entities Test::DescribeMe
+          cpanm -iqn HTML::Entities Test::DescribeMe IPC::System::Simple
           cpanm -iqn --installdeps .
       - name: Make module
         run: |
@@ -50,5 +50,4 @@ jobs:
           cd $GITHUB_WORKSPACE
           make test AUTHOR_TESTING=1
         env:
-          AUTHOR_TESTING: 1
           AUTOMATED_TESTING: 1
