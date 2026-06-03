@@ -23,6 +23,7 @@ t/comment-spelling.t
 t/critic.t
 t/cv.t
 t/dist.t
+t/edge_cases.t
 t/eof.t
 t/eol.t
 t/free.t

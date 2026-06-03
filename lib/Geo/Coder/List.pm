@@ -532,6 +532,10 @@ sub geocode {
 				next ENCODER;
 			}
 
+			# Skip bare scalars (e.g. integer 0, plain strings) that are
+			# not references; they cannot be hash-dereferenced below
+			next unless ref($l);
+
 			# Stamp the source geocoder on the result before normalisation
 			$l->{'geocoder'} = ref($geocoder);
 
@@ -587,7 +591,7 @@ sub geocode {
 				if(!defined($l->{geometry}{location}{lat})) {
 					my ($lat, $long);
 
-					if($l->{lat} && defined($l->{lon})) {
+					if(defined($l->{lat}) && defined($l->{lon})) {
 						# OSM / RandMcNally: top-level lat/lon fields
 						$lat   = $l->{lat};
 						$long  = $l->{lon};
@@ -602,12 +606,12 @@ sub geocode {
 						$lat   = $l->{point}->{coordinates}[0];
 						$long  = $l->{point}->{coordinates}[1];
 						$l->{'debug'} = __LINE__;
-					} elsif($l->{latt}) {
+					} elsif(defined($l->{latt})) {
 						# geocoder.ca: latt / longt fields
 						$lat   = $l->{latt};
 						$long  = $l->{longt};
 						$l->{'debug'} = __LINE__;
-					} elsif($l->{latitude}) {
+					} elsif(defined($l->{latitude})) {
 						# postcodes.io, Geo::Coder::Free: latitude / longitude
 						$lat   = $l->{latitude};
 						$long  = $l->{longitude};
@@ -616,7 +620,7 @@ sub geocode {
 							$l->{'type'} = lcfirst($type);
 						}
 						$l->{'debug'} = __LINE__;
-					} elsif($l->{'properties'}{'geoLatitude'}) {
+					} elsif(defined($l->{'properties'}{'geoLatitude'})) {
 						# HERE / Ovi: properties.geoLatitude / geoLongitude
 						$lat   = $l->{properties}{geoLatitude};
 						$long  = $l->{properties}{geoLongitude};
@@ -643,7 +647,7 @@ sub geocode {
 						$lat   = $l->{result}{addressMatches}[0]->{coordinates}{y};
 						$long  = $l->{result}{addressMatches}[0]->{coordinates}{x};
 						$l->{'debug'} = __LINE__;
-					} elsif($l->{lat}) {
+					} elsif(defined($l->{lat})) {
 						# Geo::GeoNames: lat / lng (reached only after lat+lon check fails)
 						$lat   = $l->{lat};
 						$long  = $l->{lng};
