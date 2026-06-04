@@ -46,16 +46,12 @@ idiosyncratic response into the common structure expected by
 
 ## new
 
-### PURPOSE
-
 Creates a new `Geo::Coder::List` object.  When called on an existing object
 it returns a clone of that object merged with the supplied arguments.
 
 The constructor reads configuration from environment variables via
 [Object::Configure](https://metacpan.org/pod/Object%3A%3AConfigure); for example, setting
 `GEO__CODER__LIST__carp_on_warn=1` causes warnings to use [Carp](https://metacpan.org/pod/Carp).
-
-### EXAMPLE
 
     use Geo::Coder::List;
     use CHI;
@@ -95,16 +91,12 @@ The constructor reads configuration from environment variables via
 
 ## push
 
-### PURPOSE
-
 Appends a geocoder to the chain.  Geocoders are tried in the order they
 were pushed.  Returns `$self` so calls can be chained.
 
 A plain geocoder object is tried for every location.  A hashref with
 `regex`, `geocoder`, and optional `limit` keys restricts the geocoder to
 locations matching the regex and caps total queries at `limit`.
-
-### EXAMPLE
 
     my $list = Geo::Coder::List->new()
         ->push({ regex => qr/USA$/, geocoder => Geo::Coder::CA->new(), limit => 100 })
@@ -132,8 +124,6 @@ locations matching the regex and caps total queries at `limit`.
 
 ## geocode
 
-### PURPOSE
-
 Resolves a location string to geographic coordinates by trying each geocoder
 in turn.  The first successful result is returned and cached.
 
@@ -145,8 +135,6 @@ supplied the result; it is set to the string `'cache'` when the result was
 served from cache.
 
 See [Geo::Coder::GooglePlaces::V3](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AGooglePlaces%3A%3AV3) for the canonical result structure.
-
-### EXAMPLE
 
     my $result = $list->geocode(location => 'Paris, France');
     if($result) {
@@ -191,16 +179,12 @@ See [Geo::Coder::GooglePlaces::V3](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3A
 
 ## ua
 
-### PURPOSE
-
 Sets the [LWP::UserAgent](https://metacpan.org/pod/LWP%3A%3AUserAgent) (or compatible) object on every geocoder in the
 chain.  Useful when you need proxy support or custom timeouts across all
 backends at once.
 
 There is intentionally no read accessor since that would be meaningless
 (each geocoder could have a different UA).
-
-### EXAMPLE
 
     use LWP::UserAgent;
     my $ua = LWP::UserAgent->new();
@@ -226,14 +210,10 @@ There is intentionally no read accessor since that would be meaningless
 
 ## reverse\_geocode
 
-### PURPOSE
-
 Converts a latitude/longitude pair into a human-readable address string.
 
 In scalar context returns a single address string (or `undef`).
 In list context returns all address strings from the winning geocoder.
-
-### EXAMPLE
 
     my $address = $list->reverse_geocode(latlng => '51.5074,-0.1278');
     print "Address: $address\n" if $address;
@@ -265,13 +245,9 @@ In list context returns all address strings from the winning geocoder.
 
 ## log
 
-### PURPOSE
-
 Returns an arrayref of log entries accumulated since the last `flush()`.
 Each entry is a hashref with the keys: `line`, `location`, `timetaken`,
 `geocoder`, `wantarray`, and either `result` or `error`.
-
-### EXAMPLE
 
     foreach my $entry (@{ $list->log() }) {
         printf "%s: %.3fs via %s\n",
@@ -305,11 +281,7 @@ Each entry is a hashref with the keys: `line`, `location`, `timetaken`,
 
 ## flush
 
-### PURPOSE
-
 Clears all accumulated log entries and returns `$self` to allow chaining.
-
-### EXAMPLE
 
     $list->geocode('Paris, France');
     my $entries = $list->log();

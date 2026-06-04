@@ -1,9 +1,6 @@
 package Geo::Coder::List;
 
-# =============================================================================
 # Geo::Coder::List - Aggregate and chain multiple geocoding backends
-# Copyright 2016-2026 Nigel Horne.  Released under GPL2.
-# =============================================================================
 
 use 5.10.1;
 
@@ -19,8 +16,6 @@ use Params::Get 0.04;
 use Readonly;
 use Scalar::Util qw(blessed);
 use Time::HiRes;
-
-# ── Version ───────────────────────────────────────────────────────────────────
 
 =head1 NAME
 
@@ -107,16 +102,12 @@ L<HTML::GoogleMaps::V3> and L<HTML::OSM>:
 
 =head2 new
 
-=head3 PURPOSE
-
 Creates a new C<Geo::Coder::List> object.  When called on an existing object
 it returns a clone of that object merged with the supplied arguments.
 
 The constructor reads configuration from environment variables via
 L<Object::Configure>; for example, setting
 C<GEO__CODER__LIST__carp_on_warn=1> causes warnings to use L<Carp>.
-
-=head3 EXAMPLE
 
     use Geo::Coder::List;
     use CHI;
@@ -199,16 +190,12 @@ sub new
 
 =head2 push
 
-=head3 PURPOSE
-
 Appends a geocoder to the chain.  Geocoders are tried in the order they
 were pushed.  Returns C<$self> so calls can be chained.
 
 A plain geocoder object is tried for every location.  A hashref with
 C<regex>, C<geocoder>, and optional C<limit> keys restricts the geocoder to
 locations matching the regex and caps total queries at C<limit>.
-
-=head3 EXAMPLE
 
     my $list = Geo::Coder::List->new()
         ->push({ regex => qr/USA$/, geocoder => Geo::Coder::CA->new(), limit => 100 })
@@ -255,8 +242,6 @@ sub push
 
 =head2 geocode
 
-=head3 PURPOSE
-
 Resolves a location string to geographic coordinates by trying each geocoder
 in turn.  The first successful result is returned and cached.
 
@@ -268,8 +253,6 @@ supplied the result; it is set to the string C<'cache'> when the result was
 served from cache.
 
 See L<Geo::Coder::GooglePlaces::V3> for the canonical result structure.
-
-=head3 EXAMPLE
 
     my $result = $list->geocode(location => 'Paris, France');
     if($result) {
@@ -331,8 +314,7 @@ sub geocode {
 
 	# A purely numeric string is almost certainly an error (e.g. a bare postcode)
 	if($params->{'location'} !~ /\D/) {
-		Carp::croak('Usage: ', __PACKAGE__,
-			': invalid input to geocode(), ', $params->{location});
+		Carp::croak('Usage: ', __PACKAGE__, ': invalid input to geocode(), ', $params->{location});
 	}
 
 	# Collapse runs of whitespace and expand any HTML entities
@@ -784,16 +766,12 @@ sub geocode {
 
 =head2 ua
 
-=head3 PURPOSE
-
 Sets the L<LWP::UserAgent> (or compatible) object on every geocoder in the
 chain.  Useful when you need proxy support or custom timeouts across all
 backends at once.
 
 There is intentionally no read accessor since that would be meaningless
 (each geocoder could have a different UA).
-
-=head3 EXAMPLE
 
     use LWP::UserAgent;
     my $ua = LWP::UserAgent->new();
@@ -858,14 +836,10 @@ sub ua
 
 =head2 reverse_geocode
 
-=head3 PURPOSE
-
 Converts a latitude/longitude pair into a human-readable address string.
 
 In scalar context returns a single address string (or C<undef>).
 In list context returns all address strings from the winning geocoder.
-
-=head3 EXAMPLE
 
     my $address = $list->reverse_geocode(latlng => '51.5074,-0.1278');
     print "Address: $address\n" if $address;
@@ -1085,13 +1059,9 @@ sub reverse_geocode {
 
 =head2 log
 
-=head3 PURPOSE
-
 Returns an arrayref of log entries accumulated since the last C<flush()>.
 Each entry is a hashref with the keys: C<line>, C<location>, C<timetaken>,
 C<geocoder>, C<wantarray>, and either C<result> or C<error>.
-
-=head3 EXAMPLE
 
     foreach my $entry (@{ $list->log() }) {
         printf "%s: %.3fs via %s\n",
@@ -1136,11 +1106,7 @@ sub log {
 
 =head2 flush
 
-=head3 PURPOSE
-
 Clears all accumulated log entries and returns C<$self> to allow chaining.
-
-=head3 EXAMPLE
 
     $list->geocode('Paris, France');
     my $entries = $list->log();
