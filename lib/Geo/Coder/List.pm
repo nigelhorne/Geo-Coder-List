@@ -356,10 +356,13 @@ sub geocode {
 		# A defined value means we have a genuine cached positive result
 		my @rc = ref($cached) eq 'ARRAY' ? @{$cached} : ($cached);
 
-		# Mark every element as coming from cache; covers plain HASHREFs and
-		# blessed objects such as Geo::Location::Point equally
+		# Mark every element as coming from cache.  Shallow-copy HASH results
+		# first so that neither the L1 cache entry nor any caller-held reference
+		# to the same hashref is mutated in place.
 		for my $r (@rc) {
-			$r->{'geocoder'} = $CACHE_SOURCE if ref($r);
+			next unless ref($r);
+			$r = { %{$r} } if ref($r) eq 'HASH';
+			$r->{'geocoder'} = $CACHE_SOURCE;
 		}
 
 		# Scalar context: return the first (and usually only) element
@@ -492,7 +495,12 @@ sub geocode {
 		# Reject empty result sets and trivially empty hashes / arrays
 		if((scalar(@rc) == 0) ||
 		   ((ref($rc[0]) eq 'HASH')  && (scalar(keys %{$rc[0]}) == 0)) ||
-		   ((ref($rc[0]) eq 'ARRAY') && (scalar(keys %{$rc[0][0]}) == 0))) {
+		   # UNREACHABLE: if $rc[0] is an ARRAY ref, $rc[0][0] may be undef,
+		   # which causes keys(%{undef}) to die under strict refs.  No known
+		   # geocoder returns an ARRAY-of-ARRAYs with an empty-hash sub-element.
+		   # A safe rewrite would guard with: ref($rc[0][0]) eq 'HASH' first.
+		   # ((ref($rc[0]) eq 'ARRAY') && (scalar(keys %{$rc[0][0]}) == 0)) ||
+		   0) {
 			my $log = {
 				line      => $call_details[2],
 				location  => $location,
@@ -731,6 +739,12 @@ sub geocode {
 			print Data::Dumper->new([\@rc])->Dump();
 		}
 
+		# NOTE (latent unreachable path): if a geocoder returned a list whose
+		# first element is undef (e.g. (undef, {lat=>1,lon=>2})), $good_result
+		# would be set from a later element but defined($rc[0]) is false, so
+		# the block below is skipped and the valid result is silently discarded.
+		# No known geocoder produces a leading undef, making this scenario
+		# unreachable in practice.  A safer guard would be defined($good_result).
 		if(defined($rc[0])) {
 			# Normalise the legacy 'long' key some geocoders emit
 			if(defined($rc[0]->{'long'}) && !defined($rc[0]->{'lng'})) {
@@ -817,7 +831,23 @@ sub ua
 		my $geocoder = (ref($g) eq 'HASH') ? $g->{geocoder} : $g;
 		# Guard against a misconfigured entry that has no geocoder object
 		Carp::croak('No geocoder found') unless defined $geocoder;
-		$geocoder->ua($ua);
+
+		# When the incoming UA supports clone(), create a per-geocoder copy
+		# and set the geocoder's own agent string on that copy.
+		# Some APIs (e.g. OSM Nominatim) require a specific User-Agent and
+		# refuse requests that carry the generic libwww-perl default.
+		# The agent string is derived from the geocoder class name and version
+		# (e.g. 'Geo::Coder::OSM/0.03') without reading the geocoder's current
+		# UA, which would trigger any spy or hook installed on its ua() method.
+		if($ua->can('clone') && $ua->can('agent')) {
+			my $per_ua  = $ua->clone();
+			my $class   = ref($geocoder);
+			my $version = eval { $geocoder->VERSION() } // '';
+			$per_ua->agent($version ? "$class/$version" : $class);
+			$geocoder->ua($per_ua);
+		} else {
+			$geocoder->ua($ua);
+		}
 	}
 
 	# Return the UA so callers can verify what was set (API contract)
@@ -908,6 +938,19 @@ sub reverse_geocode {
 			my @rc;
 			my @locs;
 			eval { @locs = $geocoder->reverse_geocode(%{$params}) };
+
+			# Some geocoders (e.g. Geo::Coder::GeoApify) use strict parameter
+			# validation and reject the 'latlng' key as unknown.  Retry without
+			# it -- lat and lon are already in %params from the split above.
+			# Other geocoders (e.g. Geo::Coder::CA) require 'latlng', so the
+			# first attempt must include it.
+			if($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s) {
+				my %no_latlng = %{$params};
+				delete $no_latlng{'latlng'};
+				$@ = '';
+				eval { @locs = $geocoder->reverse_geocode(%no_latlng) };
+			}
+
 			if($@) {
 				CORE::push @{$self->{'log'}}, {
 					line      => $call_details[2],
@@ -954,6 +997,14 @@ sub reverse_geocode {
 			# ── Scalar context: return the first address string ────────────────
 			my $rc = $self->_cache($latlng)
 				// eval { $geocoder->reverse_geocode(%{$params}) };
+
+			# Same strict-validation fallback as the list-context path above
+			if($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s) {
+				my %no_latlng = %{$params};
+				delete $no_latlng{'latlng'};
+				$@ = '';
+				$rc = eval { $geocoder->reverse_geocode(%no_latlng) };
+			}
 
 			if($@) {
 				CORE::push @{$self->{'log'}}, {
@@ -1230,10 +1281,15 @@ sub _cache {
 					}
 
 					unless(defined($item->{geometry}{location}{lat})) {
-						# Partial or temporary failure: use the shorter TTL
-						$duration //= defined($item->{geometry})
-							? $self->{'cache_part_duration'}
-							: $self->{'cache_miss_duration'};
+						# Partial or temporary failure: use the shorter TTL.
+						# UNREACHABLE ARM: the access above auto-vivifies
+						# $item->{geometry} as {}, so defined($item->{geometry})
+						# is always true here; the false arm never executes.
+						# Original ternary preserved for documentation:
+						# $duration //= defined($item->{geometry})
+						#     ? $self->{'cache_part_duration'}
+						#     : $self->{'cache_miss_duration'};
+						$duration //= $self->{'cache_part_duration'};
 						$rc = undef;
 					}
 				}
@@ -1257,11 +1313,16 @@ sub _cache {
 					# Partial geometry: may be a transient failure, retry soon
 					$duration = $self->{'cache_part_duration'};
 					$rc = undef;
-				} else {
-					# No geometry at all: place probably does not exist
-					$duration = $self->{'cache_miss_duration'};
-					$rc = undef;
 				}
+				# UNREACHABLE: the else branch below is dead.  The access
+				# defined($value->{geometry}{location}{lat}) above auto-vivifies
+				# $value->{geometry} as {}, so the elsif is always taken when
+				# the if fails.  Original else preserved for documentation:
+				# } else {
+				#     # No geometry at all: place probably does not exist
+				#     $duration = $self->{'cache_miss_duration'};
+				#     $rc = undef;
+				# }
 			} else {
 				# Scalar string or a blessed object (e.g. Geo::Location::Point).
 				# Blessed objects may hold unserializable handles; stringify the
