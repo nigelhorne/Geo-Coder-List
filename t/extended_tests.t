@@ -107,7 +107,7 @@ package main;
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 # Build a list with a single ExtMock::A geocoder
-sub _list_a { Geo::Coder::List->new()->push(ExtMock::A->new()) }
+sub _list_a { Geo::Coder::List->new({ carp_on_warn => 1 })->push(ExtMock::A->new()) }
 
 # Standard OSM result hashref
 sub _osm { { lat => $_[0], lon => $_[1] } }
@@ -468,7 +468,7 @@ subtest 'reverse_geocode(): list context -- GeoApify features response' => sub {
 
 subtest 'reverse_geocode(): list context -- geocoder exception is carpd, not croaked' => sub {
 	# Purpose: verify the list-context error path (separate eval branch from scalar)
-	my $list = Geo::Coder::List->new();
+	my $list = Geo::Coder::List->new({ carp_on_warn => 1 });
 	$list->push(ExtMock::A->new())->push(ExtMock::B->new());
 
 	my $gA = mock_scoped 'ExtMock::A::reverse_geocode' => sub {

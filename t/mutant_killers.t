@@ -705,7 +705,7 @@ subtest 'BOOL_NEGATE_947: non-latlng error is NOT retried (scalar)' => sub {
 # =============================================================================
 
 subtest 'COND_INV_954: error in list reverse_geocode is carpd and skipped' => sub {
-	my $list = Geo::Coder::List->new();
+	my $list = Geo::Coder::List->new({ carp_on_warn => 1 });
 	$list->push(Mutant::Geocoder::A->new())->push(Mutant::Geocoder::B->new());
 
 	my $gA = mock_scoped 'Mutant::Geocoder::A::reverse_geocode' => sub {
@@ -840,7 +840,7 @@ subtest 'BOOL_NEGATE_1007: scalar context latlng retry succeeds' => sub {
 # =============================================================================
 
 subtest 'COND_INV_1010: scalar error is carpd and geocoder skipped' => sub {
-	my $list = Geo::Coder::List->new();
+	my $list = Geo::Coder::List->new({ carp_on_warn => 1 });
 	$list->push(Mutant::Geocoder::A->new())->push(Mutant::Geocoder::B->new());
 
 	my $gA = mock_scoped 'Mutant::Geocoder::A::reverse_geocode' => sub {

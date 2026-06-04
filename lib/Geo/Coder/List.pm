@@ -932,7 +932,7 @@ sub reverse_geocode {
 					wantarray => 1,
 					error     => $@,
 				};
-				Carp::carp(ref($geocoder), " '$latlng': $@");
+				$self->_warn(ref($geocoder), " '$latlng': $@");
 				next;
 			}
 
@@ -987,7 +987,7 @@ sub reverse_geocode {
 					wantarray => 0,
 					error     => $@,
 				};
-				Carp::carp(ref($geocoder), " '$latlng': $@");
+				$self->_warn(ref($geocoder), " '$latlng': $@");
 				next;
 			}
 

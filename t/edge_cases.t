@@ -807,7 +807,7 @@ subtest 'reverse_geocode() edge cases' => sub {
 	# Geocoder throws exception: must carp, not propagate
 	# Fresh list avoids the cached OSM result from the block above
 	{
-		my $list_rg = Geo::Coder::List->new()->push(EdgeMock::Std->new());
+		my $list_rg = Geo::Coder::List->new({ carp_on_warn => 1 })->push(EdgeMock::Std->new());
 		my $g = mock_scoped 'EdgeMock::Std::reverse_geocode' => sub {
 			die 'reverse lookup error';
 		};
@@ -985,7 +985,7 @@ subtest 'ua() clone: geocoder with no VERSION gets class-name-only agent' => sub
 subtest 'reverse_geocode() retry: non-latlng error is NOT retried' => sub {
 	# Only "Unknown parameter 'latlng'" errors trigger the retry; other errors
 	# must go through the normal carp-and-skip path.
-	my $list = Geo::Coder::List->new()->push(EdgeMock::Std->new());
+	my $list = Geo::Coder::List->new({ carp_on_warn => 1 })->push(EdgeMock::Std->new());
 	my $calls = 0;
 	my $g = mock_scoped 'EdgeMock::Std::reverse_geocode' => sub {
 		$calls++;

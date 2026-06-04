@@ -1127,11 +1127,11 @@ subtest 'reverse_geocode: retries without latlng when geocoder rejects it as unk
 };
 
 subtest 'reverse_geocode: does not retry on non-latlng errors' => sub {
-	my $list  = _make_list(MockGeocoder::Alpha->new());
+	my $list  = _make_list(MockGeocoder::Alpha->new(), (carp_on_warn => 1));
 	my $calls = 0;
 	my $mock = mock_scoped 'MockGeocoder::Alpha::reverse_geocode' => sub {
 		$calls++;
-		die "network timeout\n";
+		die 'network timeout';
 	};
 
 	my $warned = 0;

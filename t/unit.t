@@ -536,14 +536,14 @@ subtest 'reverse_geocode: writes a log entry after each call' => sub {
 
 subtest 'reverse_geocode: carps on geocoder error and continues' => sub {
 	# Like geocode(), errors must be carpd, not croaked
-	my $list = _list_with(UnitMock::A->new());
+	my $list = _list_with(UnitMock::A->new(), (carp_on_warn => 1));
 	my $mock = mock_scoped 'UnitMock::A::reverse_geocode' => sub {
 		die 'reverse lookup failed';
 	};
 
 	my $result;
 	warnings_like { $result = $list->reverse_geocode(latlng => $LATLNG_DC) }
-		qr/reverse lookup failed/, 'error from geocoder is carpd';
+		qr/reverse lookup failed/, 'error from geocoder is carped';
 
 	ok(!defined $result, 'returns undef when all geocoders fail');
 };
