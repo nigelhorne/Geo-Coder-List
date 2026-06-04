@@ -93,27 +93,6 @@ The constructor reads configuration from environment variables via
     # Return::Set schema
     OBJECT blessed into Geo::Coder::List
 
-### FORMAL SPECIFICATION
-
-    List_State
-    ──────────────────────────────────────────────────────
-    geocoders : seq (Geocoder | RegexGeocoder)
-    L1        : LocationStr ↛ (GeoResult | NotFound)
-    log       : seq LogEntry
-    debug     : ℕ
-    cache?    : L2Cache
-
-    new
-    ──────────────────────────────────────────────────────
-    List_State
-    params? : ℙ(Key × Value)
-    ──────────────────────────────────────────────────────
-    geocoders = ⟨⟩
-    L1        = ∅
-    log       = ⟨⟩
-    debug     = params?.debug ∣ DEBUG_DEFAULT
-    cache     = params?.cache ∣ ⊥
-
 ## push
 
 ### PURPOSE
@@ -150,21 +129,6 @@ locations matching the regex and caps total queries at `limit`.
 
     # Return::Set schema
     OBJECT blessed into Geo::Coder::List   # $self, for chaining
-
-### FORMAL SPECIFICATION
-
-    push
-    ──────────────────────────────────────────────────────
-    ΔList_State
-    g? : Geocoder | RegexGeocoder
-    ──────────────────────────────────────────────────────
-    geocoders' = geocoders ⌢ ⟨g?⟩
-    L1'        = L1
-    log'       = log
-    ──────────────────────────────────────────────────────
-    where RegexGeocoder ::= { regex    : Regex
-                             ; geocoder : Geocoder
-                             ; limit?  : ℕ }
 
 ## geocode
 
@@ -225,33 +189,6 @@ See [Geo::Coder::GooglePlaces::V3](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3A
     # Return::Set schema (list context)
     ARRAY of the above HASHREFs
 
-### FORMAL SPECIFICATION
-
-    LocationStr ::= { s : seq Char | s ≠ ⟨⟩ ∧ ∃ c : s • c ∉ Digit }
-    GeoResult   ::= HASHREF with geometry.location.{lat,lng} : ℝ
-
-    geocode
-    ──────────────────────────────────────────────────────────────────────
-    ΔList_State
-    loc?    : LocationStr
-    result! : GeoResult | ⊥
-    ──────────────────────────────────────────────────────────────────────
-    loc? ∈ dom L1
-      ⟹ result! = L1(loc?)
-         ∧ log' = log ⌢ ⟨{geocoder ↦ cache; timetaken ↦ 0}⟩
-
-    loc? ∉ dom L1
-      ⟹ (∃ i : 1..#geocoders •
-            applies(geocoders i, loc?)
-            ∧ result! = Normalize(geocoders i . geocode(loc?))
-            ∧ L1' = L1 ⊕ {loc? ↦ result!}
-            ∧ log' = log ⌢ ⟨{geocoder ↦ class(geocoders i)}⟩)
-         ∨ (result! = ⊥ ∧ L1' = L1 ⊕ {loc? ↦ ⊥})
-
-    applies(g, loc) ≙
-        (g isa Geocoder)
-      ∨ (g isa RegexGeocoder ∧ loc ∈ matches(g.regex) ∧ g.limit > 0)
-
 ## ua
 
 ### PURPOSE
@@ -286,17 +223,6 @@ There is intentionally no read accessor since that would be meaningless
 
     # Return::Set schema
     OBJECT   # the same $ua that was passed in
-
-### FORMAL SPECIFICATION
-
-    ua
-    ──────────────────────────────────────────────────────
-    ΞList_State
-    ua?  : UserAgent
-    ua!  : UserAgent
-    ──────────────────────────────────────────────────────
-    ∀ g : ran geocoders • g.ua = ua?
-    ua!  = ua?
 
 ## reverse\_geocode
 
@@ -336,27 +262,6 @@ In list context returns all address strings from the winning geocoder.
 
     # Return::Set schema (list context)
     ARRAY of SCALAR
-
-### FORMAL SPECIFICATION
-
-    LatLngStr ::= { s : seq Char
-                  | s matches /^[-+]?\d+\.?\d*,[-+]?\d+\.?\d*$/ }
-
-    reverse_geocode
-    ──────────────────────────────────────────────────────────────────────
-    ΔList_State
-    latlng? : LatLngStr
-    result! : seq Char | ⊥
-    ──────────────────────────────────────────────────────────────────────
-    latlng? ∈ dom L1
-      ⟹ result! = L1(latlng?)
-
-    latlng? ∉ dom L1
-      ⟹ (∃ i : 1..#geocoders •
-            applies(geocoders i, latlng?)
-            ∧ result! = geocoders i . reverse_geocode(latlng?)
-            ∧ L1' = L1 ⊕ {latlng? ↦ result!})
-         ∨ result! = ⊥
 
 ## log
 
@@ -398,15 +303,6 @@ Each entry is a hashref with the keys: `line`, `location`, `timetaken`,
         ...
     ]
 
-### FORMAL SPECIFICATION
-
-    log
-    ──────────────────────────────────────────────────────
-    ΞList_State
-    result! : seq LogEntry
-    ──────────────────────────────────────────────────────
-    result! = log
-
 ## flush
 
 ### PURPOSE
@@ -429,16 +325,6 @@ Clears all accumulated log entries and returns `$self` to allow chaining.
 
     # Return::Set schema
     OBJECT blessed into Geo::Coder::List   # $self, for chaining
-
-### FORMAL SPECIFICATION
-
-    flush
-    ──────────────────────────────────────────────────────
-    ΔList_State
-    ──────────────────────────────────────────────────────
-    log'       = ⟨⟩
-    geocoders' = geocoders
-    L1'        = L1
 
 # AUTHOR
 
@@ -479,6 +365,122 @@ You can find documentation for this module with the perldoc command:
 
     [https://metacpan.org/release/Geo-Coder-List](https://metacpan.org/release/Geo-Coder-List)
 
+## FORMAL SPECIFICATION
+
+### new
+
+    List_State
+    ──────────────────────────────────────────────────────
+    geocoders : seq (Geocoder | RegexGeocoder)
+    L1        : LocationStr ↛ (GeoResult | NotFound)
+    log       : seq LogEntry
+    debug     : ℕ
+    cache?    : L2Cache
+
+    new
+    ──────────────────────────────────────────────────────
+    List_State
+    params? : ℙ(Key × Value)
+    ──────────────────────────────────────────────────────
+    geocoders = ⟨⟩
+    L1        = ∅
+    log       = ⟨⟩
+    debug     = params?.debug ∣ DEBUG_DEFAULT
+    cache     = params?.cache ∣ ⊥
+
+### push
+
+    push
+    ──────────────────────────────────────────────────────
+    ΔList_State
+    g? : Geocoder | RegexGeocoder
+    ──────────────────────────────────────────────────────
+    geocoders' = geocoders ⌢ ⟨g?⟩
+    L1'        = L1
+    log'       = log
+    ──────────────────────────────────────────────────────
+    where RegexGeocoder ::= { regex    : Regex
+                             ; geocoder : Geocoder
+                             ; limit?  : ℕ }
+
+### geocode
+
+    LocationStr ::= { s : seq Char | s ≠ ⟨⟩ ∧ ∃ c : s • c ∉ Digit }
+    GeoResult   ::= HASHREF with geometry.location.{lat,lng} : ℝ
+
+    geocode
+    ──────────────────────────────────────────────────────────────────────
+    ΔList_State
+    loc?    : LocationStr
+    result! : GeoResult | ⊥
+    ──────────────────────────────────────────────────────────────────────
+    loc? ∈ dom L1
+      ⟹ result! = L1(loc?)
+         ∧ log' = log ⌢ ⟨{geocoder ↦ cache; timetaken ↦ 0}⟩
+
+    loc? ∉ dom L1
+      ⟹ (∃ i : 1..#geocoders •
+            applies(geocoders i, loc?)
+            ∧ result! = Normalize(geocoders i . geocode(loc?))
+            ∧ L1' = L1 ⊕ {loc? ↦ result!}
+            ∧ log' = log ⌢ ⟨{geocoder ↦ class(geocoders i)}⟩)
+         ∨ (result! = ⊥ ∧ L1' = L1 ⊕ {loc? ↦ ⊥})
+
+    applies(g, loc) ≙
+        (g isa Geocoder)
+      ∨ (g isa RegexGeocoder ∧ loc ∈ matches(g.regex) ∧ g.limit > 0)
+
+### ua SPECIFICATION
+
+    ua
+    ──────────────────────────────────────────────────────
+    ΞList_State
+    ua?  : UserAgent
+    ua!  : UserAgent
+    ──────────────────────────────────────────────────────
+    ∀ g : ran geocoders • g.ua = ua?
+    ua!  = ua?
+
+### reverse\_geocode
+
+    LatLngStr ::= { s : seq Char
+                  | s matches /^[-+]?\d+\.?\d*,[-+]?\d+\.?\d*$/ }
+
+    reverse_geocode
+    ──────────────────────────────────────────────────────────────────────
+    ΔList_State
+    latlng? : LatLngStr
+    result! : seq Char | ⊥
+    ──────────────────────────────────────────────────────────────────────
+    latlng? ∈ dom L1
+      ⟹ result! = L1(latlng?)
+
+    latlng? ∉ dom L1
+      ⟹ (∃ i : 1..#geocoders •
+            applies(geocoders i, latlng?)
+            ∧ result! = geocoders i . reverse_geocode(latlng?)
+            ∧ L1' = L1 ⊕ {latlng? ↦ result!})
+         ∨ result! = ⊥
+
+### log
+
+    log
+    ──────────────────────────────────────────────────────
+    ΞList_State
+    result! : seq LogEntry
+    ──────────────────────────────────────────────────────
+    result! = log
+
+### flush
+
+    flush
+    ──────────────────────────────────────────────────────
+    ΔList_State
+    ──────────────────────────────────────────────────────
+    log'       = ⟨⟩
+    geocoders' = geocoders
+    L1'        = L1
+
 # LICENSE AND COPYRIGHT
 
 Copyright 2016-2026 Nigel Horne.
@@ -486,11 +488,3 @@ Copyright 2016-2026 Nigel Horne.
 Usage is subject to the GPL2 licence terms.
 If you use it,
 please let me know.
-
-# POD ERRORS
-
-Hey! **The above document had some coding errors, which are explained below:**
-
-- Around line 160:
-
-    Non-ASCII character seen before =encoding in '──────────────────────────────────────────────────────'. Assuming UTF-8
