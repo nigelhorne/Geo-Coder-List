@@ -42,6 +42,7 @@ t/list.t
 t/manifest.t
 t/mapbox.t
 t/mock.t
+t/mutant_killers.t
 t/no404s.t
 t/noplan.t
 t/opencage.t
