@@ -915,4 +915,121 @@ subtest 'log() and flush() edge cases' => sub {
 	_vdiag('log() and flush() edge cases done');
 };
 
+# =============================================================================
+# SUBTEST 18: ua() clone path edge cases
+# Purpose: boundary conditions around the clone/agent decision in ua()
+# =============================================================================
+
+subtest 'ua() clone path: UA with clone() but no agent() falls through to direct pass' => sub {
+	# If the UA has clone() but not agent(), the condition
+	# "$ua->can('clone') && $ua->can('agent')" is false, so original is passed.
+	my $list = _list_with_std();
+	{
+		package EdgeMock::CloneNoAgent;
+		sub new   { bless {}, shift }
+		sub clone { bless {%{$_[0]}}, ref($_[0]) }
+		# deliberately no agent() method
+	}
+
+	my $ua = EdgeMock::CloneNoAgent->new();
+	my $received_ua;
+	my $g = mock_scoped 'EdgeMock::Std::ua' => sub { (undef, $received_ua) = @_ };
+	$list->ua($ua);
+
+	is(refaddr($received_ua), refaddr($ua),
+		'UA with clone() but no agent(): passed directly (same reference)');
+};
+
+subtest 'ua() clone path: UA with agent() but no clone() falls through to direct pass' => sub {
+	my $list = _list_with_std();
+	{
+		package EdgeMock::AgentNoClone;
+		sub new   { bless { _a => 'test' }, shift }
+		sub agent { $_[0]->{_a} }
+		# deliberately no clone() method
+	}
+
+	my $ua = EdgeMock::AgentNoClone->new();
+	my $received_ua;
+	my $g = mock_scoped 'EdgeMock::Std::ua' => sub { (undef, $received_ua) = @_ };
+	$list->ua($ua);
+
+	is(refaddr($received_ua), refaddr($ua),
+		'UA with agent() but no clone(): passed directly (same reference)');
+};
+
+subtest 'ua() clone: geocoder with no VERSION gets class-name-only agent' => sub {
+	# EdgeMock::Std has no $VERSION; agent should be just the class name
+	my $list = _list_with_std();
+	{
+		package EdgeCloneUA;
+		sub new   { bless { _a => 'libwww-perl/test' }, shift }
+		sub clone { bless {%{$_[0]}}, ref($_[0]) }
+		sub agent { $_[0]->{_a} = $_[1] if @_ > 1; $_[0]->{_a} }
+	}
+
+	my $ua = EdgeCloneUA->new();
+	my $received_ua;
+	my $g = mock_scoped 'EdgeMock::Std::ua' => sub { (undef, $received_ua) = @_ };
+	$list->ua($ua);
+
+	is($received_ua->agent(), 'EdgeMock::Std',
+		'No-VERSION geocoder: agent string is just the class name');
+};
+
+# =============================================================================
+# SUBTEST 19: reverse_geocode() latlng retry edge cases
+# Purpose: boundary conditions for the strict-validation retry path
+# =============================================================================
+
+subtest 'reverse_geocode() retry: non-latlng error is NOT retried' => sub {
+	# Only "Unknown parameter 'latlng'" errors trigger the retry; other errors
+	# must go through the normal carp-and-skip path.
+	my $list = Geo::Coder::List->new()->push(EdgeMock::Std->new());
+	my $calls = 0;
+	my $g = mock_scoped 'EdgeMock::Std::reverse_geocode' => sub {
+		$calls++;
+		die "connection refused\n";
+	};
+
+	my $warned = 0;
+	local $SIG{__WARN__} = sub { $warned++ };
+	my $r = $list->reverse_geocode(latlng => $VALID_LATLNG);
+
+	is($calls,  1,     'Non-latlng error: geocoder called once only (no retry)');
+	is($r,      undef, 'Non-latlng error: result is undef');
+	ok($warned,        'Non-latlng error: warning emitted');
+};
+
+subtest 'reverse_geocode() retry: lat and lon present; latlng absent on retry call' => sub {
+	# After the retry, the geocoder must receive lat and lon but NOT latlng.
+	my $list = Geo::Coder::List->new()->push(EdgeMock::Std->new());
+	my %retry_args;
+	my $g = mock_scoped 'EdgeMock::Std::reverse_geocode' => sub {
+		my ($self, %args) = @_;
+		die "validate_strict: Unknown parameter 'latlng'\n" if exists $args{latlng};
+		%retry_args = %args;
+		return { display_name => 'Verified Retry' };
+	};
+
+	$list->reverse_geocode(latlng => $VALID_LATLNG);
+
+	ok(!exists $retry_args{latlng}, 'Retry: latlng key was stripped');
+	ok( exists $retry_args{lat},    'Retry: lat key is present');
+	ok( exists $retry_args{lon},    'Retry: lon key is present');
+};
+
+subtest 'reverse_geocode() retry succeeds in list context too' => sub {
+	my $list = Geo::Coder::List->new()->push(EdgeMock::Std->new());
+	my $g = mock_scoped 'EdgeMock::Std::reverse_geocode' => sub {
+		my ($self, %args) = @_;
+		die "validate_strict: Unknown parameter 'latlng'\n" if exists $args{latlng};
+		return ({ display_name => 'List Retry Result' });
+	};
+
+	my @r = $list->reverse_geocode(latlng => $VALID_LATLNG);
+	ok(scalar @r >= 1,           'List context retry: at least one result');
+	is($r[0], 'List Retry Result', 'List context retry: correct address returned');
+};
+
 done_testing();

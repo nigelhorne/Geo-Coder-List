@@ -689,6 +689,93 @@ subtest 'flush: does NOT clear the L1 cache (POD Z-spec: L1\' = L1)' => sub {
 	is($r->{geocoder}, $CACHE_STR, 'result still served from cache after flush');
 };
 
+# =============================================================================
+# geocode() -- cache-hit shallow copy (new in 0.37)
+# POD contract: "geocoder field is set to 'cache' when served from cache"
+# Additional contract: the original caller variable must not be mutated.
+# =============================================================================
+
+subtest 'geocode: cache hit does not mutate the original result variable' => sub {
+	# POD Z-spec: cached result has geocoder='cache'; live result retains its geocoder
+	my $list = _list_with(UnitMock::A->new());
+	my $mock = mock_scoped 'UnitMock::A::geocode' => sub { _osm($LAT_DC, $LNG_DC) };
+
+	my $live   = $list->geocode($LOC_DC);   # live call: geocoder is UnitMock::A object
+	my $cached = $list->geocode($LOC_DC);   # cache hit: geocoder should be 'cache'
+
+	# Cache hit must NOT modify $live; geocoder field must still be the object
+	is(ref($live->{geocoder}), 'UnitMock::A',
+		'Original result: geocoder field is the geocoder object (not mutated)');
+	is($cached->{geocoder}, $CACHE_STR,
+		'Cache-hit result: geocoder field is the "cache" string');
+};
+
+# =============================================================================
+# ua() -- per-geocoder clone with agent (new in 0.37)
+# When the incoming UA supports clone() and agent(), each geocoder receives its
+# own copy; ua() still returns the original UA (POD output schema).
+# =============================================================================
+
+subtest 'ua: with cloneable UA, returns the original UA (not a clone)' => sub {
+	# Build a minimal cloneable UA inline so this test has no LWP dependency
+	{
+		package UnitFakeCloneUA;
+		sub new   { bless { _agent => 'test/0' }, shift }
+		sub clone { bless { %{$_[0]} }, ref($_[0]) }
+		sub agent { $_[0]->{_agent} = $_[1] if @_ > 1; $_[0]->{_agent} }
+	}
+
+	my $list = _list_with(UnitMock::A->new());
+	my $ua   = UnitFakeCloneUA->new();
+	my $mock = mock_scoped 'UnitMock::A::ua' => sub { };   # accept silently
+
+	my $ret = $list->ua($ua);
+	is(refaddr($ret), refaddr($ua),
+		'ua() returns the original UA object even when cloning for geocoders');
+};
+
+subtest 'ua: geocoder receives a UA whose agent matches its class name' => sub {
+	{
+		package UnitFakeCloneUA2;
+		sub new   { bless { _agent => 'libwww-perl/x' }, shift }
+		sub clone { bless { %{$_[0]} }, ref($_[0]) }
+		sub agent { $_[0]->{_agent} = $_[1] if @_ > 1; $_[0]->{_agent} }
+	}
+
+	my $list = _list_with(UnitMock::A->new());
+	my $ua   = UnitFakeCloneUA2->new();
+
+	my $received_ua;
+	my $mock = mock_scoped 'UnitMock::A::ua' => sub { (undef, $received_ua) = @_ };
+
+	$list->ua($ua);
+
+	like($received_ua->agent(), qr/^UnitMock::A/,
+		'Geocoder UA agent string starts with the geocoder class name');
+};
+
+# =============================================================================
+# reverse_geocode() -- strict-validation latlng retry (new in 0.37)
+# If a backing geocoder rejects 'latlng' as unknown, the module retries
+# without it; lat and lon from the coordinate split are still present.
+# =============================================================================
+
+subtest 'reverse_geocode: works with strict-validation geocoder that rejects latlng' => sub {
+	my $list = _list_with(UnitMock::A->new());
+	my $mock = mock_scoped 'UnitMock::A::reverse_geocode' => sub {
+		my ($self, %args) = @_;
+		# Strict geocoder: latlng is not a known parameter
+		die "validate_strict: Unknown parameter 'latlng'\n" if exists $args{latlng};
+		return { display_name => 'Strict Geocoder Address, London' };
+	};
+
+	my $r = $list->reverse_geocode(latlng => $LATLNG_DC);
+	is($r, 'Strict Geocoder Address, London',
+		'Strict-validation geocoder: address returned after latlng is stripped on retry');
+};
+
+# =============================================================================
+
 subtest 'flush: enables chaining: flush()->geocode() works (POD example)' => sub {
 	# POD example: $list->flush()->geocode('London, UK')
 	my $list = _list_with(UnitMock::A->new());

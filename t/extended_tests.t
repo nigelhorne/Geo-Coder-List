@@ -1006,6 +1006,173 @@ subtest 'return type checks: flush()' => sub {
 	returns_ok($ret, { type => 'object' }, 'flush() return satisfies object schema');
 };
 
+# =============================================================================
+# SECTION 26: geocode() shallow-copy cache hit (new in 0.37)
+# =============================================================================
+
+subtest 'geocode(): cache hit -- non-HASH cached results bypass the copy (GLP-like)' => sub {
+	# The shallow-copy guard is "ref($r) eq 'HASH'"; non-HASH refs (e.g. GLP) are
+	# mutated in-place.  Verify GLP in L1 still gets geocoder set to 'cache'.
+	my $list = _list_a();
+	my $glp  = Geo::Location::Point->new();
+	$glp->{lat} = $LAT_DC;
+	$glp->{lng} = $LNG_DC;
+
+	# Inject the GLP directly into L1 so the cache-hit path is exercised
+	$list->{locations}{$LOC_DC} = $glp;
+
+	my $r = $list->geocode($LOC_DC);
+
+	# GLP is returned (after in-place mutation)
+	ok(defined $r,                         'GLP in L1: cache hit returns a result');
+	is(ref($r), 'Geo::Location::Point',    'GLP in L1: result is the GLP object');
+	is($r->{'geocoder'}, 'cache',          'GLP in L1: geocoder field set to "cache"');
+	# Since GLPs are not copied, $r IS the cached object
+	is(refaddr($r), refaddr($glp),         'GLP in L1: returned object is the cached one (no copy)');
+};
+
+subtest 'geocode(): each scalar cache hit returns a distinct copy object' => sub {
+	# Verify that the L1 entry is not the same object as any returned cached result
+	my $list = _list_a();
+	my $g = mock_scoped 'ExtMock::A::geocode' => sub { _osm($LAT_DC, $LNG_DC) };
+
+	$list->geocode($LOC_DC);                    # populate L1
+
+	my $r1 = $list->geocode($LOC_DC);           # first cache hit
+	my $r2 = $list->geocode($LOC_DC);           # second cache hit
+
+	isnt(refaddr($r1), refaddr($r2),
+		'Each cache hit is a distinct object');
+
+	# Neither copy should be the L1 entry itself
+	my $l1 = $list->{locations}{$LOC_DC};
+	isnt(refaddr($r1), refaddr($l1), 'First hit copy is not the L1 entry');
+	isnt(refaddr($r2), refaddr($l1), 'Second hit copy is not the L1 entry');
+};
+
+subtest 'geocode(): L1 cache entry preserves geocoder object across multiple hits' => sub {
+	# Each hit makes copies and stamps geocoder='cache' on them.
+	# The L1 entry itself must retain the original geocoder reference.
+	my $list = _list_a();
+	my $g = mock_scoped 'ExtMock::A::geocode' => sub { _osm($LAT_DC, $LNG_DC) };
+
+	$list->geocode($LOC_DC);    # populate L1
+	$list->geocode($LOC_DC);    # hit 1
+	$list->geocode($LOC_DC);    # hit 2
+	$list->geocode($LOC_DC);    # hit 3
+
+	my $l1 = $list->{locations}{$LOC_DC};
+	is(ref($l1->{'geocoder'}), 'ExtMock::A',
+		'L1 entry geocoder field still holds the geocoder object after multiple hits');
+};
+
+# =============================================================================
+# SECTION 27: ua() per-geocoder clone with VERSION (new in 0.37)
+# =============================================================================
+
+# Geocoder with a $VERSION for the "ClassName/Version" agent path
+{
+	package ExtMock::Versioned;
+	our $VERSION = '3.14';
+	sub new            { bless {}, shift }
+	sub geocode        { return () }
+	sub reverse_geocode{ return () }
+	sub ua             { }
+}
+
+# Minimal cloneable UA for offline tests
+{
+	package ExtMock::CloneUA;
+	sub new   { bless { _a => 'libwww-perl/test' }, shift }
+	sub clone { bless { %{$_[0]} }, ref($_[0]) }
+	sub agent { $_[0]->{_a} = $_[1] if @_ > 1; $_[0]->{_a} }
+}
+
+subtest 'ua(): versioned geocoder clone has "ClassName/Version" agent string' => sub {
+	my $list = Geo::Coder::List->new()->push(ExtMock::Versioned->new());
+	my $ua   = ExtMock::CloneUA->new();
+
+	my $received_ua;
+	my $g = mock_scoped 'ExtMock::Versioned::ua' => sub {
+		(undef, $received_ua) = @_;
+	};
+
+	$list->ua($ua);
+
+	is($received_ua->agent(), 'ExtMock::Versioned/3.14',
+		'Versioned geocoder: clone agent is "ClassName/Version"');
+};
+
+subtest 'ua(): un-versioned geocoder clone has just the class name as agent' => sub {
+	# ExtMock::A has no $VERSION
+	my $list = _list_a();
+	my $ua   = ExtMock::CloneUA->new();
+
+	my $received_ua;
+	my $g = mock_scoped 'ExtMock::A::ua' => sub {
+		(undef, $received_ua) = @_;
+	};
+
+	$list->ua($ua);
+
+	is($received_ua->agent(), 'ExtMock::A',
+		'Un-versioned geocoder: clone agent is just the class name');
+};
+
+subtest 'ua(): ua() returns original UA even when cloning' => sub {
+	my $list = _list_a();
+	my $ua   = ExtMock::CloneUA->new();
+	my $g    = mock_scoped 'ExtMock::A::ua' => sub { };
+
+	my $ret = $list->ua($ua);
+	is(refaddr($ret), refaddr($ua), 'ua() returns the original UA, not a clone');
+};
+
+# =============================================================================
+# SECTION 28: reverse_geocode() latlng retry (new in 0.37)
+# =============================================================================
+
+subtest 'reverse_geocode(): retry fails with second error -- normal error handling' => sub {
+	# If the retry itself also throws (not a latlng error), the error is carpd
+	# and the method returns undef.
+	my $list = _list_a();
+	my $calls = 0;
+	my $g = mock_scoped 'ExtMock::A::reverse_geocode' => sub {
+		my ($self, %args) = @_;
+		$calls++;
+		if(exists $args{latlng}) {
+			die "validate_strict: Unknown parameter 'latlng'\n";
+		}
+		die "second error: connection refused\n";
+	};
+
+	my $warned = 0;
+	local $SIG{__WARN__} = sub { $warned++ };
+	my $r = $list->reverse_geocode(latlng => $LATLNG_DC);
+
+	is($calls, 2,     'Retry that also fails: geocoder called twice total');
+	is($r,     undef, 'Retry that also fails: result is undef');
+	ok($warned,       'Retry that also fails: second error is carpd');
+};
+
+subtest 'reverse_geocode(): scalar context retry -- lat and lon are correct' => sub {
+	my $list = _list_a();
+	my %retry_params;
+	my $g = mock_scoped 'ExtMock::A::reverse_geocode' => sub {
+		my ($self, %args) = @_;
+		die "validate_strict: Unknown parameter 'latlng'\n" if exists $args{latlng};
+		%retry_params = %args;
+		return { display_name => 'Retry Scalar Address' };
+	};
+
+	my $r = $list->reverse_geocode(latlng => $LATLNG_DC);
+
+	is($r, 'Retry Scalar Address', 'Scalar context retry: correct address returned');
+	is($retry_params{lat}, $LAT_DC, 'Retry: lat has correct value from split');
+	is($retry_params{lon}, $LNG_DC, 'Retry: lon has correct value from split');
+	ok(!exists $retry_params{latlng},  'Retry: latlng key is absent');
+};
+
 done_testing();
 
 # =============================================================================

@@ -390,6 +390,94 @@ subtest 'integration: spy confirms multiple spaces collapsed before geocoder cal
 # 9. ua() integration: LWP::UserAgent propagated to all geocoders
 # =============================================================================
 
+# =============================================================================
+# 9a. ua() -- per-geocoder clone with class-based agent string (new in 0.37)
+# Each geocoder should receive a clone whose agent is "ClassName/Version".
+# =============================================================================
+
+subtest 'integration: ua() sets class-based agent on each per-geocoder clone' => sub {
+	# When a real LWP::UserAgent (which supports clone+agent) is passed, each
+	# geocoder should receive a clone whose agent reflects its own class name.
+	my $list = Geo::Coder::List->new();
+	$list->push(Geo::Coder::Free->new());
+	$list->push(Geo::Coder::Free::Local->new());
+
+	require LWP::UserAgent;
+	my $ua = LWP::UserAgent->new();
+
+	# Capture the UA that each geocoder actually receives
+	my ($agent_free, $agent_local);
+	my $mock1 = mock_scoped 'Geo::Coder::Free::ua' => sub {
+		my ($self, $u) = @_;
+		$agent_free  = $u->agent() if $u && $u->can('agent');
+	};
+	my $mock2 = mock_scoped 'Geo::Coder::Free::Local::ua' => sub {
+		my ($self, $u) = @_;
+		$agent_local = $u->agent() if $u && $u->can('agent');
+	};
+
+	$list->ua($ua);
+
+	# Each geocoder's clone must have its own class name in the agent string
+	like($agent_free,  qr/^Geo::Coder::Free/,
+		'Geo::Coder::Free received clone with its own class-based agent');
+	like($agent_local, qr/^Geo::Coder::Free::Local/,
+		'Geo::Coder::Free::Local received clone with its own class-based agent');
+
+	# The two agents must be different (each geocoder gets its own)
+	isnt($agent_free, $agent_local,
+		'The two geocoders received clones with distinct agent strings');
+};
+
+# =============================================================================
+# 9b. geocode() -- cache-hit shallow copy (new in 0.37)
+# A second geocode() call for the same location returns a fresh copy; the
+# original result variable must not be mutated.
+# =============================================================================
+
+subtest 'integration: geocode cache hit does not mutate original result variable' => sub {
+	my $list = _free_list();
+	my $mock = mock_scoped 'Geo::Coder::Free::geocode' => sub {
+		return { lat => $config{lat_ramsgate_approx}, lon => $config{lng_ramsgate_approx} };
+	};
+
+	my $live   = $list->geocode($LOC_RAMSGATE);
+	my $cached = $list->geocode($LOC_RAMSGATE);
+
+	# The original result must still carry the geocoder object, not 'cache'
+	is(ref($live->{geocoder}), 'Geo::Coder::Free',
+		'Original result: geocoder field is the live geocoder object');
+	is($cached->{geocoder}, $config{cache_str},
+		'Cache-hit result: geocoder field is "cache"');
+};
+
+# =============================================================================
+# 9c. reverse_geocode() -- strict-validation latlng retry (new in 0.37)
+# A geocoder that rejects 'latlng' as an unknown parameter triggers a retry
+# without that key; lat and lon (split from latlng) are still present.
+# =============================================================================
+
+subtest 'integration: reverse_geocode retries without latlng for strict geocoders' => sub {
+	# StrictRevGeo simulates a geocoder (like Geo::Coder::GeoApify) that uses
+	# Params::Validate::Strict and therefore rejects unknown parameters.
+	{
+		package IntegrationStrictRevGeo;
+		sub new            { bless {}, shift }
+		sub reverse_geocode {
+			my ($self, %args) = @_;
+			die "validate_strict: Unknown parameter 'latlng'\n" if exists $args{latlng};
+			return { display_name => 'Ramsgate, Kent, England' };
+		}
+	}
+
+	my $list = Geo::Coder::List->new()->push(IntegrationStrictRevGeo->new());
+	my $r    = $list->reverse_geocode(latlng => $LATLNG_KT);
+	is($r, 'Ramsgate, Kent, England',
+		'Strict-validation geocoder: address returned after latlng stripped on retry');
+};
+
+# =============================================================================
+
 subtest 'integration: ua() propagates to every geocoder in the chain' => sub {
 	# Real LWP::UserAgent is passed to geocoders via ua(); spy confirms calls
 	my $g1_spy = spy('Geo::Coder::Free::ua');

@@ -58,6 +58,25 @@ sub geocode        { return () }
 sub reverse_geocode{ return () }
 sub ua             { $_[0]->{ua} = $_[1]; return $_[1] }
 
+# Geocoder with a $VERSION so the clone-agent test can verify "Class/Version" format
+package MockGeocoder::WithVersion;
+our $VERSION = '2.0';
+sub new            { bless {}, shift }
+sub geocode        { return () }
+sub reverse_geocode{ return () }
+sub ua             { $_[0]->{_ua} = $_[1] if @_ > 1; $_[0]->{_ua} }
+
+# Minimal UA that supports clone() and agent() -- used to test the ua() clone path
+# without a real LWP::UserAgent dependency in this offline test file
+package FakeCloneableUA;
+sub new   { bless { _agent => 'libwww-perl/test' }, shift }
+sub clone { bless { %{$_[0]} }, ref($_[0]) }
+sub agent {
+	my ($self, $new) = @_;
+	$self->{_agent} = $new if @_ > 1;
+	return $self->{_agent};
+}
+
 package main;
 
 # ── Helper: build a list with one geocoder already pushed ─────────────────────
@@ -931,6 +950,216 @@ subtest '_cache: L2 CHI object receives set() call with 1-month TTL for found re
 	like($set_calls[0]{ttl}, qr/month/i,
 		'TTL for a confirmed location is 1 month');
 };
+
+# =============================================================================
+# geocode() -- shallow-copy cache-hit behaviour (new in 0.37)
+# Each cache hit returns a fresh copy; the original caller variable and the
+# L1 cache entry are never mutated in place.
+# =============================================================================
+
+subtest 'geocode: cache hit returns a shallow copy; original variable not mutated' => sub {
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $mock = mock_scoped 'MockGeocoder::Alpha::geocode' => sub {
+		return _osm_result($LAT_DC, $LNG_DC);
+	};
+
+	# First call: live geocode stores the geocoder object in the result
+	my $live = $list->geocode($LOC_DC);
+	ok(defined $live, 'first call returned a result');
+
+	# Second call: cache hit -- must NOT modify $live
+	my $cached = $list->geocode($LOC_DC);
+
+	is(ref($live->{'geocoder'}), 'MockGeocoder::Alpha',
+		'Original variable: geocoder field still holds the geocoder object');
+	is($cached->{'geocoder'}, 'cache',
+		'Cache-hit copy: geocoder field is the string "cache"');
+};
+
+subtest 'geocode: each cache hit returns a distinct object (not the L1 entry itself)' => sub {
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $mock = mock_scoped 'MockGeocoder::Alpha::geocode' => sub {
+		return _osm_result($LAT_DC, $LNG_DC);
+	};
+
+	$list->geocode($LOC_DC);                    # populate L1
+
+	my $r1 = $list->geocode($LOC_DC);           # first cache hit
+	my $r2 = $list->geocode($LOC_DC);           # second cache hit
+
+	isnt(refaddr($r1), refaddr($r2),
+		'Consecutive cache hits return distinct copy objects');
+	is($r1->{'geometry'}{'location'}{'lat'},
+	   $r2->{'geometry'}{'location'}{'lat'},
+	   'Both copies carry the same canonical lat');
+};
+
+subtest 'geocode: L1 cache entry retains original geocoder object after cache hits' => sub {
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $mock = mock_scoped 'MockGeocoder::Alpha::geocode' => sub {
+		return _osm_result($LAT_DC, $LNG_DC);
+	};
+
+	$list->geocode($LOC_DC);      # populate L1
+	$list->geocode($LOC_DC);      # cache hit 1 -- must not mutate L1
+	$list->geocode($LOC_DC);      # cache hit 2
+
+	# Inspect L1 directly: the entry must still hold the live geocoder object
+	my $l1 = $list->{'locations'}{$LOC_DC};
+	is(ref($l1->{'geocoder'}), 'MockGeocoder::Alpha',
+		'L1 cache entry geocoder field still holds the geocoder object (not mutated)');
+};
+
+# =============================================================================
+# ua() -- per-geocoder clone with agent string (new in 0.37)
+# When the incoming UA supports clone() and agent(), each geocoder receives
+# a private clone whose agent string is set to "ClassName/Version".
+# =============================================================================
+
+subtest 'ua: with cloneable UA, geocoder receives a clone, not the original' => sub {
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $ua   = FakeCloneableUA->new();
+
+	my $received_ua;
+	my $mock = mock_scoped 'MockGeocoder::Alpha::ua' => sub {
+		(undef, $received_ua) = @_;
+	};
+
+	$list->ua($ua);
+
+	ok(defined $received_ua, 'geocoder->ua() was called with a UA argument');
+	isnt(refaddr($received_ua), refaddr($ua),
+		'Geocoder received a clone, not the original UA reference');
+};
+
+subtest 'ua: clone agent string is the geocoder class name (no $VERSION)' => sub {
+	# MockGeocoder::Alpha has no $VERSION, so agent = class name only
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $ua   = FakeCloneableUA->new();
+
+	my $received_ua;
+	my $mock = mock_scoped 'MockGeocoder::Alpha::ua' => sub {
+		(undef, $received_ua) = @_;
+	};
+
+	$list->ua($ua);
+	like($received_ua->agent(), qr/^MockGeocoder::Alpha/,
+		'Clone agent starts with geocoder class name when $VERSION is absent');
+};
+
+subtest 'ua: clone agent string is "ClassName/Version" when geocoder has $VERSION' => sub {
+	my $list = Geo::Coder::List->new()->push(MockGeocoder::WithVersion->new());
+	my $ua   = FakeCloneableUA->new();
+
+	my $received_ua;
+	my $mock = mock_scoped 'MockGeocoder::WithVersion::ua' => sub {
+		(undef, $received_ua) = @_;
+	};
+
+	$list->ua($ua);
+	is($received_ua->agent(), 'MockGeocoder::WithVersion/2.0',
+		'Clone agent is "ClassName/Version" when geocoder has $VERSION');
+};
+
+subtest 'ua: original UA is returned even when clones are made' => sub {
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $ua   = FakeCloneableUA->new();
+	my $mock = mock_scoped 'MockGeocoder::Alpha::ua' => sub { };
+
+	my $ret = $list->ua($ua);
+	is(refaddr($ret), refaddr($ua),
+		'ua() returns the original UA object, not a per-geocoder clone');
+};
+
+subtest 'ua: multiple geocoders each receive an independent clone' => sub {
+	my ($a, $b) = (MockGeocoder::Alpha->new(), MockGeocoder::Beta->new());
+	my $list    = Geo::Coder::List->new()->push($a)->push($b);
+	my $ua      = FakeCloneableUA->new();
+
+	my ($got_a, $got_b);
+	my $mock_a = mock_scoped 'MockGeocoder::Alpha::ua' => sub { (undef, $got_a) = @_ };
+	my $mock_b = mock_scoped 'MockGeocoder::Beta::ua'  => sub { (undef, $got_b) = @_ };
+
+	$list->ua($ua);
+
+	ok(defined $got_a && defined $got_b, 'both geocoders received a UA');
+	isnt(refaddr($got_a), refaddr($got_b),
+		'Each geocoder received a distinct clone');
+	isnt(refaddr($got_a), refaddr($ua), 'Alpha clone is not the original');
+	isnt(refaddr($got_b), refaddr($ua), 'Beta clone is not the original');
+};
+
+subtest 'ua: UA without clone() is passed directly (backward compatibility)' => sub {
+	# FakeUA has no clone() method, so the new clone path must not fire
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $ua   = bless { id => 'no-clone' }, 'FakeUA';
+
+	my $received_ua;
+	my $mock = mock_scoped 'MockGeocoder::Alpha::ua' => sub {
+		(undef, $received_ua) = @_;
+	};
+
+	$list->ua($ua);
+	is(refaddr($received_ua), refaddr($ua),
+		'UA without clone() is passed as-is (same reference)');
+};
+
+# =============================================================================
+# reverse_geocode() -- strict-validation latlng retry (new in 0.37)
+# If a geocoder rejects 'latlng' as an unknown parameter, the call is retried
+# without it; lat and lon are already present from the coordinate split.
+# =============================================================================
+
+subtest 'reverse_geocode: retries without latlng when geocoder rejects it as unknown' => sub {
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my %retry_params;
+	my $mock = mock_scoped 'MockGeocoder::Alpha::reverse_geocode' => sub {
+		my ($self, %args) = @_;
+		# Simulate strict parameter validation rejecting 'latlng'
+		die "validate_strict: Unknown parameter 'latlng'\n" if exists $args{latlng};
+		%retry_params = %args;
+		return { display_name => 'Test Address, London' };
+	};
+
+	my $r = $list->reverse_geocode(latlng => $LATLNG_DC);
+
+	is($r, 'Test Address, London', 'Result returned after latlng-retry');
+	ok(!exists $retry_params{latlng}, 'Retry call did not include latlng key');
+	ok( exists $retry_params{lat},    'Retry call included lat');
+	ok( exists $retry_params{lon},    'Retry call included lon');
+};
+
+subtest 'reverse_geocode: does not retry on non-latlng errors' => sub {
+	my $list  = _make_list(MockGeocoder::Alpha->new());
+	my $calls = 0;
+	my $mock = mock_scoped 'MockGeocoder::Alpha::reverse_geocode' => sub {
+		$calls++;
+		die "network timeout\n";
+	};
+
+	my $warned = 0;
+	local $SIG{__WARN__} = sub { $warned++ };
+	my $r = $list->reverse_geocode(latlng => $LATLNG_DC);
+
+	is($calls, 1,  'Non-latlng error: geocoder called exactly once (no retry)');
+	is($r, undef,  'Non-latlng error: result is undef');
+	ok($warned,    'Non-latlng error: warning emitted via carp');
+};
+
+subtest 'reverse_geocode: list context also retries without latlng on strict validation' => sub {
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $mock = mock_scoped 'MockGeocoder::Alpha::reverse_geocode' => sub {
+		my ($self, %args) = @_;
+		die "validate_strict: Unknown parameter 'latlng'\n" if exists $args{latlng};
+		return ({ display_name => 'List Retry Address' });
+	};
+
+	my @r = $list->reverse_geocode(latlng => $LATLNG_DC);
+	ok(scalar @r >= 1,          'List context: at least one result after latlng-retry');
+	is($r[0], 'List Retry Address', 'List context: correct address returned');
+};
+
+# =============================================================================
 
 subtest '_cache: set() is not called on L2 for a not-found result' => sub {
 	# Not-found sentinel is L1-only; it must not leak into the external L2 store
