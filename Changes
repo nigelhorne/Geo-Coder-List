@@ -1,6 +1,6 @@
 Revision history for Geo-Coder-List
 
-0.37
+0.37	Thu Jun  4 19:02:53 EDT 2026
 	[ Enhancements ]
 	Add Readonly constants and %config hash for configurable cache TTLs
 	Add logging to reverse_geocode()

@@ -11,7 +11,7 @@ Geo::Coder::List - Call many Geo-Coders
 
 # VERSION
 
-Version 0.36
+Version 0.37
 
 # SYNOPSIS
 
