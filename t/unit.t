@@ -357,7 +357,7 @@ subtest 'geocode: carps on geocoder error and falls back to next geocoder' => su
 
 	my $r;
 	warnings_like { $r = $list->geocode($LOC_DC) }
-		qr/rate limit hit/, 'error from first geocoder is carpd (not croaked)';
+		qr/rate limit hit/, 'error from first geocoder is carped (not croaked)';
 
 	ok(defined $r,                      'fallback geocoder result returned');
 	is(ref($r->{geocoder}), 'UnitMock::B', 'result came from the fallback geocoder');

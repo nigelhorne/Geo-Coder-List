@@ -296,9 +296,7 @@ subtest 'geocode: falls back to second geocoder when first throws' => sub {
 	};
 
 	my $result;
-	warnings_like { $result = $list->geocode($LOC_DC) }
-		qr/rate limit exceeded/,
-		'error from Alpha is carpd';
+	warnings_like { $result = $list->geocode($LOC_DC) } qr/rate limit exceeded/, 'error from Alpha is carped';
 
 	ok(defined $result, 'result obtained from Beta after Alpha failed');
 	is(ref($result->{geocoder}), 'MockGeocoder::Beta',
@@ -413,8 +411,7 @@ subtest 'geocode: writes a log entry recording the error on failure' => sub {
 		die 'simulated API error';
 	};
 
-	warnings_like { $list->geocode($LOC_DC) }
-		qr/simulated API error/, 'error is carpd';
+	warnings_like { $list->geocode($LOC_DC) } qr/simulated API error/, 'error is carped';
 
 	my ($err) = grep { exists $_->{error} } @{$list->log()};
 	ok(defined $err,                        'error log entry was created');

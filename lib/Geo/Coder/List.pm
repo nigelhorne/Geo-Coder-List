@@ -307,13 +307,13 @@ sub geocode {
 
 	# Reject empty or whitespace-only location strings
 	if((!defined($location)) || (length($location) == 0)) {
-		Carp::carp(__PACKAGE__, ' usage: geocode(location => $location)');
+		$self->_warn(__PACKAGE__, ' usage: geocode(location => $location)');
 		return;
 	}
 
 	# A purely numeric string is almost certainly an error (e.g. a bare postcode)
 	if($params->{'location'} !~ /\D/) {
-		Carp::croak('Usage: ', __PACKAGE__, ': invalid input to geocode(), ', $params->{location});
+		$self->_error('Usage: ', __PACKAGE__, ': invalid input to geocode(), ', $params->{location});
 	}
 
 	# Collapse runs of whitespace and expand any HTML entities
@@ -452,10 +452,7 @@ sub geocode {
 				error     => $@,
 			};
 			CORE::push @{$self->{'log'}}, $log;
-			if(my $logger = $self->{logger}) {
-				$logger->debug(ref($geocoder), " '$location': $@");
-			}
-			Carp::carp(ref($geocoder), " '$location': $@");
+			$self->_warn(ref($geocoder), " '$location': $@");
 			next ENCODER;
 		}
 
@@ -740,8 +737,8 @@ sub geocode {
 
 			# Sanity check: the good result must have lat and lng
 			if((!defined($good_result->{lat})) || (!defined($good_result->{lng}))) {
-				Carp::carp(Data::Dumper->new([\@rc])->Dump());
-				Carp::croak("BUG: '$location': HASH exists but is not sensible");
+				$self->_warn(Data::Dumper->new([\@rc])->Dump());
+				$self->_error("BUG: '$location': HASH exists but is not sensible");
 			}
 
 			if(wantarray) {
@@ -877,8 +874,7 @@ sub reverse_geocode {
 	my $self = shift;
 	my $params = Params::Get::get_params('latlng', \@_);
 
-	my $latlng = $params->{'latlng'}
-		or Carp::croak('Usage: reverse_geocode(latlng => $location)');
+	my $latlng = $params->{'latlng'} or Carp::croak('Usage: reverse_geocode(latlng => $location)');
 
 	# Split into components; populate convenience keys for geocoders that want them
 	my ($latitude, $longitude) = split(/,/, $latlng);
@@ -1344,6 +1340,41 @@ sub _cache {
 	}
 
 	return $rc;
+}
+
+# Emit a debug message somewhere
+sub _debug {
+	my $self = shift;
+
+	if(my $logger = $self->{logger}) {
+		$logger->debug(@_);
+	}
+	if($self->{debug}) {
+		print @_, "\n";
+	}
+}
+
+# Emit a warning message somewhere
+sub _warn {
+	my $self = shift;
+
+	if(my $logger = $self->{logger}) {
+		$logger->warn(@_);
+	} else {
+		Carp::carp(@_);
+	}
+}
+
+# Emit an error message somewhere
+sub _error {
+	my $self = shift;
+
+	if(my $logger = $self->{logger}) {
+		$logger->error(@_);
+		die @_;
+	} else {
+		Carp::croak(@_);
+	}
 }
 
 # =============================================================================
