@@ -315,11 +315,11 @@ Approximate LCSAJ segments: 287<br>
 </span><span class="">   23: 
 </span><span class="">   24: =head1 VERSION
 </span><span class="">   25: 
-</span><span class="">   26: Version 0.36
+</span><span class="">   26: Version 0.37
 </span><span class="">   27: 
 </span><span class="">   28: =cut
 </span><span class="">   29: 
-</span><span class="">   30: our $VERSION = &#39;0.36&#39;;
+</span><span class="">   30: our $VERSION = &#39;0.37&#39;;
 </span><span class="">   31: 
 </span><span class="">   32: # &acirc;&#148;&#128;&acirc;&#148;&#128; Module-level constants (not user-configurable) &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
 </span><span class="">   33: 
@@ -736,7 +736,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  382: 			}
 </span><span class="">  383: 		}
 </span><span class="">  384: 		return if $allempty;
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  385: 		return @rc;
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  385: 		return @rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -819,7 +819,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 				<li><b>COND_INV_406_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
 <span class="">  407: 				print &quot;limit: $limit\n&quot; if($self-&gt;{&#39;debug&#39;});
-</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Mutation survived. Add targeted tests to validate this branch.">  408: 				if($limit &lt;= 0) {
+</span><span class="survived-3 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  408: 				if($limit &lt;= 0) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 4, Killed: 0, Survived: 4)</summary>
@@ -908,24 +908,18 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  452: 				error     =&gt; $@,
 </span><span class="">  453: 			};
 </span><span class="">  454: 			CORE::push @{$self-&gt;{&#39;log&#39;}}, $log;
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  455: 			$self-&gt;_warn(ref($geocoder), &quot; &#39;$location&#39;: $@&quot;);
-</span>
-					<details class="mutant-details">
-					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
-					<ul>
-				<li><b>COND_INV_455_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
-</li></ul></details>
-<span class="">  456: 			next ENCODER;
+</span><span class="">  455: 			$self-&gt;_warn(ref($geocoder), &quot; &#39;$location&#39;: $@&quot;);
+</span><span class="">  456: 			next ENCODER;
 </span><span class="">  457: 		}
 </span><span class="">  458: 
 </span><span class="">  459: 		$timetaken = Time::HiRes::time() - $timetaken;
 </span><span class="">  460: 
 </span><span class="">  461: 		# Geo::Coder::US::Census sometimes returns a truthy but empty result
-</span><span class="">  462: 		if((ref($geocoder) eq &#39;Geo::Coder::US::Census&#39;) &amp;&amp;
-</span><span class="">  463: 		   !(defined($rc[0]-&gt;{result}{addressMatches}[0]-&gt;{coordinates}{y}))) {
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  462: 		if((ref($geocoder) eq &#39;Geo::Coder::US::Census&#39;) &amp;&amp;
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  463: 		   !(defined($rc[0]-&gt;{result}{addressMatches}[0]-&gt;{coordinates}{y}))) {
 </span><span class="">  464: 			my $log = {
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  465: 				line      =&gt; $call_details[2],
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  466: 				location  =&gt; $location,
+</span><span class="">  465: 				line      =&gt; $call_details[2],
+</span><span class="">  466: 				location  =&gt; $location,
 </span><span class="">  467: 				timetaken =&gt; $timetaken,
 </span><span class="">  468: 				geocoder  =&gt; ref($geocoder),
 </span><span class="">  469: 				wantarray =&gt; wantarray,
@@ -936,12 +930,12 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  474: 		}
 </span><span class="">  475: 
 </span><span class="">  476: 		# Reject empty result sets and trivially empty hashes / arrays
-</span><span class="">  477: 		if((scalar(@rc) == 0) ||
-</span><span class="">  478: 		   ((ref($rc[0]) eq &#39;HASH&#39;)  &amp;&amp; (scalar(keys %{$rc[0]}) == 0)) ||
-</span><span class="">  479: 		   # UNREACHABLE: if $rc[0] is an ARRAY ref, $rc[0][0] may be undef,
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  480: 		   # which causes keys(%{undef}) to die under strict refs.  No known
-</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  481: 		   # geocoder returns an ARRAY-of-ARRAYs with an empty-hash sub-element.
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  482: 		   # A safe rewrite would guard with: ref($rc[0][0]) eq &#39;HASH&#39; first.
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  477: 		if((scalar(@rc) == 0) ||
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  478: 		   ((ref($rc[0]) eq &#39;HASH&#39;)  &amp;&amp; (scalar(keys %{$rc[0]}) == 0)) ||
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  479: 		   # UNREACHABLE: if $rc[0] is an ARRAY ref, $rc[0][0] may be undef,
+</span><span class="">  480: 		   # which causes keys(%{undef}) to die under strict refs.  No known
+</span><span class="">  481: 		   # geocoder returns an ARRAY-of-ARRAYs with an empty-hash sub-element.
+</span><span class="">  482: 		   # A safe rewrite would guard with: ref($rc[0][0]) eq &#39;HASH&#39; first.
 </span><span class="">  483: 		   # ((ref($rc[0]) eq &#39;ARRAY&#39;) &amp;&amp; (scalar(keys %{$rc[0][0]}) == 0)) ||
 </span><span class="">  484: 		   0) {
 </span><span class="">  485: 			my $log = {
@@ -964,17 +958,17 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  502: 
 </span><span class="">  503: 		POSSIBLE_LOCATION: foreach my $l (@rc) {
 </span><span class="">  504: 			# Geo::GeoNames wraps each result in a one-element array
-</span><span class="">  505: 			if(ref($l) eq &#39;ARRAY&#39;) {
-</span><span class="">  506: 				# FIXME: only the first element of the sub-array is considered
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  505: 			if(ref($l) eq &#39;ARRAY&#39;) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  506: 				# FIXME: only the first element of the sub-array is considered
 </span><span class="">  507: 				$l = $l-&gt;[0];
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  508: 			}
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  509: 
+</span><span class="">  508: 			}
+</span><span class="">  509: 
 </span><span class="">  510: 			# Skip undefined or empty-string candidates
-</span><span class="">  511: 			if((!defined($l)) || ($l eq &#39;&#39;)) {
-</span><span class="">  512: 				my $log = {
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  511: 			if((!defined($l)) || ($l eq &#39;&#39;)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  512: 				my $log = {
 </span><span class="">  513: 					line      =&gt; $call_details[2],
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  514: 					location  =&gt; $location,
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  515: 					timetaken =&gt; $timetaken,
+</span><span class="">  514: 					location  =&gt; $location,
+</span><span class="">  515: 					timetaken =&gt; $timetaken,
 </span><span class="">  516: 					geocoder  =&gt; ref($geocoder),
 </span><span class="">  517: 					wantarray =&gt; wantarray,
 </span><span class="">  518: 					result    =&gt; $RESULT_NONE,
@@ -991,15 +985,12 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  529: 			$l-&gt;{&#39;geocoder&#39;} = ref($geocoder);
 </span><span class="">  530: 
 </span><span class="">  531: 			print ref($geocoder), &#39;: &#39;,
-</span><span class="">  532: 				Data::Dumper-&gt;new([\$l])-&gt;Dump() if($self-&gt;{&#39;debug&#39;} &gt;= 2);
-</span><span class="">  533: 
-</span><span class="">  534: 			# Geo::Location::Point objects carry their own accessors;
-</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  535: 			# upgrade the geocoder field and populate the canonical geometry
+</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  532: 				Data::Dumper-&gt;new([\$l])-&gt;Dump() if($self-&gt;{&#39;debug&#39;} &gt;= 2);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 3, Killed: 0, Survived: 3)</summary>
 					<ul>
-				<li><b>NUM_BOUNDARY_535_58_>: Numeric boundary flip >= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
+				<li><b>NUM_BOUNDARY_532_58_>: Numeric boundary flip >= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1007,7 +998,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_535_58_<: Numeric boundary flip >= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_532_58_<: Numeric boundary flip >= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1015,7 +1006,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_535_58_<=: Numeric boundary flip >= to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_532_58_<=: Numeric boundary flip >= to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1024,28 +1015,31 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class="">  536: 			# structure so callers can rely on geometry.location.{lat,lng}
-</span><span class="">  537: 			if(ref($l) eq &#39;Geo::Location::Point&#39;) {
-</span><span class="">  538: 				$l-&gt;{&#39;geocoder&#39;} = $geocoder;
+<span class="">  533: 
+</span><span class="">  534: 			# Geo::Location::Point objects carry their own accessors;
+</span><span class="">  535: 			# upgrade the geocoder field and populate the canonical geometry
+</span><span class="">  536: 			# structure so callers can rely on geometry.location.{lat,lng}
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  537: 			if(ref($l) eq &#39;Geo::Location::Point&#39;) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_537_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  538: 				$l-&gt;{&#39;geocoder&#39;} = $geocoder;
 </span><span class="">  539: 
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  540: 				# Populate canonical geometry structure from the GLP&#39;s own fields
+</span><span class="">  540: 				# Populate canonical geometry structure from the GLP&#39;s own fields
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  541: 				if(!defined($l-&gt;{geometry}{location}{lat}) &amp;&amp; defined($l-&gt;{lat})) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_540_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_541_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  541: 				if(!defined($l-&gt;{geometry}{location}{lat}) &amp;&amp; defined($l-&gt;{lat})) {
-</span><span class="">  542: 					$l-&gt;{geometry}{location}{lat} = $l-&gt;{lat};
+<span class="">  542: 					$l-&gt;{geometry}{location}{lat} = $l-&gt;{lat};
 </span><span class="">  543: 					$l-&gt;{geometry}{location}{lng} = $l-&gt;{lng} // $l-&gt;{lon};
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  544: 				}
-</span>
-					<details class="mutant-details">
-					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
-					<ul>
-				<li><b>COND_INV_544_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
-</li></ul></details>
-<span class="">  545: 
+</span><span class="">  544: 				}
+</span><span class="">  545: 
 </span><span class="">  546: 				# Convenience aliases (idempotent if already set by GLP)
 </span><span class="">  547: 				$l-&gt;{&#39;lat&#39;} //= $l-&gt;{geometry}{location}{lat};
 </span><span class="">  548: 				$l-&gt;{&#39;lng&#39;} //= $l-&gt;{geometry}{location}{lng};
@@ -1066,11 +1060,11 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  563: 			# Only HASH results need normalisation
 </span><span class="">  564: 			next if(ref($l) ne &#39;HASH&#39;);
 </span><span class="">  565: 
-</span><span class="">  566: 			if($l-&gt;{&#39;error&#39;}) {
-</span><span class="">  567: 				# A top-level &#39;error&#39; key signals a provider-level failure
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  566: 			if($l-&gt;{&#39;error&#39;}) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  567: 				# A top-level &#39;error&#39; key signals a provider-level failure
 </span><span class="">  568: 				my $log = {
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  569: 					line      =&gt; $call_details[2],
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  570: 					location  =&gt; $location,
+</span><span class="">  569: 					line      =&gt; $call_details[2],
+</span><span class="">  570: 					location  =&gt; $location,
 </span><span class="">  571: 					timetaken =&gt; $timetaken,
 </span><span class="">  572: 					geocoder  =&gt; ref($geocoder),
 </span><span class="">  573: 					wantarray =&gt; wantarray,
@@ -1080,14 +1074,14 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  577: 				next ENCODER;
 </span><span class="">  578: 			} else {
 </span><span class="">  579: 				# Map provider-specific fields to the canonical geometry structure
-</span><span class="">  580: 				if(!defined($l-&gt;{geometry}{location}{lat})) {
-</span><span class="">  581: 					my ($lat, $long);
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  580: 				if(!defined($l-&gt;{geometry}{location}{lat})) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  581: 					my ($lat, $long);
 </span><span class="">  582: 
 </span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  583: 					if(defined($l-&gt;{lat}) &amp;&amp; defined($l-&gt;{lon})) {
 </span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  584: 						# OSM / RandMcNally: top-level lat/lon fields
 </span><span class="">  585: 						$lat   = $l-&gt;{lat};
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  586: 						$long  = $l-&gt;{lon};
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  587: 						$l-&gt;{&#39;debug&#39;} = __LINE__;
+</span><span class="">  586: 						$long  = $l-&gt;{lon};
+</span><span class="">  587: 						$l-&gt;{&#39;debug&#39;} = __LINE__;
 </span><span class="">  588: 					} elsif($l-&gt;{BestLocation}) {
 </span><span class="">  589: 						# Bing Maps: BestLocation.Coordinates.{Latitude,Longitude}
 </span><span class="">  590: 						$lat   = $l-&gt;{BestLocation}-&gt;{Coordinates}-&gt;{Latitude};
@@ -1107,34 +1101,34 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  604: 						# postcodes.io, Geo::Coder::Free: latitude / longitude
 </span><span class="">  605: 						$lat   = $l-&gt;{latitude};
 </span><span class="">  606: 						$long  = $l-&gt;{longitude};
-</span><span class="">  607: 						if(my $type = $l-&gt;{&#39;local_type&#39;}) {
-</span><span class="">  608: 							# Carry the local_type hint forward as a normalised &#39;type&#39;
-</span><span class="">  609: 							$l-&gt;{&#39;type&#39;} = lcfirst($type);
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  610: 						}
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  607: 						if(my $type = $l-&gt;{&#39;local_type&#39;}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_610_7: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_607_7: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  611: 						$l-&gt;{&#39;debug&#39;} = __LINE__;
+<span class="">  608: 							# Carry the local_type hint forward as a normalised &#39;type&#39;
+</span><span class="">  609: 							$l-&gt;{&#39;type&#39;} = lcfirst($type);
+</span><span class="">  610: 						}
+</span><span class="">  611: 						$l-&gt;{&#39;debug&#39;} = __LINE__;
 </span><span class="">  612: 					} elsif(defined($l-&gt;{&#39;properties&#39;}{&#39;geoLatitude&#39;})) {
 </span><span class="">  613: 						# HERE / Ovi: properties.geoLatitude / geoLongitude
 </span><span class="">  614: 						$lat   = $l-&gt;{properties}{geoLatitude};
 </span><span class="">  615: 						$long  = $l-&gt;{properties}{geoLongitude};
 </span><span class="">  616: 						$l-&gt;{&#39;debug&#39;} = __LINE__;
 </span><span class="">  617: 					} elsif($l-&gt;{&#39;results&#39;}[0]-&gt;{&#39;geometry&#39;}) {
-</span><span class="">  618: 						if($l-&gt;{&#39;results&#39;}[0]-&gt;{&#39;geometry&#39;}-&gt;{&#39;location&#39;}) {
-</span><span class="">  619: 							# DataScienceToolkit mirrors the Google Maps shape
-</span><span class="">  620: 							$lat   = $l-&gt;{&#39;results&#39;}[0]-&gt;{&#39;geometry&#39;}-&gt;{&#39;location&#39;}-&gt;{&#39;lat&#39;};
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  621: 							$long  = $l-&gt;{&#39;results&#39;}[0]-&gt;{&#39;geometry&#39;}-&gt;{&#39;location&#39;}-&gt;{&#39;lng&#39;};
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  618: 						if($l-&gt;{&#39;results&#39;}[0]-&gt;{&#39;geometry&#39;}-&gt;{&#39;location&#39;}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_621_7: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_618_7: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  622: 							$l-&gt;{&#39;debug&#39;} = __LINE__;
+<span class="">  619: 							# DataScienceToolkit mirrors the Google Maps shape
+</span><span class="">  620: 							$lat   = $l-&gt;{&#39;results&#39;}[0]-&gt;{&#39;geometry&#39;}-&gt;{&#39;location&#39;}-&gt;{&#39;lat&#39;};
+</span><span class="">  621: 							$long  = $l-&gt;{&#39;results&#39;}[0]-&gt;{&#39;geometry&#39;}-&gt;{&#39;location&#39;}-&gt;{&#39;lng&#39;};
+</span><span class="">  622: 							$l-&gt;{&#39;debug&#39;} = __LINE__;
 </span><span class="">  623: 						} else {
 </span><span class="">  624: 							# OpenCage places lat/lng directly under geometry
 </span><span class="">  625: 							$lat   = $l-&gt;{&#39;results&#39;}[0]-&gt;{&#39;geometry&#39;}-&gt;{&#39;lat&#39;};
@@ -1157,17 +1151,17 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  642: 						$long  = $l-&gt;{lng};
 </span><span class="">  643: 						$l-&gt;{&#39;debug&#39;} = __LINE__;
 </span><span class="">  644: 					} elsif($l-&gt;{features}) {
-</span><span class="">  645: 						if($l-&gt;{features}[0]-&gt;{center}) {
-</span><span class="">  646: 							# Geo::Coder::Mapbox: center is [lng, lat]
-</span><span class="">  647: 							$lat   = $l-&gt;{features}[0]-&gt;{center}[1];
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  648: 							$long  = $l-&gt;{features}[0]-&gt;{center}[0];
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  645: 						if($l-&gt;{features}[0]-&gt;{center}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_648_7: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_645_7: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  649: 							$l-&gt;{&#39;debug&#39;} = __LINE__;
+<span class="">  646: 							# Geo::Coder::Mapbox: center is [lng, lat]
+</span><span class="">  647: 							$lat   = $l-&gt;{features}[0]-&gt;{center}[1];
+</span><span class="">  648: 							$long  = $l-&gt;{features}[0]-&gt;{center}[0];
+</span><span class="">  649: 							$l-&gt;{&#39;debug&#39;} = __LINE__;
 </span><span class="">  650: 						} elsif($l-&gt;{&#39;features&#39;}[0]{&#39;geometry&#39;}{&#39;coordinates&#39;}) {
 </span><span class="">  651: 							# Geo::Coder::GeoApify: coordinates is [lng, lat]
 </span><span class="">  652: 							$lat   = $l-&gt;{&#39;features&#39;}[0]{&#39;geometry&#39;}{&#39;coordinates&#39;}[1];
@@ -1181,11 +1175,11 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  660: 						$l-&gt;{&#39;debug&#39;} = __LINE__;
 </span><span class="">  661: 					}
 </span><span class="">  662: 
-</span><span class="">  663: 					if(defined($lat) &amp;&amp; defined($long)) {
-</span><span class="">  664: 						# Populate the canonical geometry structure
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  663: 					if(defined($lat) &amp;&amp; defined($long)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  664: 						# Populate the canonical geometry structure
 </span><span class="">  665: 						$l-&gt;{geometry}{location}{lat} = $lat;
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  666: 						$l-&gt;{geometry}{location}{lng} = $long;
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  667: 						# Compatibility aliases expected by callers
+</span><span class="">  666: 						$l-&gt;{geometry}{location}{lng} = $long;
+</span><span class="">  667: 						# Compatibility aliases expected by callers
 </span><span class="">  668: 						$l-&gt;{&#39;lat&#39;} = $lat;
 </span><span class="">  669: 						$l-&gt;{&#39;lon&#39;} = $long;
 </span><span class="">  670: 					} else {
@@ -1196,22 +1190,22 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  675: 					}
 </span><span class="">  676: 
 </span><span class="">  677: 					# geocoder.xyz provides a country name under &#39;standard&#39;
-</span><span class="">  678: 					if($l-&gt;{&#39;standard&#39;}{&#39;countryname&#39;}) {
-</span><span class="">  679: 						$l-&gt;{&#39;address&#39;}{&#39;country&#39;} = $l-&gt;{&#39;standard&#39;}{&#39;countryname&#39;};
-</span><span class="">  680: 					}
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  681: 				}
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  678: 					if($l-&gt;{&#39;standard&#39;}{&#39;countryname&#39;}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_681_6: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_678_6: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  682: 
-</span><span class="">  683: 				if(defined($l-&gt;{geometry}{location}{lat})) {
-</span><span class="">  684: 					print $l-&gt;{geometry}{location}{lat}, &#39;/&#39;,
+<span class="">  679: 						$l-&gt;{&#39;address&#39;}{&#39;country&#39;} = $l-&gt;{&#39;standard&#39;}{&#39;countryname&#39;};
+</span><span class="">  680: 					}
+</span><span class="">  681: 				}
+</span><span class="">  682: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  683: 				if(defined($l-&gt;{geometry}{location}{lat})) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  684: 					print $l-&gt;{geometry}{location}{lat}, &#39;/&#39;,
 </span><span class="">  685: 						$l-&gt;{geometry}{location}{lng}, &quot;\n&quot;
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  686: 						if($self-&gt;{&#39;debug&#39;});
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  687: 
+</span><span class="">  686: 						if($self-&gt;{&#39;debug&#39;});
+</span><span class="">  687: 
 </span><span class="">  688: 					# Store the geocoder object (not just its name) on the result
 </span><span class="">  689: 					$l-&gt;{geocoder} = $geocoder;
 </span><span class="">  690: 					$l-&gt;{&#39;lat&#39;} //= $l-&gt;{geometry}{location}{lat};
@@ -1241,15 +1235,12 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  714: 		print &#39;Number of matches from &#39;, ref($geocoder), &#39;: &#39;,
 </span><span class="">  715: 			scalar(@rc), &quot;\n&quot; if($self-&gt;{&#39;debug&#39;});
 </span><span class="">  716: 
-</span><span class="">  717: 		if($self-&gt;{&#39;debug&#39;} &gt;= 2) {
-</span><span class="">  718: 			# Use &#39;local&#39; to avoid permanently altering the global Maxdepth
-</span><span class="">  719: 			local $Data::Dumper::Maxdepth = 10;
-</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Mutation survived. Add targeted tests to validate this branch.">  720: 			print Data::Dumper-&gt;new([\@rc])-&gt;Dump();
+</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Mutation survived. Add targeted tests to validate this branch.">  717: 		if($self-&gt;{&#39;debug&#39;} &gt;= 2) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 4, Killed: 0, Survived: 4)</summary>
 					<ul>
-				<li><b>NUM_BOUNDARY_720_23_>: Numeric boundary flip >= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
+				<li><b>NUM_BOUNDARY_717_23_>: Numeric boundary flip >= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1257,7 +1248,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_720_23_<: Numeric boundary flip >= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_717_23_<: Numeric boundary flip >= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1265,7 +1256,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_720_23_<=: Numeric boundary flip >= to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_717_23_<=: Numeric boundary flip >= to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1273,9 +1264,12 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>COND_INV_720_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+							</li><li><b>COND_INV_717_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  721: 		}
+<span class="">  718: 			# Use &#39;local&#39; to avoid permanently altering the global Maxdepth
+</span><span class="">  719: 			local $Data::Dumper::Maxdepth = 10;
+</span><span class="">  720: 			print Data::Dumper-&gt;new([\@rc])-&gt;Dump();
+</span><span class="">  721: 		}
 </span><span class="">  722: 
 </span><span class="">  723: 		# NOTE (latent unreachable path): if a geocoder returned a list whose
 </span><span class="">  724: 		# first element is undef (e.g. (undef, {lat=&gt;1,lon=&gt;2})), $good_result
@@ -1283,53 +1277,50 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  726: 		# the block below is skipped and the valid result is silently discarded.
 </span><span class="">  727: 		# No known geocoder produces a leading undef, making this scenario
 </span><span class="">  728: 		# unreachable in practice.  A safer guard would be defined($good_result).
-</span><span class="">  729: 		if(defined($rc[0])) {
-</span><span class="">  730: 			# Normalise the legacy &#39;long&#39; key some geocoders emit
-</span><span class="">  731: 			if(defined($rc[0]-&gt;{&#39;long&#39;}) &amp;&amp; !defined($rc[0]-&gt;{&#39;lng&#39;})) {
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  732: 				$rc[0]-&gt;{&#39;lng&#39;} = $rc[0]-&gt;{&#39;long&#39;};
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  733: 			}
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  734: 			if(defined($rc[0]-&gt;{&#39;long&#39;}) &amp;&amp; !defined($rc[0]-&gt;{&#39;lon&#39;})) {
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  735: 				$rc[0]-&gt;{&#39;lon&#39;} = $rc[0]-&gt;{&#39;long&#39;};
-</span><span class="">  736: 			}
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  737: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  729: 		if(defined($rc[0])) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  730: 			# Normalise the legacy &#39;long&#39; key some geocoders emit
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  731: 			if(defined($rc[0]-&gt;{&#39;long&#39;}) &amp;&amp; !defined($rc[0]-&gt;{&#39;lng&#39;})) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  732: 				$rc[0]-&gt;{&#39;lng&#39;} = $rc[0]-&gt;{&#39;long&#39;};
+</span><span class="">  733: 			}
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  734: 			if(defined($rc[0]-&gt;{&#39;long&#39;}) &amp;&amp; !defined($rc[0]-&gt;{&#39;lon&#39;})) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_737_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_734_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  738: 			# Sanity check: the good result must have lat and lng
-</span><span class="">  739: 			if((!defined($good_result-&gt;{lat})) || (!defined($good_result-&gt;{lng}))) {
-</span><span class="">  740: 				$self-&gt;_warn(Data::Dumper-&gt;new([\@rc])-&gt;Dump());
+<span class="">  735: 				$rc[0]-&gt;{&#39;lon&#39;} = $rc[0]-&gt;{&#39;long&#39;};
+</span><span class="">  736: 			}
+</span><span class="">  737: 
+</span><span class="">  738: 			# Sanity check: the good result must have lat and lng
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  739: 			if((!defined($good_result-&gt;{lat})) || (!defined($good_result-&gt;{lng}))) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  740: 				$self-&gt;_warn(Data::Dumper-&gt;new([\@rc])-&gt;Dump());
 </span><span class="">  741: 				$self-&gt;_error(&quot;BUG: &#39;$location&#39;: HASH exists but is not sensible&quot;);
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  742: 			}
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  743: 
-</span><span class="">  744: 			if(wantarray) {
-</span><span class="">  745: 				$self-&gt;_cache($location, \@rc);
-</span><span class="">  746: 				return @rc;
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  747: 			}
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  748: 
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  749: 			$self-&gt;_cache($location, $good_result);
-</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  750: 			return $good_result;
-</span><span class="">  751: 		}
+</span><span class="">  742: 			}
+</span><span class="">  743: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  744: 			if(wantarray) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  745: 				$self-&gt;_cache($location, \@rc);
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  746: 				return @rc;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  747: 			}
+</span><span class="">  748: 
+</span><span class="">  749: 			$self-&gt;_cache($location, $good_result);
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  750: 			return $good_result;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  751: 		}
 </span><span class="">  752: 	}
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  753: 
-</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  754: 	# &acirc;&#148;&#128;&acirc;&#148;&#128; No geocoder produced a usable result &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
+</span><span class="">  753: 
+</span><span class="">  754: 	# &acirc;&#148;&#128;&acirc;&#148;&#128; No geocoder produced a usable result &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
 </span><span class="">  755: 
 </span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">756 → 761 → 0</span></span>  756: 	print &quot;No matches\n&quot; if($self-&gt;{&#39;debug&#39;});
 </span><span class="">  757: 
 </span><span class="">  758: 	# Cache the not-found result so repeated calls do not hammer all backends
 </span><span class="">  759: 	$self-&gt;_cache($location, undef);
 </span><span class="">  760: 
-</span><span class="">  761: 	return wantarray ? () : undef;
-</span><span class="">  762: }
-</span><span class="">  763: 
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  764: # =============================================================================
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  761: 	return wantarray ? () : undef;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_764_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_761_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1337,7 +1328,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_764_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_761_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1346,7 +1337,10 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class="">  765: 
+<span class="">  762: }
+</span><span class="">  763: 
+</span><span class="">  764: # =============================================================================
+</span><span class="">  765: 
 </span><span class="">  766: =head2 ua
 </span><span class="">  767: 
 </span><span class="">  768: Sets the L&lt;LWP::UserAgent&gt; (or compatible) object on every geocoder in the
@@ -1400,17 +1394,17 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  816: 		# The agent string is derived from the geocoder class name and version
 </span><span class="">  817: 		# (e.g. &#39;Geo::Coder::OSM/0.03&#39;) without reading the geocoder&#39;s current
 </span><span class="">  818: 		# UA, which would trigger any spy or hook installed on its ua() method.
-</span><span class="">  819: 		if($ua-&gt;can(&#39;clone&#39;) &amp;&amp; $ua-&gt;can(&#39;agent&#39;)) {
-</span><span class="">  820: 			my $per_ua  = $ua-&gt;clone();
-</span><span class="">  821: 			my $class   = ref($geocoder);
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  822: 			my $version = eval { $geocoder-&gt;VERSION() } // &#39;&#39;;
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  819: 		if($ua-&gt;can(&#39;clone&#39;) &amp;&amp; $ua-&gt;can(&#39;agent&#39;)) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_822_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_819_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  823: 			$per_ua-&gt;agent($version ? &quot;$class/$version&quot; : $class);
+<span class="">  820: 			my $per_ua  = $ua-&gt;clone();
+</span><span class="">  821: 			my $class   = ref($geocoder);
+</span><span class="">  822: 			my $version = eval { $geocoder-&gt;VERSION() } // &#39;&#39;;
+</span><span class="">  823: 			$per_ua-&gt;agent($version ? &quot;$class/$version&quot; : $class);
 </span><span class="">  824: 			$geocoder-&gt;ua($per_ua);
 </span><span class="">  825: 		} else {
 </span><span class="">  826: 			$geocoder-&gt;ua($ua);
@@ -1418,15 +1412,12 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  828: 	}
 </span><span class="">  829: 
 </span><span class="">  830: 	# Return the UA so callers can verify what was set (API contract)
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">831 → 831 → 0</span></span>  831: 	return $ua;
-</span><span class="">  832: }
-</span><span class="">  833: 
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  834: # =============================================================================
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">831 → 831 → 0</span></span>  831: 	return $ua;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_834_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_831_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1434,7 +1425,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_834_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_831_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1443,7 +1434,10 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class="">  835: 
+<span class="">  832: }
+</span><span class="">  833: 
+</span><span class="">  834: # =============================================================================
+</span><span class="">  835: 
 </span><span class="">  836: =head2 reverse_geocode
 </span><span class="">  837: 
 </span><span class="">  838: Converts a latitude/longitude pair into a human-readable address string.
@@ -1493,23 +1487,19 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  882: 	$params-&gt;{&#39;lon&#39;} //= $longitude;
 </span><span class="">  883: 
 </span><span class="">  884: 	# Check L1 / L2 cache before hitting any backend
-</span><span class="">  885: 	if(my $rc = $self-&gt;_cache($latlng)) {
-</span><span class="">  886: 		return $rc;
-</span><span class="">  887: 	}
-</span><span class="">  888: 
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">889 → 891 → 1053</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">889 → 891 → 0</span></span>  889: 	my @call_details = caller(0);
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  885: 	if(my $rc = $self-&gt;_cache($latlng)) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_889_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_885_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  890: 
+<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  886: 		return $rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_890_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_886_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1517,7 +1507,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_890_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_886_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1526,35 +1516,35 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class="">  891: 	foreach my $g (@{$self-&gt;{geocoders}}) {
+<span class="">  887: 	}
+</span><span class="">  888: 
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">889 → 891 → 1053</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">889 → 891 → 0</span></span>  889: 	my @call_details = caller(0);
+</span><span class="">  890: 
+</span><span class="">  891: 	foreach my $g (@{$self-&gt;{geocoders}}) {
 </span><span class="">  892: 		my $geocoder = $g;
 </span><span class="">  893: 
 </span><span class="">  894: 		# Apply the per-geocoder limit guard for hashref entries
-</span><span class="">  895: 		if(ref($geocoder) eq &#39;HASH&#39;) {
-</span><span class="">  896: 			if(exists($geocoder-&gt;{&#39;limit&#39;}) &amp;&amp; defined(my $limit = $geocoder-&gt;{&#39;limit&#39;})) {
-</span><span class="">  897: 				print &quot;limit: $limit\n&quot; if($self-&gt;{&#39;debug&#39;});
-</span><span class="">  898: 				if($limit &lt;= 0) {
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  899: 					next;
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  895: 		if(ref($geocoder) eq &#39;HASH&#39;) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_899_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_895_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  900: 				}
+<span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  896: 			if(exists($geocoder-&gt;{&#39;limit&#39;}) &amp;&amp; defined(my $limit = $geocoder-&gt;{&#39;limit&#39;})) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_900_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_896_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  901: 				$geocoder-&gt;{&#39;limit&#39;}--;
-</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Mutation survived. Add targeted tests to validate this branch.">  902: 			}
+<span class="">  897: 				print &quot;limit: $limit\n&quot; if($self-&gt;{&#39;debug&#39;});
+</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Mutation survived. Add targeted tests to validate this branch.">  898: 				if($limit &lt;= 0) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 4, Killed: 0, Survived: 4)</summary>
 					<ul>
-				<li><b>NUM_BOUNDARY_902_15_<: Numeric boundary flip <= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
+				<li><b>NUM_BOUNDARY_898_15_<: Numeric boundary flip <= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1562,7 +1552,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_902_15_>: Numeric boundary flip <= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_898_15_>: Numeric boundary flip <= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1570,7 +1560,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_902_15_>=: Numeric boundary flip <= to >=</b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_898_15_>=: Numeric boundary flip <= to >=</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1578,55 +1568,59 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>COND_INV_902_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+							</li><li><b>COND_INV_898_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  903: 			$geocoder = $g-&gt;{&#39;geocoder&#39;};
+<span class="">  899: 					next;
+</span><span class="">  900: 				}
+</span><span class="">  901: 				$geocoder-&gt;{&#39;limit&#39;}--;
+</span><span class="">  902: 			}
+</span><span class="">  903: 			$geocoder = $g-&gt;{&#39;geocoder&#39;};
 </span><span class="">  904: 		}
 </span><span class="">  905: 
 </span><span class="">  906: 		print &#39;trying &#39;, ref($geocoder), &quot;\n&quot; if($self-&gt;{&#39;debug&#39;});
 </span><span class="">  907: 
-</span><span class="">  908: 		if(wantarray) {
-</span><span class="">  909: 			# &acirc;&#148;&#128;&acirc;&#148;&#128; List context: collect all address strings from this geocoder &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
-</span><span class="">  910: 			my @rc;
-</span><span class="">  911: 			my @locs;
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  912: 			eval { @locs = $geocoder-&gt;reverse_geocode(%{$params}) };
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  908: 		if(wantarray) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_912_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_908_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  913: 
+<span class="">  909: 			# &acirc;&#148;&#128;&acirc;&#148;&#128; List context: collect all address strings from this geocoder &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
+</span><span class="">  910: 			my @rc;
+</span><span class="">  911: 			my @locs;
+</span><span class="">  912: 			eval { @locs = $geocoder-&gt;reverse_geocode(%{$params}) };
+</span><span class="">  913: 
 </span><span class="">  914: 			# Some geocoders (e.g. Geo::Coder::GeoApify) use strict parameter
 </span><span class="">  915: 			# validation and reject the &#39;latlng&#39; key as unknown.  Retry without
 </span><span class="">  916: 			# it -- lat and lon are already in %params from the split above.
 </span><span class="">  917: 			# Other geocoders (e.g. Geo::Coder::CA) require &#39;latlng&#39;, so the
 </span><span class="">  918: 			# first attempt must include it.
-</span><span class="">  919: 			if($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s) {
-</span><span class="">  920: 				my %no_latlng = %{$params};
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  919: 			if($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_919_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  920: 				my %no_latlng = %{$params};
 </span><span class="">  921: 				delete $no_latlng{&#39;latlng&#39;};
 </span><span class="">  922: 				$@ = &#39;&#39;;
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  923: 				eval { @locs = $geocoder-&gt;reverse_geocode(%no_latlng) };
+</span><span class="">  923: 				eval { @locs = $geocoder-&gt;reverse_geocode(%no_latlng) };
+</span><span class="">  924: 			}
+</span><span class="">  925: 
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  926: 			if($@) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_923_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_926_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  924: 			}
-</span><span class="">  925: 
-</span><span class="">  926: 			if($@) {
-</span><span class="">  927: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
+<span class="">  927: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
 </span><span class="">  928: 					line      =&gt; $call_details[2],
 </span><span class="">  929: 					location  =&gt; $latlng,
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  930: 					geocoder  =&gt; ref($geocoder),
-</span>
-					<details class="mutant-details">
-					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
-					<ul>
-				<li><b>COND_INV_930_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
-</li></ul></details>
-<span class="">  931: 					timetaken =&gt; 0,
+</span><span class="">  930: 					geocoder  =&gt; ref($geocoder),
+</span><span class="">  931: 					timetaken =&gt; 0,
 </span><span class="">  932: 					wantarray =&gt; 1,
 </span><span class="">  933: 					error     =&gt; $@,
 </span><span class="">  934: 				};
@@ -1634,16 +1628,12 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  936: 				next;
 </span><span class="">  937: 			}
 </span><span class="">  938: 
-</span><span class="">  939: 			print Data::Dumper-&gt;new([\@locs])-&gt;Dump() if($self-&gt;{&#39;debug&#39;} &gt;= 2);
-</span><span class="">  940: 
-</span><span class="">  941: 			foreach my $loc (@locs) {
-</span><span class="">  942: 				if(my $name = $loc-&gt;{&#39;display_name&#39;}) {
-</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  943: 					# OSM returns the full address in display_name
+</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  939: 			print Data::Dumper-&gt;new([\@locs])-&gt;Dump() if($self-&gt;{&#39;debug&#39;} &gt;= 2);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 3, Killed: 0, Survived: 3)</summary>
 					<ul>
-				<li><b>NUM_BOUNDARY_943_66_>: Numeric boundary flip >= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
+				<li><b>NUM_BOUNDARY_939_66_>: Numeric boundary flip >= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1651,7 +1641,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_943_66_<: Numeric boundary flip >= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_939_66_<: Numeric boundary flip >= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1659,7 +1649,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_943_66_<=: Numeric boundary flip >= to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_939_66_<=: Numeric boundary flip >= to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1668,16 +1658,20 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class="">  944: 					CORE::push @rc, $name;
-</span><span class="">  945: 				} elsif($loc-&gt;{&#39;city&#39;}) {
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  946: 					# Geo::Coder::CA: build the address from individual fields
+<span class="">  940: 
+</span><span class="">  941: 			foreach my $loc (@locs) {
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  942: 				if(my $name = $loc-&gt;{&#39;display_name&#39;}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_946_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_942_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  947: 					CORE::push @rc, _build_ca_address($loc);
+<span class="">  943: 					# OSM returns the full address in display_name
+</span><span class="">  944: 					CORE::push @rc, $name;
+</span><span class="">  945: 				} elsif($loc-&gt;{&#39;city&#39;}) {
+</span><span class="">  946: 					# Geo::Coder::CA: build the address from individual fields
+</span><span class="">  947: 					CORE::push @rc, _build_ca_address($loc);
 </span><span class="">  948: 				} elsif($loc-&gt;{features}) {
 </span><span class="">  949: 					# GeoApify: formatted string inside a features array
 </span><span class="">  950: 					CORE::push @rc,
@@ -1696,16 +1690,12 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  963: 			};
 </span><span class="">  964: 
 </span><span class="">  965: 			$self-&gt;_cache($latlng, \@rc);
-</span><span class="">  966: 			return @rc;
-</span><span class="">  967: 
-</span><span class="">  968: 		} else {
-</span><span class="">  969: 			# &acirc;&#148;&#128;&acirc;&#148;&#128; Scalar context: return the first address string &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  970: 			my $rc = $self-&gt;_cache($latlng)
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  966: 			return @rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_970_4: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_966_4: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1713,7 +1703,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_970_4: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_966_4: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1722,34 +1712,38 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class="">  971: 				// eval { $geocoder-&gt;reverse_geocode(%{$params}) };
+<span class="">  967: 
+</span><span class="">  968: 		} else {
+</span><span class="">  969: 			# &acirc;&#148;&#128;&acirc;&#148;&#128; Scalar context: return the first address string &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
+</span><span class="">  970: 			my $rc = $self-&gt;_cache($latlng)
+</span><span class="">  971: 				// eval { $geocoder-&gt;reverse_geocode(%{$params}) };
 </span><span class="">  972: 
 </span><span class="">  973: 			# Same strict-validation fallback as the list-context path above
-</span><span class="">  974: 			if($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s) {
-</span><span class="">  975: 				my %no_latlng = %{$params};
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  974: 			if($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_974_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  975: 				my %no_latlng = %{$params};
 </span><span class="">  976: 				delete $no_latlng{&#39;latlng&#39;};
 </span><span class="">  977: 				$@ = &#39;&#39;;
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  978: 				$rc = eval { $geocoder-&gt;reverse_geocode(%no_latlng) };
+</span><span class="">  978: 				$rc = eval { $geocoder-&gt;reverse_geocode(%no_latlng) };
+</span><span class="">  979: 			}
+</span><span class="">  980: 
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  981: 			if($@) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_978_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_981_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="">  979: 			}
-</span><span class="">  980: 
-</span><span class="">  981: 			if($@) {
-</span><span class="">  982: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
+<span class="">  982: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
 </span><span class="">  983: 					line      =&gt; $call_details[2],
 </span><span class="">  984: 					location  =&gt; $latlng,
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  985: 					geocoder  =&gt; ref($geocoder),
-</span>
-					<details class="mutant-details">
-					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
-					<ul>
-				<li><b>COND_INV_985_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
-</li></ul></details>
-<span class="">  986: 					timetaken =&gt; 0,
+</span><span class="">  985: 					geocoder  =&gt; ref($geocoder),
+</span><span class="">  986: 					timetaken =&gt; 0,
 </span><span class="">  987: 					wantarray =&gt; 0,
 </span><span class="">  988: 					error     =&gt; $@,
 </span><span class="">  989: 				};
@@ -1759,31 +1753,27 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  993: 
 </span><span class="">  994: 			# A bare string needs no further processing
 </span><span class="">  995: 			next unless defined $rc;
-</span><span class="">  996: 			if(!ref($rc)) {
-</span><span class="">  997: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
-</span><span class="">  998: 					line      =&gt; $call_details[2],
-</span><span class="">  999: 					location  =&gt; $latlng,
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1000: 					geocoder  =&gt; ref($geocoder),
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  996: 			if(!ref($rc)) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1000_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_996_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1001: 					timetaken =&gt; 0,
+<span class="">  997: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
+</span><span class="">  998: 					line      =&gt; $call_details[2],
+</span><span class="">  999: 					location  =&gt; $latlng,
+</span><span class=""> 1000: 					geocoder  =&gt; ref($geocoder),
+</span><span class=""> 1001: 					timetaken =&gt; 0,
 </span><span class=""> 1002: 					wantarray =&gt; 0,
 </span><span class=""> 1003: 					result    =&gt; $rc,
 </span><span class=""> 1004: 				};
-</span><span class=""> 1005: 				return $rc;
-</span><span class=""> 1006: 			}
-</span><span class=""> 1007: 
-</span><span class=""> 1008: 			print Data::Dumper-&gt;new([$rc])-&gt;Dump() if($self-&gt;{&#39;debug&#39;} &gt;= 2);
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1009: 
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1005: 				return $rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_1009_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_1005_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1791,7 +1781,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_1009_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_1005_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1800,14 +1790,14 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class=""> 1010: 			if(my $name = $rc-&gt;{&#39;display_name&#39;}) {
-</span><span class=""> 1011: 				# OSM
-</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one)."> 1012: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
+<span class=""> 1006: 			}
+</span><span class=""> 1007: 
+</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one)."> 1008: 			print Data::Dumper-&gt;new([$rc])-&gt;Dump() if($self-&gt;{&#39;debug&#39;} &gt;= 2);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 3, Killed: 0, Survived: 3)</summary>
 					<ul>
-				<li><b>NUM_BOUNDARY_1012_63_>: Numeric boundary flip >= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
+				<li><b>NUM_BOUNDARY_1008_63_>: Numeric boundary flip >= to ></b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1815,7 +1805,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_1012_63_<: Numeric boundary flip >= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_1008_63_<: Numeric boundary flip >= to <</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1823,7 +1813,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>NUM_BOUNDARY_1012_63_<=: Numeric boundary flip >= to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+							</li><li><b>NUM_BOUNDARY_1008_63_<=: Numeric boundary flip >= to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1832,29 +1822,29 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class=""> 1013: 					line      =&gt; $call_details[2],
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1014: 					location  =&gt; $latlng,
+<span class=""> 1009: 
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1010: 			if(my $name = $rc-&gt;{&#39;display_name&#39;}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1014_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1010_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1015: 					geocoder  =&gt; ref($geocoder),
+<span class=""> 1011: 				# OSM
+</span><span class=""> 1012: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
+</span><span class=""> 1013: 					line      =&gt; $call_details[2],
+</span><span class=""> 1014: 					location  =&gt; $latlng,
+</span><span class=""> 1015: 					geocoder  =&gt; ref($geocoder),
 </span><span class=""> 1016: 					timetaken =&gt; 0,
 </span><span class=""> 1017: 					wantarray =&gt; 0,
 </span><span class=""> 1018: 					result    =&gt; $name,
 </span><span class=""> 1019: 				};
-</span><span class=""> 1020: 				return $self-&gt;_cache($latlng, $name);
-</span><span class=""> 1021: 			}
-</span><span class=""> 1022: 
-</span><span class=""> 1023: 			if($rc-&gt;{&#39;city&#39;}) {
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1024: 				# Geo::Coder::CA
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values."> 1020: 				return $self-&gt;_cache($latlng, $name);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_1024_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_1020_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1862,7 +1852,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_1024_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_1020_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1871,31 +1861,31 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class=""> 1025: 				my $name = _build_ca_address($rc);
-</span><span class=""> 1026: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1027: 					line      =&gt; $call_details[2],
+<span class=""> 1021: 			}
+</span><span class=""> 1022: 
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1023: 			if($rc-&gt;{&#39;city&#39;}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1027_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1023_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1028: 					location  =&gt; $latlng,
+<span class=""> 1024: 				# Geo::Coder::CA
+</span><span class=""> 1025: 				my $name = _build_ca_address($rc);
+</span><span class=""> 1026: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
+</span><span class=""> 1027: 					line      =&gt; $call_details[2],
+</span><span class=""> 1028: 					location  =&gt; $latlng,
 </span><span class=""> 1029: 					geocoder  =&gt; ref($geocoder),
 </span><span class=""> 1030: 					timetaken =&gt; 0,
 </span><span class=""> 1031: 					wantarray =&gt; 0,
 </span><span class=""> 1032: 					result    =&gt; $name,
 </span><span class=""> 1033: 				};
-</span><span class=""> 1034: 				return $self-&gt;_cache($latlng, $name);
-</span><span class=""> 1035: 			}
-</span><span class=""> 1036: 
-</span><span class=""> 1037: 			if($rc-&gt;{features}) {
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1038: 				# GeoApify
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1034: 				return $self-&gt;_cache($latlng, $name);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_1038_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_1034_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1903,7 +1893,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_1038_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_1034_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1912,31 +1902,31 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class=""> 1039: 				my $name = $rc-&gt;{features}[0]-&gt;{properties}{formatted};
-</span><span class=""> 1040: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1041: 					line      =&gt; $call_details[2],
+<span class=""> 1035: 			}
+</span><span class=""> 1036: 
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1037: 			if($rc-&gt;{features}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1041_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1037_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1042: 					location  =&gt; $latlng,
+<span class=""> 1038: 				# GeoApify
+</span><span class=""> 1039: 				my $name = $rc-&gt;{features}[0]-&gt;{properties}{formatted};
+</span><span class=""> 1040: 				CORE::push @{$self-&gt;{&#39;log&#39;}}, {
+</span><span class=""> 1041: 					line      =&gt; $call_details[2],
+</span><span class=""> 1042: 					location  =&gt; $latlng,
 </span><span class=""> 1043: 					geocoder  =&gt; ref($geocoder),
 </span><span class=""> 1044: 					timetaken =&gt; 0,
 </span><span class=""> 1045: 					wantarray =&gt; 0,
 </span><span class=""> 1046: 					result    =&gt; $name,
 </span><span class=""> 1047: 				};
-</span><span class=""> 1048: 				return $self-&gt;_cache($latlng, $name);
-</span><span class=""> 1049: 			}
-</span><span class=""> 1050: 		}
-</span><span class=""> 1051: 	}
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1052: 
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1048: 				return $self-&gt;_cache($latlng, $name);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_1052_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_1048_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1944,7 +1934,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_1052_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_1048_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -1953,7 +1943,11 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1053 → 1053 → 0</span></span> 1053: 	return;
+<span class=""> 1049: 			}
+</span><span class=""> 1050: 		}
+</span><span class=""> 1051: 	}
+</span><span class=""> 1052: 
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1053 → 1053 → 0</span></span> 1053: 	return;
 </span><span class=""> 1054: }
 </span><span class=""> 1055: 
 </span><span class=""> 1056: # =============================================================================
@@ -2000,12 +1994,12 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1097: 	my $self = shift;
 </span><span class=""> 1098: 
 </span><span class=""> 1099: 	# Guard against the state left by flush(); always return a valid arrayref
-</span><span class=""> 1100: 	return $self-&gt;{&#39;log&#39;} // [];
-</span><span class=""> 1101: }
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1100: 	return $self-&gt;{&#39;log&#39;} // [];
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class=""> 1101: }
 </span><span class=""> 1102: 
 </span><span class=""> 1103: # =============================================================================
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1104: 
-</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class=""> 1105: =head2 flush
+</span><span class=""> 1104: 
+</span><span class=""> 1105: =head2 flush
 </span><span class=""> 1106: 
 </span><span class=""> 1107: Clears all accumulated log entries and returns C&lt;$self&gt; to allow chaining.
 </span><span class=""> 1108: 
@@ -2032,16 +2026,12 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1129: 	# Reset to an empty arrayref so log() always returns a valid reference
 </span><span class=""> 1130: 	$self-&gt;{&#39;log&#39;} = [];
 </span><span class=""> 1131: 
-</span><span class=""> 1132: 	return $self;
-</span><span class=""> 1133: }
-</span><span class=""> 1134: 
-</span><span class=""> 1135: # =============================================================================
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1136: # PRIVATE HELPERS
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1132: 	return $self;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_1136_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_1132_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -2049,7 +2039,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_1136_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_1132_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -2058,7 +2048,11 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class=""> 1137: # =============================================================================
+<span class=""> 1133: }
+</span><span class=""> 1134: 
+</span><span class=""> 1135: # =============================================================================
+</span><span class=""> 1136: # PRIVATE HELPERS
+</span><span class=""> 1137: # =============================================================================
 </span><span class=""> 1138: 
 </span><span class=""> 1139: # _build_ca_address
 </span><span class=""> 1140: #
@@ -2078,18 +2072,18 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1154 → 1157 → 1176</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1154 → 1157 → 0</span></span> 1154: 	my $loc = $_[0];
 </span><span class=""> 1155: 	my $name  = &#39;&#39;;
 </span><span class=""> 1156: 
-</span><span class=""> 1157: 	if(my $usa = $loc-&gt;{&#39;usa&#39;}) {
-</span><span class=""> 1158: 		# US address layout inside a CA result
-</span><span class=""> 1159: 		$name  = $usa-&gt;{&#39;usstnumber&#39;} // &#39;&#39;;
-</span><span class=""> 1160: 		# Street name follows number with a space; if no number, no leading space
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1161: 		$name .= ($name ? &#39; &#39; : &#39;&#39;) . $usa-&gt;{&#39;usstaddress&#39;} if $usa-&gt;{&#39;usstaddress&#39;};
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1157: 	if(my $usa = $loc-&gt;{&#39;usa&#39;}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1161_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1157_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1162: 		# City, state, country each separated by &#39;, &#39;; skip separator if name empty
+<span class=""> 1158: 		# US address layout inside a CA result
+</span><span class=""> 1159: 		$name  = $usa-&gt;{&#39;usstnumber&#39;} // &#39;&#39;;
+</span><span class=""> 1160: 		# Street name follows number with a space; if no number, no leading space
+</span><span class=""> 1161: 		$name .= ($name ? &#39; &#39; : &#39;&#39;) . $usa-&gt;{&#39;usstaddress&#39;} if $usa-&gt;{&#39;usstaddress&#39;};
+</span><span class=""> 1162: 		# City, state, country each separated by &#39;, &#39;; skip separator if name empty
 </span><span class=""> 1163: 		$name .= ($name ? &#39;, &#39; : &#39;&#39;) . $usa-&gt;{&#39;uscity&#39;}     if $usa-&gt;{&#39;uscity&#39;};
 </span><span class=""> 1164: 		$name .= ($name ? &#39;, &#39; : &#39;&#39;) . $usa-&gt;{&#39;state&#39;}      if $usa-&gt;{&#39;state&#39;};
 </span><span class=""> 1165: 		# Country is always appended for the US branch
@@ -2103,16 +2097,12 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1173: 		$name .= ($name ? &#39;, &#39; : &#39;&#39;) . $loc-&gt;{&#39;prov&#39;}        if $loc-&gt;{&#39;prov&#39;};
 </span><span class=""> 1174: 	}
 </span><span class=""> 1175: 
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1176 → 1176 → 0</span></span> 1176: 	return $name;
-</span><span class=""> 1177: }
-</span><span class=""> 1178: 
-</span><span class=""> 1179: # -----------------------------------------------------------------------------
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1180: 
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1176 → 1176 → 0</span></span> 1176: 	return $name;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_1180_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_1176_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -2120,7 +2110,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_1180_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_1176_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -2129,7 +2119,11 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class=""> 1181: # _cache
+<span class=""> 1177: }
+</span><span class=""> 1178: 
+</span><span class=""> 1179: # -----------------------------------------------------------------------------
+</span><span class=""> 1180: 
+</span><span class=""> 1181: # _cache
 </span><span class=""> 1182: #
 </span><span class=""> 1183: # Read from or write to the two-level cache.
 </span><span class=""> 1184: #             L1 is an in-process HASH (always active).
@@ -2163,62 +2157,62 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1212: 	# Detect a write call by the presence of a third argument (even if undef).
 </span><span class=""> 1213: 	# Testing truthiness of the value would silently swallow not-found results.
 </span><span class=""> 1214: 
-</span><span class=""> 1215: 	if(scalar(@_)) {
-</span><span class=""> 1216: 		my $value = shift;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1215: 	if(scalar(@_)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class=""> 1216: 		my $value = shift;
 </span><span class=""> 1217: 
 </span><span class=""> 1218: 		# Store a sentinel for not-found so we can skip backends on repeat calls
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1219: 		my $stored = defined($value) ? $value : $NOT_FOUND_SENTINEL;
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class=""> 1220: 		$self-&gt;{locations}-&gt;{$key} = $stored;
+</span><span class=""> 1219: 		my $stored = defined($value) ? $value : $NOT_FOUND_SENTINEL;
+</span><span class=""> 1220: 		$self-&gt;{locations}-&gt;{$key} = $stored;
 </span><span class=""> 1221: 
 </span><span class=""> 1222: 		my $rc = $value;
 </span><span class=""> 1223: 
-</span><span class=""> 1224: 		if($self-&gt;{&#39;cache&#39;}) {
-</span><span class=""> 1225: 			my $duration;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1224: 		if($self-&gt;{&#39;cache&#39;}) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class=""> 1225: 			my $duration;
 </span><span class=""> 1226: 
-</span><span class=""> 1227: 			if(ref($value) eq &#39;ARRAY&#39;) {
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1228: 				foreach my $item (@{$value}) {
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class=""> 1229: 					# Blessed objects (e.g. Geo::Location::Point) may hold
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1227: 			if(ref($value) eq &#39;ARRAY&#39;) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class=""> 1228: 				foreach my $item (@{$value}) {
+</span><span class=""> 1229: 					# Blessed objects (e.g. Geo::Location::Point) may hold
 </span><span class=""> 1230: 					# unserializable handles; stringify their geocoder field too
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1231: 					if(blessed($item) &amp;&amp; ref($item-&gt;{&#39;geocoder&#39;})) {
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class=""> 1232: 						$item-&gt;{&#39;geocoder&#39;} = ref($item-&gt;{&#39;geocoder&#39;});
-</span><span class=""> 1233: 					}
-</span><span class=""> 1234: 
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1235: 					next unless ref($item) eq &#39;HASH&#39;;
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1231: 					if(blessed($item) &amp;&amp; ref($item-&gt;{&#39;geocoder&#39;})) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1235_6: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1231_6: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1236: 
+<span class=""> 1232: 						$item-&gt;{&#39;geocoder&#39;} = ref($item-&gt;{&#39;geocoder&#39;});
+</span><span class=""> 1233: 					}
+</span><span class=""> 1234: 
+</span><span class=""> 1235: 					next unless ref($item) eq &#39;HASH&#39;;
+</span><span class=""> 1236: 
 </span><span class=""> 1237: 					# Serialise the geocoder object to its class name for storage
 </span><span class=""> 1238: 					$item-&gt;{&#39;geocoder&#39;} = ref($item-&gt;{&#39;geocoder&#39;});
 </span><span class=""> 1239: 
 </span><span class=""> 1240: 					# Strip everything except geometry to keep the L2 entry small
-</span><span class=""> 1241: 					unless($self-&gt;{&#39;debug&#39;}) {
-</span><span class=""> 1242: 						while(my ($k, $v) = each %{$item}) {
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1241: 					unless($self-&gt;{&#39;debug&#39;}) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_1241_6: Invert condition unless to if</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class=""> 1242: 						while(my ($k, $v) = each %{$item}) {
 </span><span class=""> 1243: 							delete $item-&gt;{$k} unless($k eq &#39;geometry&#39;);
 </span><span class=""> 1244: 						}
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1245: 					}
+</span><span class=""> 1245: 					}
+</span><span class=""> 1246: 
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1247: 					unless(defined($item-&gt;{geometry}{location}{lat})) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1245_6: Invert condition unless to if</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1247_6: Invert condition unless to if</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1246: 
-</span><span class=""> 1247: 					unless(defined($item-&gt;{geometry}{location}{lat})) {
-</span><span class=""> 1248: 						# Partial or temporary failure: use the shorter TTL.
+<span class=""> 1248: 						# Partial or temporary failure: use the shorter TTL.
 </span><span class=""> 1249: 						# UNREACHABLE ARM: the access above auto-vivifies
 </span><span class=""> 1250: 						# $item-&gt;{geometry} as {}, so defined($item-&gt;{geometry})
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1251: 						# is always true here; the false arm never executes.
-</span>
-					<details class="mutant-details">
-					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
-					<ul>
-				<li><b>COND_INV_1251_6: Invert condition unless to if</b><br>MEDIUM: Add tests asserting both true and false outcomes
-</li></ul></details>
-<span class=""> 1252: 						# Original ternary preserved for documentation:
+</span><span class=""> 1251: 						# is always true here; the false arm never executes.
+</span><span class=""> 1252: 						# Original ternary preserved for documentation:
 </span><span class=""> 1253: 						# $duration //= defined($item-&gt;{geometry})
 </span><span class=""> 1254: 						#     ? $self-&gt;{&#39;cache_part_duration&#39;}
 </span><span class=""> 1255: 						#     : $self-&gt;{&#39;cache_miss_duration&#39;};
@@ -2233,30 +2227,30 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1264: 			} elsif(ref($value) eq &#39;HASH&#39;) {
 </span><span class=""> 1265: 				$value-&gt;{&#39;geocoder&#39;} = ref($value-&gt;{&#39;geocoder&#39;});
 </span><span class=""> 1266: 
-</span><span class=""> 1267: 				unless($self-&gt;{&#39;debug&#39;}) {
-</span><span class=""> 1268: 					while(my ($k, $v) = each %{$value}) {
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1267: 				unless($self-&gt;{&#39;debug&#39;}) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_1267_5: Invert condition unless to if</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class=""> 1268: 					while(my ($k, $v) = each %{$value}) {
 </span><span class=""> 1269: 						delete $value-&gt;{$k} unless($k eq &#39;geometry&#39;);
 </span><span class=""> 1270: 					}
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1271: 				}
+</span><span class=""> 1271: 				}
+</span><span class=""> 1272: 
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1273: 				if(defined($value-&gt;{geometry}{location}{lat})) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1271_5: Invert condition unless to if</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1273_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1272: 
-</span><span class=""> 1273: 				if(defined($value-&gt;{geometry}{location}{lat})) {
-</span><span class=""> 1274: 					# Confirmed location: cache for a full month
+<span class=""> 1274: 					# Confirmed location: cache for a full month
 </span><span class=""> 1275: 					$duration = $self-&gt;{&#39;cache_hit_duration&#39;};
 </span><span class=""> 1276: 				} elsif(defined($value-&gt;{geometry})) {
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1277: 					# Partial geometry: may be a transient failure, retry soon
-</span>
-					<details class="mutant-details">
-					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
-					<ul>
-				<li><b>COND_INV_1277_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
-</li></ul></details>
-<span class=""> 1278: 					$duration = $self-&gt;{&#39;cache_part_duration&#39;};
+</span><span class=""> 1277: 					# Partial geometry: may be a transient failure, retry soon
+</span><span class=""> 1278: 					$duration = $self-&gt;{&#39;cache_part_duration&#39;};
 </span><span class=""> 1279: 					$rc = undef;
 </span><span class=""> 1280: 				}
 </span><span class=""> 1281: 				# UNREACHABLE: the else branch below is dead.  The access
@@ -2272,46 +2266,42 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1291: 				# Scalar string or a blessed object (e.g. Geo::Location::Point).
 </span><span class=""> 1292: 				# Blessed objects may hold unserializable handles; stringify the
 </span><span class=""> 1293: 				# geocoder field so CHI (Storable) can freeze the value safely.
-</span><span class=""> 1294: 				if(ref($value) &amp;&amp; ref($value-&gt;{&#39;geocoder&#39;})) {
-</span><span class=""> 1295: 					$value-&gt;{&#39;geocoder&#39;} = ref($value-&gt;{&#39;geocoder&#39;});
-</span><span class=""> 1296: 				}
-</span><span class=""> 1297: 				$duration = $self-&gt;{&#39;cache_hit_duration&#39;};
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1298: 			}
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1294: 				if(ref($value) &amp;&amp; ref($value-&gt;{&#39;geocoder&#39;})) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1298_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1294_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1299: 
+<span class=""> 1295: 					$value-&gt;{&#39;geocoder&#39;} = ref($value-&gt;{&#39;geocoder&#39;});
+</span><span class=""> 1296: 				}
+</span><span class=""> 1297: 				$duration = $self-&gt;{&#39;cache_hit_duration&#39;};
+</span><span class=""> 1298: 			}
+</span><span class=""> 1299: 
 </span><span class=""> 1300: 			print Data::Dumper-&gt;new([$value])-&gt;Dump() if($self-&gt;{&#39;debug&#39;});
 </span><span class=""> 1301: 
 </span><span class=""> 1302: 			# Do not push the not-found sentinel into L2
-</span><span class=""> 1303: 			if(!defined($value)) {
-</span><span class=""> 1304: 				# value is not-found; L1 sentinel is sufficient
-</span><span class=""> 1305: 			} elsif(ref($self-&gt;{&#39;cache&#39;}) eq &#39;HASH&#39;) {
-</span><span class=""> 1306: 				$self-&gt;{&#39;cache&#39;}-&gt;{$key} = $value;
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1307: 			} else {
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1303: 			if(!defined($value)) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1307_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1303_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1308: 				$self-&gt;{&#39;cache&#39;}-&gt;set($key, $value, $duration);
+<span class=""> 1304: 				# value is not-found; L1 sentinel is sufficient
+</span><span class=""> 1305: 			} elsif(ref($self-&gt;{&#39;cache&#39;}) eq &#39;HASH&#39;) {
+</span><span class=""> 1306: 				$self-&gt;{&#39;cache&#39;}-&gt;{$key} = $value;
+</span><span class=""> 1307: 			} else {
+</span><span class=""> 1308: 				$self-&gt;{&#39;cache&#39;}-&gt;set($key, $value, $duration);
 </span><span class=""> 1309: 			}
 </span><span class=""> 1310: 		}
 </span><span class=""> 1311: 
-</span><span class=""> 1312: 		return $rc;
-</span><span class=""> 1313: 	}
-</span><span class=""> 1314: 
-</span><span class=""> 1315: 	# &acirc;&#148;&#128;&acirc;&#148;&#128; Read path &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1316: 
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1312: 		return $rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_1316_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_1312_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -2319,7 +2309,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_1316_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_1312_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -2328,17 +2318,21 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class=""> 1317: 	# Check L1 first (in-process, no serialisation cost)
+<span class=""> 1313: 	}
+</span><span class=""> 1314: 
+</span><span class=""> 1315: 	# &acirc;&#148;&#128;&acirc;&#148;&#128; Read path &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
+</span><span class=""> 1316: 
+</span><span class=""> 1317: 	# Check L1 first (in-process, no serialisation cost)
 </span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1318 → 1321 → 1329</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1318 → 1321 → 0</span></span> 1318: 	my $rc = $self-&gt;{&#39;locations&#39;}-&gt;{$key};
 </span><span class=""> 1319: 
 </span><span class=""> 1320: 	# Fall through to L2 only when L1 has no entry for this key
-</span><span class=""> 1321: 	if((!defined($rc)) &amp;&amp; $self-&gt;{&#39;cache&#39;}) {
-</span><span class=""> 1322: 		if(ref($self-&gt;{&#39;cache&#39;}) eq &#39;HASH&#39;) {
-</span><span class=""> 1323: 			$rc = $self-&gt;{&#39;cache&#39;}-&gt;{$key};
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1321: 	if((!defined($rc)) &amp;&amp; $self-&gt;{&#39;cache&#39;}) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1322: 		if(ref($self-&gt;{&#39;cache&#39;}) eq &#39;HASH&#39;) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class=""> 1323: 			$rc = $self-&gt;{&#39;cache&#39;}-&gt;{$key};
 </span><span class=""> 1324: 		} else {
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1325: 			$rc = $self-&gt;{&#39;cache&#39;}-&gt;get($key);
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1326: 		}
-</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class=""> 1327: 	}
+</span><span class=""> 1325: 			$rc = $self-&gt;{&#39;cache&#39;}-&gt;get($key);
+</span><span class=""> 1326: 		}
+</span><span class=""> 1327: 	}
 </span><span class=""> 1328: 
 </span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1329 → 1335 → 1342</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1329 → 1335 → 0</span></span> 1329: 	return unless defined $rc;
 </span><span class=""> 1330: 
@@ -2346,29 +2340,25 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1332: 	return if ref($rc) &amp;&amp; (ref($rc) eq _NOT_FOUND_CLASS);
 </span><span class=""> 1333: 
 </span><span class=""> 1334: 	# Restore the convenience aliases that were stripped before L2 storage
-</span><span class=""> 1335: 	if(ref($rc) eq &#39;HASH&#39;) {
-</span><span class=""> 1336: 		return unless defined($rc-&gt;{geometry}{location}{lat});
-</span><span class=""> 1337: 		$rc-&gt;{&#39;lat&#39;} //= $rc-&gt;{geometry}{location}{lat};
-</span><span class=""> 1338: 		$rc-&gt;{&#39;lng&#39;} //= $rc-&gt;{geometry}{location}{lng};
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1339: 		$rc-&gt;{&#39;lon&#39;} //= $rc-&gt;{geometry}{location}{lng};
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1335: 	if(ref($rc) eq &#39;HASH&#39;) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
 					<ul>
-				<li><b>COND_INV_1339_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>COND_INV_1335_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class=""> 1340: 	}
+<span class=""> 1336: 		return unless defined($rc-&gt;{geometry}{location}{lat});
+</span><span class=""> 1337: 		$rc-&gt;{&#39;lat&#39;} //= $rc-&gt;{geometry}{location}{lat};
+</span><span class=""> 1338: 		$rc-&gt;{&#39;lng&#39;} //= $rc-&gt;{geometry}{location}{lng};
+</span><span class=""> 1339: 		$rc-&gt;{&#39;lon&#39;} //= $rc-&gt;{geometry}{location}{lng};
+</span><span class=""> 1340: 	}
 </span><span class=""> 1341: 
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1342 → 1342 → 0</span></span> 1342: 	return $rc;
-</span><span class=""> 1343: }
-</span><span class=""> 1344: 
-</span><span class=""> 1345: # Emit a debug message somewhere
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values."> 1346: sub _debug {
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1342 → 1342 → 0</span></span> 1342: 	return $rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
 					<ul>
-				<li><b>BOOL_NEGATE_1346_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+				<li><b>BOOL_NEGATE_1342_2: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -2376,7 +2366,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
 </pre>
 								</div>
-							</li><li><b>RETURN_UNDEF_1346_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+							</li><li><b>RETURN_UNDEF_1342_2: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
 
 								<div class="suggested-test">
 								<div class="suggest-label">🧪 Suggested Test</div>
@@ -2385,13 +2375,29 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </pre>
 								</div>
 							</li></ul></details>
-<span class=""><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 1347 → 1349 → 1352</span></span><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 1347 → 1349 → 0</span></span> 1347: 	my $self = shift;
+<span class=""> 1343: }
+</span><span class=""> 1344: 
+</span><span class=""> 1345: # Emit a debug message somewhere
+</span><span class=""> 1346: sub _debug {
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 1347 → 1349 → 1352</span></span><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 1347 → 1349 → 0</span></span> 1347: 	my $self = shift;
 </span><span class=""> 1348: 
-</span><span class=""> 1349: 	if(my $logger = $self-&gt;{logger}) {
-</span><span class=""> 1350: 		$logger-&gt;debug(@_);
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1349: 	if(my $logger = $self-&gt;{logger}) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_1349_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class=""> 1350: 		$logger-&gt;debug(@_);
 </span><span class=""> 1351: 	}
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 1352 → 1352 → 0</span></span> 1352: 	if($self-&gt;{debug}) {
-</span><span class=""> 1353: 		print @_, &quot;\n&quot;;
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 1352 → 1352 → 0</span></span> 1352: 	if($self-&gt;{debug}) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_1352_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class=""> 1353: 		print @_, &quot;\n&quot;;
 </span><span class=""> 1354: 	}
 </span><span class=""> 1355: }
 </span><span class=""> 1356: 
@@ -2399,8 +2405,14 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1358: sub _warn {
 </span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1359 → 1361 → 0</span></span> 1359: 	my $self = shift;
 </span><span class=""> 1360: 
-</span><span class=""> 1361: 	if(my $logger = $self-&gt;{logger}) {
-</span><span class=""> 1362: 		$logger-&gt;warn(@_);
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1361: 	if(my $logger = $self-&gt;{logger}) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_1361_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class=""> 1362: 		$logger-&gt;warn(@_);
 </span><span class=""> 1363: 	} else {
 </span><span class=""> 1364: 		Carp::carp(@_);
 </span><span class=""> 1365: 	}
@@ -2410,8 +2422,14 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1369: sub _error {
 </span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1370 → 1372 → 0</span></span> 1370: 	my $self = shift;
 </span><span class=""> 1371: 
-</span><span class=""> 1372: 	if(my $logger = $self-&gt;{logger}) {
-</span><span class=""> 1373: 		$logger-&gt;error(@_);
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1372: 	if(my $logger = $self-&gt;{logger}) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_1372_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class=""> 1373: 		$logger-&gt;error(@_);
 </span><span class=""> 1374: 		die @_;
 </span><span class=""> 1375: 	} else {
 </span><span class=""> 1376: 		Carp::croak(@_);
