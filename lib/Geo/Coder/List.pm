@@ -128,12 +128,11 @@ C<GEO__CODER__LIST__carp_on_warn=1> causes warnings to use L<Carp>.
     # Params::Validate::Strict schema
     {
         cache => {
-            type     => HASHREF | OBJECT,
+            type     => [ 'hashref', 'object' ],	# OBJECT must implement get($key) and set($key, $value, $ttl)
             optional => 1,
-            # OBJECT must implement get($key) and set($key, $value, $ttl)
         },
         debug => {
-            type     => SCALAR,
+            type     => 'boolean',
             optional => 1,
             default  => 0,
         },
@@ -453,6 +452,9 @@ sub geocode {
 				error     => $@,
 			};
 			CORE::push @{$self->{'log'}}, $log;
+			if(my $logger = $self->{logger}) {
+				$logger->debug(ref($geocoder), " '$location': $@");
+			}
 			Carp::carp(ref($geocoder), " '$location': $@");
 			next ENCODER;
 		}
@@ -1182,7 +1184,7 @@ sub _build_ca_address
 
 # _cache
 #
-# Purpose:    Read from or write to the two-level cache.
+# Read from or write to the two-level cache.
 #             L1 is an in-process HASH (always active).
 #             L2 is an optional CHI-compatible object or a plain HASH ref.
 #
@@ -1381,7 +1383,7 @@ element of each sub-array is considered.
 
 =item * L<Geo::Coder::Many>
 
-=item * L<Object::Configure>
+=item * L<Configure an Object at Runtime|Object::Configure>
 
 =item * L<Readonly>
 

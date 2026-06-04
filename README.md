@@ -72,12 +72,11 @@ The constructor reads configuration from environment variables via
     # Params::Validate::Strict schema
     {
         cache => {
-            type     => HASHREF | OBJECT,
+            type     => [ 'hashref', 'object' ],        # OBJECT must implement get($key) and set($key, $value, $ttl)
             optional => 1,
-            # OBJECT must implement get($key) and set($key, $value, $ttl)
         },
         debug => {
-            type     => SCALAR,
+            type     => 'boolean',
             optional => 1,
             default  => 0,
         },
@@ -320,7 +319,7 @@ element of each sub-array is considered.
 - [Geo::Coder::All](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AAll)
 - [Geo::Coder::GooglePlaces](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AGooglePlaces)
 - [Geo::Coder::Many](https://metacpan.org/pod/Geo%3A%3ACoder%3A%3AMany)
-- [Object::Configure](https://metacpan.org/pod/Object%3A%3AConfigure)
+- [Configure an Object at Runtime](https://metacpan.org/pod/Object%3A%3AConfigure)
 - [Readonly](https://metacpan.org/pod/Readonly)
 
 # SUPPORT
