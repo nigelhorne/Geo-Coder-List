@@ -223,14 +223,14 @@ subtest 'geocode: croaks when called with no arguments' => sub {
 
 subtest 'geocode: carps for empty location string' => sub {
 	# POD input: "Must contain at least one non-digit character"
-	my $list = Geo::Coder::List->new();
+	my $list = Geo::Coder::List->new(carp_on_warn => 1);
 	warnings_like { $list->geocode(location => '') }
 		qr/usage: geocode\(/i,
 		'empty string emits carp with expected message';
 };
 
 subtest 'geocode: carps for undef location' => sub {
-	my $list = Geo::Coder::List->new();
+	my $list = Geo::Coder::List->new(carp_on_warn => 1);
 	warnings_like { $list->geocode(location => undef) }
 		qr/usage: geocode\(/i,
 		'undef location emits carp with expected message';
@@ -349,7 +349,7 @@ subtest 'geocode: list context returns array of HASHREFs (POD: "all results from
 
 subtest 'geocode: carps on geocoder error and falls back to next geocoder' => sub {
 	# POD purpose: "trying each geocoder in turn; first successful result returned"
-	my $list = Geo::Coder::List->new();
+	my $list = Geo::Coder::List->new(carp_on_warn => 1);
 	$list->push(UnitMock::A->new())->push(UnitMock::B->new());
 
 	my $mock_a = mock_scoped 'UnitMock::A::geocode' => sub { die 'rate limit hit' };
@@ -620,10 +620,10 @@ subtest 'log: wantarray key reflects calling context (false for scalar context)'
 
 subtest 'log: error key present when geocoder threw' => sub {
 	# POD: entries have result OR error
-	my $list = _list_with(UnitMock::A->new());
+	my $list = _list_with(UnitMock::A->new(), ( carp_on_warn => 1 ));
 	my $mock = mock_scoped 'UnitMock::A::geocode' => sub { die 'boom' };
 
-	warnings_like { $list->geocode($LOC_DC) } qr/boom/, 'error carpd';
+	warnings_like { $list->geocode($LOC_DC) } qr/boom/, 'error carped';
 
 	my ($err_entry) = grep { exists $_->{error} } @{$list->log()};
 	ok(defined $err_entry,                   'error entry present in log');

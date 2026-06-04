@@ -222,20 +222,20 @@ subtest 'push: croaks with no argument' => sub {
 
 subtest 'geocode: croaks when called with no arguments' => sub {
 	# Params::Get::get_params croaks when the required key is absent
-	my $list = Geo::Coder::List->new();
+	my $list = new_ok('Geo::Coder::List');
 	throws_ok { $list->geocode() } qr/Usage:/i,
 		'geocode() with no args croaks';
 };
 
 subtest 'geocode: carps for empty location string' => sub {
-	my $list = Geo::Coder::List->new();
+	my $list = Geo::Coder::List->new({ carp_on_warn => 1 });
 	warnings_like { $list->geocode(location => '') }
 		qr/usage: geocode\(/,
 		'empty string location emits expected carp';
 };
 
 subtest 'geocode: carps for undef location' => sub {
-	my $list = Geo::Coder::List->new();
+	my $list = Geo::Coder::List->new({ carp_on_warn => 1 });
 	warnings_like { $list->geocode(location => undef) }
 		qr/usage: geocode\(/,
 		'undef location emits expected carp';
@@ -285,7 +285,7 @@ subtest 'geocode: geocoder field holds the geocoder object (not a string)' => su
 
 subtest 'geocode: falls back to second geocoder when first throws' => sub {
 	my ($a, $b) = (MockGeocoder::Alpha->new(), MockGeocoder::Beta->new());
-	my $list = Geo::Coder::List->new();
+	my $list = Geo::Coder::List->new({ carp_on_warn => 1 });
 	$list->push($a)->push($b);
 
 	my $mock_a = mock_scoped 'MockGeocoder::Alpha::geocode' => sub {
@@ -406,7 +406,7 @@ subtest 'geocode: writes a log entry on success' => sub {
 };
 
 subtest 'geocode: writes a log entry recording the error on failure' => sub {
-	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $list = _make_list(MockGeocoder::Alpha->new(), (carp_on_warn => 1));
 	my $mock = mock_scoped 'MockGeocoder::Alpha::geocode' => sub {
 		die 'simulated API error';
 	};

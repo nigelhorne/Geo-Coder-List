@@ -100,7 +100,7 @@ package main;
 
 # Build a Geo::Coder::List with one EdgeMock::Std geocoder already pushed
 sub _list_with_std {
-	return Geo::Coder::List->new()->push(EdgeMock::Std->new());
+	return Geo::Coder::List->new(carp_on_warn => 1)->push(EdgeMock::Std->new());
 }
 
 # Build an OSM-style result hashref (top-level lat/lon)
@@ -357,7 +357,7 @@ subtest 'geocode() handles edge-case return values' => sub {
 	# Geocoder throws: must not propagate, only carp
 	{
 		my $list = _list_with_std();
-		my $g = mock_scoped 'EdgeMock::Std::geocode' => sub { die "network timeout\n" };
+		my $g = mock_scoped 'EdgeMock::Std::geocode' => sub { die 'network timeout' };
 		my $warned = 0;
 		local $SIG{__WARN__} = sub { $warned++ };
 		my $r;
@@ -378,9 +378,9 @@ subtest 'geocode() handles edge-case return values' => sub {
 subtest 'geocode() fallback chain with edge-case failures' => sub {
 	# First geocoder dies, second succeeds; result must come from second
 	{
-		my $list = Geo::Coder::List->new();
+		my $list = Geo::Coder::List->new(carp_on_warn => 1);
 		$list->push(EdgeMock::Std->new())->push(EdgeMock::B->new());
-		my $gA = mock_scoped 'EdgeMock::Std::geocode' => sub { die "fail A\n" };
+		my $gA = mock_scoped 'EdgeMock::Std::geocode' => sub { die 'fail A' };
 		my $gB = mock_scoped 'EdgeMock::B::geocode'   => sub { _osm($VALID_LAT, $VALID_LNG) };
 		my $warned = 0;
 		local $SIG{__WARN__} = sub { $warned++ };
@@ -392,7 +392,7 @@ subtest 'geocode() fallback chain with edge-case failures' => sub {
 
 	# All geocoders fail: must return undef, not crash
 	{
-		my $list = Geo::Coder::List->new();
+		my $list = new_ok('Geo::Coder::List');
 		$list->push(EdgeMock::Std->new())->push(EdgeMock::B->new());
 		my $gA = mock_scoped 'EdgeMock::Std::geocode' => sub { return () };
 		my $gB = mock_scoped 'EdgeMock::B::geocode'   => sub { return () };
@@ -494,7 +494,7 @@ subtest 'geocode() Geo::GeoNames special handling' => sub {
 	# the eval; the eval catches it, carps, and tries the next encoder
 	{
 		my $gnames = Geo::GeoNames->new();
-		my $list   = Geo::Coder::List->new()->push($gnames);
+		my $list   = Geo::Coder::List->new(carp_on_warn => 1)->push($gnames);
 
 		# Override username to return undef for this test
 		my $g = mock_scoped 'Geo::GeoNames::username' => sub { return $config{no_result} };
@@ -809,7 +809,7 @@ subtest 'reverse_geocode() edge cases' => sub {
 	{
 		my $list_rg = Geo::Coder::List->new()->push(EdgeMock::Std->new());
 		my $g = mock_scoped 'EdgeMock::Std::reverse_geocode' => sub {
-			die "reverse lookup error\n";
+			die 'reverse lookup error';
 		};
 		my $warned = 0;
 		local $SIG{__WARN__} = sub { $warned++ };
@@ -989,7 +989,7 @@ subtest 'reverse_geocode() retry: non-latlng error is NOT retried' => sub {
 	my $calls = 0;
 	my $g = mock_scoped 'EdgeMock::Std::reverse_geocode' => sub {
 		$calls++;
-		die "connection refused\n";
+		die 'connection refused';
 	};
 
 	my $warned = 0;
