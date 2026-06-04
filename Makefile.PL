@@ -78,6 +78,7 @@ WriteMakefile(
     PREREQ_PM => {
 	'Carp' => 0,
 	'HTML::Entities' => 0,
+	'IPC::System::Simple' => 0,
 	'LWP::Protocol::https' => 0,
 	'Object::Configure' => 0.13,
 	'Params::Get' => 0.04,
