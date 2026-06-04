@@ -20,7 +20,7 @@ https://pjcj.net
 <h1>Branch Coverage</h1>
 <table>
 <tr><td class="h" align="right">File:</td><td align="left">blib/lib/Geo/Coder/List.pm</td></tr>
-<tr><td class="h" align="right">Coverage:</td><td align="left" class="c1">88.5%</td></tr>
+<tr><td class="h" align="right">Coverage:</td><td align="left" class="c2">90.3%</td></tr>
 </table>
 <div><br/></div>
 <table>
@@ -102,8 +102,8 @@ https://pjcj.net
 <tr><td class="h"><a id="L827">827</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $ua</td></tr>
 <tr><td class="h"><a id="L831">831</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">ref $g eq &#39;HASH&#39; ? :</td></tr>
 <tr><td class="h"><a id="L833">833</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $geocoder</td></tr>
-<tr><td class="h"><a id="L842">842</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($ua-&gt;can(&#39;clone&#39;) and $ua-&gt;can(&#39;agent&#39;)) { }</td></tr>
-<tr><td class="h"><a id="L846">846</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">$version ? :</td></tr>
+<tr><td class="h"><a id="L842">842</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($ua-&gt;can(&#39;clone&#39;) and $ua-&gt;can(&#39;agent&#39;)) { }</td></tr>
+<tr><td class="h"><a id="L846">846</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$version ? :</td></tr>
 <tr><td class="h"><a id="L904">904</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless my $latlng = $params-&gt;{&#39;latlng&#39;}</td></tr>
 <tr><td class="h"><a id="L913">913</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $rc = $self-&gt;_cache($latlng))</td></tr>
 <tr><td class="h"><a id="L923">923</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $geocoder eq &quot;HASH&quot;)</td></tr>
@@ -112,13 +112,13 @@ https://pjcj.net
 <tr><td class="h"><a id="L926">926</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($limit &lt;= 0)</td></tr>
 <tr><td class="h"><a id="L934">934</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
 <tr><td class="h"><a id="L936">936</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (wantarray) { }</td></tr>
-<tr><td class="h"><a id="L947">947</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s)</td></tr>
+<tr><td class="h"><a id="L947">947</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s)</td></tr>
 <tr><td class="h"><a id="L954">954</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@)</td></tr>
 <tr><td class="h"><a id="L967">967</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;} &gt;= 2</td></tr>
 <tr><td class="h"><a id="L970">970</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $name = $loc-&gt;{&#39;display_name&#39;}) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($loc-&gt;{&#39;city&#39;}) { }</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">elsif ($loc-&gt;{&#39;features&#39;}) { }</td></tr>
-<tr><td class="h"><a id="L1002">1002</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s)</td></tr>
+<tr><td class="h"><a id="L1002">1002</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s)</td></tr>
 <tr><td class="h"><a id="L1009">1009</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@)</td></tr>
 <tr><td class="h"><a id="L1023">1023</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $rc</td></tr>
 <tr><td class="h"><a id="L1024">1024</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (ref $rc)</td></tr>
