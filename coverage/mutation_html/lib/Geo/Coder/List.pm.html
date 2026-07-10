@@ -246,7 +246,7 @@ pre details.mutant-details ul {
 <strong>Structural Coverage (Approximate)</strong><p>
 TER1 (Statement): 98.23%<br>
 TER2 (Branch): 90.56%<br>
-TER3 (LCSAJ): 89.7% (35/39)<br>
+TER3 (LCSAJ): 88.9% (16/18)<br>
 Approximate LCSAJ segments: 287<br>
 </div>
 
@@ -440,7 +440,7 @@ Approximate LCSAJ segments: 287<br>
 </span><span class="">  148: 
 </span><span class="">  149: sub new
 </span><span class="">  150: {
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">151 → 155 → 170</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">151 → 155 → 0</span></span>  151: 	my $class = shift;
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">151 → 155 → 170</span></span>  151: 	my $class = shift;
 </span><span class="">  152: 	my $params = Params::Get::get_params(undef, \@_) || {};
 </span><span class="">  153: 
 </span><span class="">  154: 	# Handle the rare Geo::Coder::List::new() (function-style) invocation
@@ -488,7 +488,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  167: 	}
 </span><span class="">  168: 
 </span><span class="">  169: 	# Let Object::Configure overlay defaults from environment / config files
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">170 → 173 → 179</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">170 → 173 → 0</span></span>  170: 	$params = Object::Configure::configure($class, $params);
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">170 → 173 → 179</span></span>  170: 	$params = Object::Configure::configure($class, $params);
 </span><span class="">  171: 
 </span><span class="">  172: 	# Fill in any %config defaults the caller did not explicitly supply
 </span><span class="">  173: 	for my $key (keys %config) {
@@ -497,7 +497,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  176: 
 </span><span class="">  177: 	# Bless and return; params override scalar defaults but locations/log
 </span><span class="">  178: 	# are always initialised fresh so callers cannot inject stale state
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 179 → 179 → 0</span></span>  179: 	return bless {
+</span><span class="">  179: 	return bless {
 </span><span class="">  180: 		debug     =&gt; DEBUG_DEFAULT,
 </span><span class="">  181: 		geocoders =&gt; [],
 </span><span class="">  182: 		%{$params},
@@ -618,7 +618,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  297: =cut
 </span><span class="">  298: 
 </span><span class="">  299: sub geocode {
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">300 → 309 → 315</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">300 → 309 → 0</span></span>  300: 	my $self = shift;
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">300 → 309 → 315</span></span>  300: 	my $self = shift;
 </span><span class="">  301: 
 </span><span class="">  302: 	# Params::Get enforces &#39;location&#39;; calling geocode() with no args causes
 </span><span class="">  303: 	# get_params itself to croak with &quot;Usage:&quot; matching t/carp.t expectations
@@ -633,12 +633,12 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  312: 	}
 </span><span class="">  313: 
 </span><span class="">  314: 	# A purely numeric string is almost certainly an error (e.g. a bare postcode)
-</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">315 → 315 → 320</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">315 → 315 → 0</span></span>  315: 	if($params-&gt;{&#39;location&#39;} !~ /\D/) {
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">315 → 315 → 320</span></span>  315: 	if($params-&gt;{&#39;location&#39;} !~ /\D/) {
 </span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  316: 		$self-&gt;_error(&#39;Usage: &#39;, __PACKAGE__, &#39;: invalid input to geocode(), &#39;, $params-&gt;{location});
 </span><span class="">  317: 	}
 </span><span class="">  318: 
 </span><span class="">  319: 	# Collapse runs of whitespace and expand any HTML entities
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">320 → 336 → 390</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">320 → 336 → 0</span></span>  320: 	$location =~ s/\s\s+/ /g;
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">320 → 336 → 390</span></span>  320: 	$location =~ s/\s\s+/ /g;
 </span><span class="">  321: 	$location = decode_entities($location);
 </span><span class="">  322: 	# Propagate the cleaned-up string so geocoders also receive the decoded form
 </span><span class="">  323: 	$params-&gt;{&#39;location&#39;} = $location;
@@ -736,7 +736,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  382: 			}
 </span><span class="">  383: 		}
 </span><span class="">  384: 		return if $allempty;
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  385: 		return @rc;
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  385: 		return @rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -762,7 +762,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  387: 
 </span><span class="">  388: 	# Also check if this location is cached as a definite not-found in L1,
 </span><span class="">  389: 	# without going through _cache() (which masks the sentinel as undef)
-</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">390 → 390 → 400</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">390 → 390 → 0</span></span>  390: 	if(exists $self-&gt;{&#39;locations&#39;}{$location}) {
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">390 → 390 → 400</span></span>  390: 	if(exists $self-&gt;{&#39;locations&#39;}{$location}) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
@@ -805,7 +805,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  397: 
 </span><span class="">  398: 	# &acirc;&#148;&#128;&acirc;&#148;&#128; Try each geocoder in turn &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
 </span><span class="">  399: 
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">400 → 400 → 756</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">400 → 400 → 0</span></span>  400: 	ENCODER: foreach my $g (@{$self-&gt;{geocoders}}) {
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">400 → 400 → 756</span></span>  400: 	ENCODER: foreach my $g (@{$self-&gt;{geocoders}}) {
 </span><span class="">  401: 		my $geocoder = $g;
 </span><span class="">  402: 
 </span><span class="">  403: 		# Unpack a hashref entry and apply regex / limit guards
@@ -819,7 +819,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 				<li><b>COND_INV_406_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
 <span class="">  407: 				print &quot;limit: $limit\n&quot; if($self-&gt;{&#39;debug&#39;});
-</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Mutation survived. Add targeted tests to validate this branch.">  408: 				if($limit &lt;= 0) {
+</span><span class="survived-3 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  408: 				if($limit &lt;= 0) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 4, Killed: 0, Survived: 4)</summary>
@@ -1235,7 +1235,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  714: 		print &#39;Number of matches from &#39;, ref($geocoder), &#39;: &#39;,
 </span><span class="">  715: 			scalar(@rc), &quot;\n&quot; if($self-&gt;{&#39;debug&#39;});
 </span><span class="">  716: 
-</span><span class="survived-3 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  717: 		if($self-&gt;{&#39;debug&#39;} &gt;= 2) {
+</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Mutation survived. Add targeted tests to validate this branch.">  717: 		if($self-&gt;{&#39;debug&#39;} &gt;= 2) {
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 4, Killed: 0, Survived: 4)</summary>
@@ -1310,7 +1310,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  753: 
 </span><span class="">  754: 	# &acirc;&#148;&#128;&acirc;&#148;&#128; No geocoder produced a usable result &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
 </span><span class="">  755: 
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">756 → 761 → 0</span></span>  756: 	print &quot;No matches\n&quot; if($self-&gt;{&#39;debug&#39;});
+</span><span class="">  756: 	print &quot;No matches\n&quot; if($self-&gt;{&#39;debug&#39;});
 </span><span class="">  757: 
 </span><span class="">  758: 	# Cache the not-found result so repeated calls do not hammer all backends
 </span><span class="">  759: 	$self-&gt;_cache($location, undef);
@@ -1376,7 +1376,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  798: 
 </span><span class="">  799: sub ua
 </span><span class="">  800: {
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">801 → 807 → 831</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">801 → 807 → 0</span></span>  801: 	my ($self, $ua) = @_;
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">801 → 807 → 831</span></span>  801: 	my ($self, $ua) = @_;
 </span><span class="">  802: 
 </span><span class="">  803: 	# Nothing to propagate if no UA was supplied
 </span><span class="">  804: 	return unless $ua;
@@ -1412,7 +1412,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  828: 	}
 </span><span class="">  829: 
 </span><span class="">  830: 	# Return the UA so callers can verify what was set (API contract)
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">831 → 831 → 0</span></span>  831: 	return $ua;
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  831: 	return $ua;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -1476,7 +1476,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  871: =cut
 </span><span class="">  872: 
 </span><span class="">  873: sub reverse_geocode {
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">874 → 885 → 889</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">874 → 885 → 0</span></span>  874: 	my $self = shift;
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">874 → 885 → 889</span></span>  874: 	my $self = shift;
 </span><span class="">  875: 	my $params = Params::Get::get_params(&#39;latlng&#39;, \@_);
 </span><span class="">  876: 
 </span><span class="">  877: 	my $latlng = $params-&gt;{&#39;latlng&#39;} or Carp::croak(&#39;Usage: reverse_geocode(latlng =&gt; $location)&#39;);
@@ -1494,7 +1494,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 					<ul>
 				<li><b>COND_INV_885_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  886: 		return $rc;
+<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  886: 		return $rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -1518,7 +1518,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 							</li></ul></details>
 <span class="">  887: 	}
 </span><span class="">  888: 
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">889 → 891 → 1053</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">889 → 891 → 0</span></span>  889: 	my @call_details = caller(0);
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">889 → 891 → 1053</span></span>  889: 	my @call_details = caller(0);
 </span><span class="">  890: 
 </span><span class="">  891: 	foreach my $g (@{$self-&gt;{geocoders}}) {
 </span><span class="">  892: 		my $geocoder = $g;
@@ -1690,7 +1690,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class="">  963: 			};
 </span><span class="">  964: 
 </span><span class="">  965: 			$self-&gt;_cache($latlng, \@rc);
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  966: 			return @rc;
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  966: 			return @rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -1839,7 +1839,7 @@ is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
 </span><span class=""> 1017: 					wantarray =&gt; 0,
 </span><span class=""> 1018: 					result    =&gt; $name,
 </span><span class=""> 1019: 				};
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1020: 				return $self-&gt;_cache($latlng, $name);
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values."> 1020: 				return $self-&gt;_cache($latlng, $name);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -1880,7 +1880,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1031: 					wantarray =&gt; 0,
 </span><span class=""> 1032: 					result    =&gt; $name,
 </span><span class=""> 1033: 				};
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values."> 1034: 				return $self-&gt;_cache($latlng, $name);
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1034: 				return $self-&gt;_cache($latlng, $name);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -1921,7 +1921,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1045: 					wantarray =&gt; 0,
 </span><span class=""> 1046: 					result    =&gt; $name,
 </span><span class=""> 1047: 				};
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values."> 1048: 				return $self-&gt;_cache($latlng, $name);
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1048: 				return $self-&gt;_cache($latlng, $name);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -1947,7 +1947,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1050: 		}
 </span><span class=""> 1051: 	}
 </span><span class=""> 1052: 
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1053 → 1053 → 0</span></span> 1053: 	return;
+</span><span class=""> 1053: 	return;
 </span><span class=""> 1054: }
 </span><span class=""> 1055: 
 </span><span class=""> 1056: # =============================================================================
@@ -2026,7 +2026,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1129: 	# Reset to an empty arrayref so log() always returns a valid reference
 </span><span class=""> 1130: 	$self-&gt;{&#39;log&#39;} = [];
 </span><span class=""> 1131: 
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1132: 	return $self;
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values."> 1132: 	return $self;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -2069,7 +2069,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1151: 
 </span><span class=""> 1152: sub _build_ca_address
 </span><span class=""> 1153: {
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1154 → 1157 → 1176</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1154 → 1157 → 0</span></span> 1154: 	my $loc = $_[0];
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1154 → 1157 → 1176</span></span> 1154: 	my $loc = $_[0];
 </span><span class=""> 1155: 	my $name  = &#39;&#39;;
 </span><span class=""> 1156: 
 </span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1157: 	if(my $usa = $loc-&gt;{&#39;usa&#39;}) {
@@ -2097,7 +2097,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1173: 		$name .= ($name ? &#39;, &#39; : &#39;&#39;) . $loc-&gt;{&#39;prov&#39;}        if $loc-&gt;{&#39;prov&#39;};
 </span><span class=""> 1174: 	}
 </span><span class=""> 1175: 
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1176 → 1176 → 0</span></span> 1176: 	return $name;
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1176: 	return $name;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -2150,7 +2150,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1205: #             internal implementation details into an external L2 store.
 </span><span class=""> 1206: 
 </span><span class=""> 1207: sub _cache {
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1208 → 1215 → 1318</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1208 → 1215 → 0</span></span> 1208: 	my $self = shift;
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1208 → 1215 → 1318</span></span> 1208: 	my $self = shift;
 </span><span class=""> 1209: 	my $key  = shift;
 </span><span class=""> 1210: 
 </span><span class=""> 1211: 	# &acirc;&#148;&#128;&acirc;&#148;&#128; Write path &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
@@ -2323,7 +2323,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1315: 	# &acirc;&#148;&#128;&acirc;&#148;&#128; Read path &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
 </span><span class=""> 1316: 
 </span><span class=""> 1317: 	# Check L1 first (in-process, no serialisation cost)
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1318 → 1321 → 1329</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1318 → 1321 → 0</span></span> 1318: 	my $rc = $self-&gt;{&#39;locations&#39;}-&gt;{$key};
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1318 → 1321 → 1329</span></span> 1318: 	my $rc = $self-&gt;{&#39;locations&#39;}-&gt;{$key};
 </span><span class=""> 1319: 
 </span><span class=""> 1320: 	# Fall through to L2 only when L1 has no entry for this key
 </span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."> 1321: 	if((!defined($rc)) &amp;&amp; $self-&gt;{&#39;cache&#39;}) {
@@ -2334,7 +2334,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1326: 		}
 </span><span class=""> 1327: 	}
 </span><span class=""> 1328: 
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1329 → 1335 → 1342</span></span><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1329 → 1335 → 0</span></span> 1329: 	return unless defined $rc;
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1329 → 1335 → 1342</span></span> 1329: 	return unless defined $rc;
 </span><span class=""> 1330: 
 </span><span class=""> 1331: 	# Translate the not-found sentinel back to undef for the caller
 </span><span class=""> 1332: 	return if ref($rc) &amp;&amp; (ref($rc) eq _NOT_FOUND_CLASS);
@@ -2353,7 +2353,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1339: 		$rc-&gt;{&#39;lon&#39;} //= $rc-&gt;{geometry}{location}{lng};
 </span><span class=""> 1340: 	}
 </span><span class=""> 1341: 
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">1342 → 1342 → 0</span></span> 1342: 	return $rc;
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths."> 1342: 	return $rc;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -2379,7 +2379,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class=""> 1344: 
 </span><span class=""> 1345: # Emit a debug message somewhere
 </span><span class=""> 1346: sub _debug {
-</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 1347 → 1349 → 1352</span></span><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 1347 → 1349 → 0</span></span> 1347: 	my $self = shift;
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot-uncovered">●</span><span class="lcsaj-tip-text">[NOT COVERED] 1347 → 1349 → 1352</span></span> 1347: 	my $self = shift;
 </span><span class=""> 1348: 
 </span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."> 1349: 	if(my $logger = $self-&gt;{logger}) {
 </span>
