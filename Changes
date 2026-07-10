@@ -1,6 +1,6 @@
 Revision history for Geo-Coder-List
 
-0.38
+0.38	Fri Jul 10 13:35:31 EDT 2026
 	[ Bug fixes ]
 	- Fixed testing prereqs (affected AUTHOR_TESTING only)
 
