@@ -4,628 +4,628 @@
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703769.80807,
+         "finish" : 1783705067.23783,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "-e",
-         "start" : 1783703747.41361,
-         "version" : "0.37"
+         "start" : 1783705044.90115,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703747.56098,
+         "finish" : 1783705045.05045,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "-e",
-         "start" : 1783703747.56086,
-         "version" : "0.37"
+         "start" : 1783705045.05028,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703747.93132,
+         "finish" : 1783705045.41738,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/00-load.t",
-         "start" : 1783703747.92995,
-         "version" : "0.37"
+         "start" : 1783705045.41609,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703748.45844,
+         "finish" : 1783705045.95205,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/10-new.t",
-         "start" : 1783703748.42042,
-         "version" : "0.37"
+         "start" : 1783705045.9146,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703749.01476,
+         "finish" : 1783705046.51823,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/30-basics.t",
-         "start" : 1783703748.97482,
-         "version" : "0.37"
+         "start" : 1783705046.47476,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703749.52694,
+         "finish" : 1783705047.04979,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/bing.t",
-         "start" : 1783703749.51983,
-         "version" : "0.37"
+         "start" : 1783705047.04219,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703749.94572,
+         "finish" : 1783705047.4809,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/boiler.t",
-         "start" : 1783703749.92502,
-         "version" : "0.37"
+         "start" : 1783705047.45999,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703750.2207,
+         "finish" : 1783705047.76267,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/cache.t",
-         "start" : 1783703750.22039,
-         "version" : "0.37"
+         "start" : 1783705047.76237,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703750.60832,
+         "finish" : 1783705047.94416,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/canada.t",
-         "start" : 1783703750.59926,
-         "version" : "0.37"
+         "start" : 1783705047.9441,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703751.11949,
+         "finish" : 1783705048.28974,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/carp.t",
-         "start" : 1783703751.11909,
-         "version" : "0.37"
+         "start" : 1783705048.28931,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703751.61873,
+         "finish" : 1783705048.7939,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/census.t",
-         "start" : 1783703751.61338,
-         "version" : "0.37"
+         "start" : 1783705048.78849,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703752.00116,
+         "finish" : 1783705049.18018,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/changes.t",
-         "start" : 1783703752.00089,
-         "version" : "0.37"
+         "start" : 1783705049.17987,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703752.23449,
+         "finish" : 1783705049.41594,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/comment-spelling.t",
-         "start" : 1783703752.23423,
-         "version" : "0.37"
+         "start" : 1783705049.41566,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703752.4675,
+         "finish" : 1783705049.65471,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/critic.t",
-         "start" : 1783703752.46724,
-         "version" : "0.37"
+         "start" : 1783705049.65442,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703752.70048,
+         "finish" : 1783705049.89266,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/cv.t",
-         "start" : 1783703752.70023,
-         "version" : "0.37"
+         "start" : 1783705049.89237,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703752.93423,
+         "finish" : 1783705050.12844,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/dist.t",
-         "start" : 1783703752.93395,
-         "version" : "0.37"
+         "start" : 1783705050.12815,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703753.47396,
+         "finish" : 1783705050.6747,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/edge_cases.t",
-         "start" : 1783703753.29333,
-         "version" : "0.37"
+         "start" : 1783705050.48863,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703753.9845,
+         "finish" : 1783705051.21347,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/eof.t",
-         "start" : 1783703753.98424,
-         "version" : "0.37"
+         "start" : 1783705051.21319,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703754.21935,
+         "finish" : 1783705051.45041,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/eol.t",
-         "start" : 1783703754.21907,
-         "version" : "0.37"
+         "start" : 1783705051.4501,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703754.77971,
+         "finish" : 1783705052.01449,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/extended_tests.t",
-         "start" : 1783703754.57672,
-         "version" : "0.37"
+         "start" : 1783705051.81177,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703755.45631,
+         "finish" : 1783705052.66326,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/free.t",
-         "start" : 1783703755.44964,
-         "version" : "0.37"
+         "start" : 1783705052.65745,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703756.28603,
+         "finish" : 1783705053.49323,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/function.t",
-         "start" : 1783703755.96842,
-         "version" : "0.37"
+         "start" : 1783705053.17331,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703756.99832,
+         "finish" : 1783705054.20844,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/fuzz.t",
-         "start" : 1783703756.998,
-         "version" : "0.37"
+         "start" : 1783705054.20804,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703757.27281,
+         "finish" : 1783705054.48476,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/geoapify.t",
-         "start" : 1783703757.27253,
-         "version" : "0.37"
+         "start" : 1783705054.48448,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703757.63475,
+         "finish" : 1783705054.85338,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/geofarm.t",
-         "start" : 1783703757.62592,
-         "version" : "0.37"
+         "start" : 1783705054.84456,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703758.14675,
+         "finish" : 1783705055.36851,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/geonames.t",
-         "start" : 1783703758.13863,
-         "version" : "0.37"
+         "start" : 1783705055.36022,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703758.65507,
+         "finish" : 1783705055.88335,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/google.t",
-         "start" : 1783703758.64728,
-         "version" : "0.37"
+         "start" : 1783705055.87549,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703759.16211,
+         "finish" : 1783705056.40689,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/googleplaces.t",
-         "start" : 1783703759.15457,
-         "version" : "0.37"
+         "start" : 1783705056.39745,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703759.54791,
+         "finish" : 1783705056.80112,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/gv.t",
-         "start" : 1783703759.54763,
-         "version" : "0.37"
+         "start" : 1783705056.80079,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703759.84504,
+         "finish" : 1783705057.10899,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/integration.t",
-         "start" : 1783703759.84477,
-         "version" : "0.37"
+         "start" : 1783705057.10865,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703760.0983,
+         "finish" : 1783705057.36452,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/kwalitee.t",
-         "start" : 1783703760.09799,
-         "version" : "0.37"
+         "start" : 1783705057.36421,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703760.46079,
+         "finish" : 1783705057.73993,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/list.t",
-         "start" : 1783703760.44255,
-         "version" : "0.37"
+         "start" : 1783705057.72168,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703760.86462,
+         "finish" : 1783705058.14171,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/manifest.t",
-         "start" : 1783703760.86436,
-         "version" : "0.37"
+         "start" : 1783705058.14143,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703761.21369,
+         "finish" : 1783705058.49196,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/mapbox.t",
-         "start" : 1783703761.20575,
-         "version" : "0.37"
+         "start" : 1783705058.48434,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703761.62566,
+         "finish" : 1783705058.9002,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/mock.t",
-         "start" : 1783703761.6254,
-         "version" : "0.37"
+         "start" : 1783705058.89984,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703762.20211,
+         "finish" : 1783705059.5106,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/mutant_killers.t",
-         "start" : 1783703761.98918,
-         "version" : "0.37"
+         "start" : 1783705059.28605,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703762.73366,
+         "finish" : 1783705060.06281,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/no404s.t",
-         "start" : 1783703762.73329,
-         "version" : "0.37"
+         "start" : 1783705060.06249,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703762.96603,
+         "finish" : 1783705060.30277,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/noplan.t",
-         "start" : 1783703762.96579,
-         "version" : "0.37"
+         "start" : 1783705060.30245,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703763.31422,
+         "finish" : 1783705060.66793,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/opencage.t",
-         "start" : 1783703763.3072,
-         "version" : "0.37"
+         "start" : 1783705060.6602,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703763.82199,
+         "finish" : 1783705061.19882,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/osm.t",
-         "start" : 1783703763.81113,
-         "version" : "0.37"
+         "start" : 1783705061.18705,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703764.3318,
+         "finish" : 1783705061.73276,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/ovi.t",
-         "start" : 1783703764.323,
-         "version" : "0.37"
+         "start" : 1783705061.72323,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703764.74236,
+         "finish" : 1783705062.15793,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/pod-cm.t",
-         "start" : 1783703764.74146,
-         "version" : "0.37"
+         "start" : 1783705062.15699,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703764.98661,
+         "finish" : 1783705062.40996,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/pod-coverage.t",
-         "start" : 1783703764.98635,
-         "version" : "0.37"
+         "start" : 1783705062.40965,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703765.21873,
+         "finish" : 1783705062.65231,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/pod-links.t",
-         "start" : 1783703765.21846,
-         "version" : "0.37"
+         "start" : 1783705062.65198,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703765.45157,
+         "finish" : 1783705062.89203,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/pod-snippets.t",
-         "start" : 1783703765.45132,
-         "version" : "0.37"
+         "start" : 1783705062.89171,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703765.68548,
+         "finish" : 1783705063.12881,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/pod-spelling.t",
-         "start" : 1783703765.6852,
-         "version" : "0.37"
+         "start" : 1783705063.12861,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703765.9205,
+         "finish" : 1783705063.35528,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/pod-synopsis.t",
-         "start" : 1783703765.92023,
-         "version" : "0.37"
+         "start" : 1783705063.35499,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703766.15447,
+         "finish" : 1783705063.58835,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/pod.t",
-         "start" : 1783703766.15419,
-         "version" : "0.37"
+         "start" : 1783705063.5881,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703766.51499,
+         "finish" : 1783705063.93723,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/postcodes.t",
-         "start" : 1783703766.50467,
-         "version" : "0.37"
+         "start" : 1783705063.92678,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703766.9175,
+         "finish" : 1783705064.33374,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/rand.t",
-         "start" : 1783703766.91724,
-         "version" : "0.37"
+         "start" : 1783705064.33345,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703767.19887,
+         "finish" : 1783705064.60793,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/ua.t",
-         "start" : 1783703767.19837,
-         "version" : "0.37"
+         "start" : 1783705064.60759,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703767.78063,
+         "finish" : 1783705065.18321,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/unit.t",
-         "start" : 1783703767.57047,
-         "version" : "0.37"
+         "start" : 1783705064.97225,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703768.29025,
+         "finish" : 1783705065.68333,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/unused.t",
-         "start" : 1783703768.28999,
-         "version" : "0.37"
+         "start" : 1783705065.683,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703768.64313,
+         "finish" : 1783705066.04509,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/us.t",
-         "start" : 1783703768.63578,
-         "version" : "0.37"
+         "start" : 1783705066.03701,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703769.02629,
+         "finish" : 1783705066.43983,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/used.t",
-         "start" : 1783703769.02602,
-         "version" : "0.37"
+         "start" : 1783705066.43955,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703769.25972,
+         "finish" : 1783705066.67615,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/vars.t",
-         "start" : 1783703769.25945,
-         "version" : "0.37"
+         "start" : 1783705066.67583,
+         "version" : "0.38"
       },
       {
          "OS" : "linux",
          "abstract" : "Call many Geo-Coders",
          "dir" : "/home/runner/work/Geo-Coder-List/Geo-Coder-List",
-         "finish" : 1783703769.61159,
+         "finish" : 1783705067.03719,
          "name" : "Geo-Coder-List",
          "perl" : "5.40.4",
          "run" : "t/xyz.t",
-         "start" : 1783703769.60373,
-         "version" : "0.37"
+         "start" : 1783705067.02894,
+         "version" : "0.38"
       }
    ],
    "summary" : {
