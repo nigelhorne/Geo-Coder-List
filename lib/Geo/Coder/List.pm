@@ -10,6 +10,20 @@ use autodie qw(:all);
 
 use Carp;
 use Data::Dumper;
+# One definition of what counts as a location: Geo::Location::Predicate holds
+# the rule the facade and its backends apply, so what is refused here is refused
+# there for the same reason.  It is called by name rather than imported - an
+# import copies the code reference into this package, and then a test could not
+# swap the rule for a spy to prove that it is the rule being consulted.
+#
+# The rule is an optional dependency, not a prerequisite: it is a distribution of
+# its own (Geo-Location-Predicate), declared in Makefile.PL under META_MERGE's
+# recommends, so an installer fetches it by default and a standalone install that
+# leaves it out still gets the one answer this module can give alone - a
+# reference is refused.  It is looked for when it is first needed rather than
+# when this module is loaded, so importing this module reads no file it may not
+# need, and a rule installed after this module is loaded is still found.
+my $HAVE_RULE;	# undef until the rule is first looked for
 use HTML::Entities;
 use Object::Configure 0.13;
 use Params::Get 0.04;
@@ -23,11 +37,11 @@ Geo::Coder::List - Call many Geo-Coders
 
 =head1 VERSION
 
-Version 0.38
+Version 0.39
 
 =cut
 
-our $VERSION = '0.38';
+our $VERSION = '0.39';
 
 # ── Module-level constants (not user-configurable) ────────────────────────────
 
@@ -296,6 +310,32 @@ See L<Geo::Coder::GooglePlaces::V3> for the canonical result structure.
 
 =cut
 
+# The rule when it is installed, and the one thing that can be said without it.
+# A reference is not a location however it would print: when the rule is there it
+# says so, and when it is not this refuses it - the hole this module used to have
+# was testing the string a reference turns into.  Whether a string of digits is a
+# place is the rule's question, so without the rule it is not asked: the string
+# is looked up, as it was before the rule existed.
+sub _could_be_a_location {
+	my $location = shift;
+
+	if(!defined($HAVE_RULE)) {
+		$HAVE_RULE = eval {
+			require Geo::Location::Predicate;
+			Geo::Location::Predicate->can('_valid_location') ? 1 : 0;
+		} ? 1 : 0;
+	}
+
+	# When the rule is installed it decides everything, references included, so
+	# that this module cannot be stricter or looser than the facade.  Without it
+	# there are two answers this module can give on its own.
+	return Geo::Location::Predicate::_valid_location($location) ? 1 : 0 if $HAVE_RULE;
+
+	return 0 if ref($location);
+	return 0 unless defined($location) && length($location);
+	return 1;
+}
+
 sub geocode {
 	my $self = shift;
 
@@ -309,15 +349,26 @@ sub geocode {
 
 	my $location = $params->{'location'};
 
+	# A scalar reference is one way of passing the string it points at, and
+	# Params::Get dereferences it when it is the only argument.  Do it here as
+	# well, in every calling form, so that it means the string however the
+	# method is called.
+	$location = ${$location} if ref($location) eq 'SCALAR';
+
 	# Reject empty or whitespace-only location strings
 	if((!defined($location)) || (length($location) == 0)) {
 		$self->_warn(__PACKAGE__, ' usage: geocode(location => $location)');
 		return;
 	}
 
-	# A purely numeric string is almost certainly an error (e.g. a bare postcode)
-	if($params->{'location'} !~ /\D/) {
-		$self->_error('Usage: ', __PACKAGE__, ': invalid input to geocode(), ', $params->{location});
+	# What counts as a location is Geo::Location::Predicate's answer, not a
+	# second copy of it here: a reference is not a location however it would print,
+	# and a string of digits is what a numeric column holds when the wrong one has
+	# been read.
+	if(!_could_be_a_location($location)) {
+		$self->_error('Usage: ', __PACKAGE__, ': invalid input to geocode(), ',
+			ref($location) ? 'a reference is not a location' : $location);
+		return;
 	}
 
 	# Collapse runs of whitespace and expand any HTML entities

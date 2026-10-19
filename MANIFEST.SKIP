@@ -71,3 +71,11 @@ t/online.enabled
 CLAUDE.md
 \.claude
 mutation.json
+
+# Super-linter per-repo tuning files - not for distribution
+^\.perlcriticrc$
+^\.jscpd\.json$
+^\.markdown-lint\.yml$
+# Super-linter tuning files - not for distribution
+^\.prettierignore$
+^\.textlintrc$

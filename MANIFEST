@@ -57,6 +57,7 @@ t/pod-synopsis.t
 t/pod.t
 t/postcodes.t
 t/rand.t
+t/reference.t
 t/ua.t
 t/unit.t
 t/unused.t
