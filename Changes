@@ -44,8 +44,15 @@ Revision history for Geo-Coder-List
 	- reverse_geocode(): in list context a geocoder with no address no longer
 	  ends the search, and the empty answer is not cached
 	- reverse_geocode(): croak on a latlng that is not a numeric pair
+	- reverse_geocode(): only the ASCII digits 0-9 make a numeric pair; \d also
+	  matched Eastern Arabic and full-width digits
 	- new(): a clone has its own geocoder chain, so pushing onto it or spending
 	  one of its limits leaves the original alone
+
+	[ Documentation ]
+	- Rewrote the POD: more SYNOPSIS examples, DESCRIPTION, COMMON PITFALLS,
+	  ENCODING, API SPECIFICATION blocks in the form extract-schemas
+	  --strict-pod=fatal reads, FORMAL SPECIFICATION and STATE DIAGRAM
 
 	[ Testing ]
 	- Added t/reference.t, the same test as the other Geo::Coder distributions

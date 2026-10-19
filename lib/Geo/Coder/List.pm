@@ -31,6 +31,8 @@ use Readonly;
 use Scalar::Util qw(blessed reftype);
 use Time::HiRes;
 
+=encoding utf-8
+
 =head1 NAME
 
 Geo::Coder::List - Call many Geo-Coders
@@ -59,8 +61,10 @@ my $NOT_FOUND_SENTINEL = bless {}, _NOT_FOUND_CLASS;
 # String placed in the 'geocoder' field of a result served from cache
 Readonly::Scalar my $CACHE_SOURCE => 'cache';
 
-# A latlng argument to reverse_geocode(): two decimal numbers and a comma
-Readonly::Scalar my $LATLNG_RE => qr/^\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*,\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*$/;
+# A latlng argument to reverse_geocode(): two decimal numbers and a comma.
+# /a keeps \d and \s to ASCII: without it Arabic-Indic and other Unicode
+# digits would pass, and no backend reads them as numbers.
+Readonly::Scalar my $LATLNG_RE => qr/^\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*,\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*$/a;
 
 # String used as the 'result' value in log entries for a geocoder miss
 Readonly::Scalar my $RESULT_NONE => 'not found';
@@ -88,78 +92,195 @@ my %config = (
 
 =head1 SYNOPSIS
 
+    use Geo::Coder::List;
+    use Geo::Coder::OSM;
+
+    # 1. The simplest use: one list, one geocoder
+    my $list = Geo::Coder::List->new()->push(Geo::Coder::OSM->new());
+
+    my $place = $list->geocode('10 Downing St, London, UK');
+    if($place) {
+        print "Latitude:  $place->{geometry}{location}{lat}\n";
+        print "Longitude: $place->{geometry}{location}{lng}\n";
+    } else {
+        print "Not found\n";
+    }
+
+    # 2. Several geocoders, tried in order.  Geo::Coder::CA is asked only
+    #    about places in Canada or the USA, and at most 1000 times.
+    use Geo::Coder::CA;
+
+    my $chain = Geo::Coder::List->new()
+        ->push({ regex => qr/(Canada|USA)$/, geocoder => Geo::Coder::CA->new(), limit => 1000 })
+        ->push(Geo::Coder::OSM->new());
+
+    my $ottawa = $chain->geocode('Ottawa, ON, Canada');    # asks CA first
+    my $paris  = $chain->geocode('Paris, France');         # CA is skipped
+
+    # 3. A cache that lives longer than the object (any CHI driver works)
+    use CHI;
+
+    my $cached = Geo::Coder::List->new(
+        cache => CHI->new(driver => 'File', root_dir => '/var/cache/geocode'),
+    )->push(Geo::Coder::OSM->new());
+
+    # 4. Every candidate, not only the best one: call geocode() in list context
+    my @candidates = $list->geocode('Springfield, USA');
+    print scalar(@candidates), " places are called Springfield\n";
+
+    # 5. From a position to an address
+    my $address = $list->reverse_geocode(latlng => '51.5034,-0.1276');
+    print "$address\n" if defined($address);
+
+    # 6. Bad input is fatal, so check it when the text comes from a user
+    my $text_from_a_form = $ARGV[0];
+    my $result = eval { $list->geocode($text_from_a_form) };
+    warn "Not a place: $@" if $@;
+
+    # 7. See what happened, then clear the record
+    $list->geocode('Rome, Italy');
+    for my $entry (@{ $list->log() }) {
+        printf "%s: %s in %.3fs\n", $entry->{location}, $entry->{geocoder}, $entry->{timetaken};
+    }
+    $list->flush();
+
+=head1 DESCRIPTION
+
 L<Geo::Coder::All> and L<Geo::Coder::Many> are great modules but neither
 quite does what I want.
 
-C<Geo::Coder::List> aggregates multiple geocoding services into a single,
-unified interface.  It chains and prioritizes backends based on regex routing
-and per-geocoder query limits, caches results at two levels (L1 in-memory
-always; optional L2 via CHI or a plain HASH), and normalizes every provider's
-idiosyncratic response into the common structure expected by
-L<HTML::GoogleMaps::V3> and L<HTML::OSM>:
+A I<geocoder> turns the name of a place, such as C<'Paris, France'>, into
+a position on the Earth (a latitude and a longitude).  There are many
+geocoding services.  Each one knows some places better than others, each
+one has its own limits, and each one returns its answer in its own format.
 
-    $result->{geometry}{location}{lat}   # canonical latitude
-    $result->{geometry}{location}{lng}   # canonical longitude
-    $result->{geocoder}                  # source object (or 'cache')
+C<Geo::Coder::List> lets you use many geocoders as if they were one:
 
-    use Geo::Coder::List;
-    use Geo::Coder::OSM;
-    use Geo::Coder::CA;
+=over 4
 
-    my $list = Geo::Coder::List->new()
-        ->push({ regex => qr/(Canada|USA)$/, geocoder => Geo::Coder::CA->new() })
-        ->push(Geo::Coder::OSM->new());
+=item * B<A chain.>
+You add geocoders with C<push()>.  When you ask for a place, the geocoders
+are asked one at a time, in the order you added them.  The first one that
+gives a usable answer wins, and the others are not asked.
 
-    my $loc = $list->geocode('10 Downing St, London, UK');
-    printf "lat=%.4f lng=%.4f\n",
-        $loc->{geometry}{location}{lat},
-        $loc->{geometry}{location}{lng};
+=item * B<Routing.>
+A geocoder can be given a regular expression.  It is then asked only
+about places whose names match it.
+
+=item * B<Limits.>
+A geocoder can be given a limit: the number of questions it may answer.
+When the limit is used up, the geocoder is skipped.
+
+=item * B<One answer format.>
+Every answer is changed into the same structure, whichever service gave
+it.  The structure is the one used by L<HTML::GoogleMaps::V3> and
+L<HTML::OSM>:
+
+    $result->{geometry}{location}{lat}   # latitude
+    $result->{geometry}{location}{lng}   # longitude
+    $result->{lat}                       # the same latitude, for convenience
+    $result->{lng}                       # the same longitude, for convenience
+    $result->{lon}                       # the same longitude, another common name
+    $result->{geocoder}                  # the geocoder object that answered,
+                                         # or the string 'cache'
+
+=item * B<A cache in two levels.>
+Level 1 (L1) is a hash inside the object.  It is always used, and it lasts
+as long as the object.  Level 2 (L2) is optional.  It can be a plain hash
+or any object with C<get()> and C<set()> methods, such as a L<CHI> cache.
+L2 can last longer than the object and can be shared between programs.
+How long L2 keeps an answer depends on the answer:
+
+    found                      1 month   (cache_hit_duration)
+    found, but no latitude     1 day     (cache_part_duration)
+    not found                  1 week    (cache_miss_duration)
+
+A place that was not found is remembered in L1 only, never in L2.
+
+=back
 
 =head1 SUBROUTINES/METHODS
 
 =head2 new
 
-Creates a new C<Geo::Coder::List> object.  When called on an existing object
-it returns a clone of that object merged with the supplied arguments.
+Creates a new C<Geo::Coder::List> object with no geocoders in it.
 
-The constructor reads configuration from environment variables via
-L<Object::Configure>; for example, setting
-C<GEO__CODER__LIST__carp_on_warn=1> causes warnings to use L<Carp>.
+Settings can also come from the environment, through
+L<Object::Configure>.  The variable name is C<GEO__CODER__LIST__> followed
+by the setting name.  For example, C<GEO__CODER__LIST__carp_on_warn=1>
+makes warnings go through L<Carp>, and
+C<GEO__CODER__LIST__cache_hit_duration='7 days'> changes how long a found
+place stays in L2.
+
+When you call C<new()> on an object that already exists, you get a
+I<clone>: a new object with the same settings and the same geocoders,
+merged with any arguments you give.  The clone has its own list of
+geocoders and its own limits, and it starts with an empty log.  The clone
+B<shares> the L1 and L2 caches with the original.
 
     use Geo::Coder::List;
     use CHI;
 
-    # With an optional L2 cache (any CHI driver works)
+    # With an L2 cache
     my $geocoder = Geo::Coder::List->new(
         cache => CHI->new(driver => 'Memory', global => 1),
-        debug => 0,
     );
 
-    # Clone an existing object with a higher debug level
-    my $verbose = $geocoder->new(debug => 2);
+    # A clone of it that prints what it is doing
+    my $verbose = $geocoder->new(debug => 1);
+
+Arguments can be given as a list of pairs or as one hash reference.
+
+=over 4
+
+=item * C<cache> - Optional.  The L2 cache: a hash reference, or an object
+with C<get($key)> and C<set($key, $value, $ttl)> methods.
+
+=item * C<debug> - Optional.  C<0> (the default) prints nothing, C<1>
+prints what is tried, C<2> also prints every answer in full.
+
+=item * C<cache_hit_duration>, C<cache_part_duration>,
+C<cache_miss_duration> - Optional.  How long L2 keeps each kind of
+answer, in any form your L2 cache understands, such as C<'1 week'>.
+
+=item * C<geocoders> - Optional.  An array reference of geocoders, as if
+each had been given to C<push()>.
+
+=item * C<logger> - Optional.  Where warnings and errors go.  See
+L<Object::Configure>.
+
+=item * C<carp_on_warn> - Optional.  When true, warnings go through
+L<Carp>.
+
+=back
+
+If C<new> is called as a function, C<Geo::Coder::List::new()>, with no
+arguments, it still returns an object.  Called as a function with
+arguments, it warns and returns C<undef>.
 
 =head3 API SPECIFICATION
 
 =head4 INPUT
 
-    # Params::Validate::Strict schema
     {
-        cache => {
-            type     => [ 'hashref', 'object' ],	# OBJECT must implement get($key) and set($key, $value, $ttl)
-            optional => 1,
-        },
-        debug => {
-            type     => 'boolean',
-            optional => 1,
-            default  => 0,
-        },
-        # Any additional key is forwarded to Object::Configure
+        cache               => { type => 'hashref|object', optional => 1 },
+        debug               => { type => 'integer', optional => 1, min => 0, max => 2 },
+        cache_hit_duration  => { type => 'string', optional => 1 },
+        cache_part_duration => { type => 'string', optional => 1 },
+        cache_miss_duration => { type => 'string', optional => 1 },
+        geocoders           => { type => 'arrayref', optional => 1 },
+        logger              => { type => 'object|coderef|arrayref|string', optional => 1 },
+        carp_on_warn        => { type => 'boolean', optional => 1 },
     }
 
 =head4 OUTPUT
 
-    # Return::Set schema
-    OBJECT blessed into Geo::Coder::List
+    {
+        type => 'object',
+        isa  => 'Geo::Coder::List',
+    }
+
+    # undef only when called as Geo::Coder::List::new() with arguments
 
 =cut
 
@@ -212,36 +333,60 @@ sub new
 
 =head2 push
 
-Appends a geocoder to the chain.  Geocoders are tried in the order they
-were pushed.  Returns C<$self> so calls can be chained.
+Adds one geocoder to the end of the chain.  Geocoders are asked in the
+order in which they were added.
 
-A plain geocoder object is tried for every location.  A hashref with
-C<regex>, C<geocoder>, and optional C<limit> keys restricts the geocoder to
-locations matching the regex and caps total queries at C<limit>.
+C<push> returns the object itself, so you can add several geocoders in
+one statement.
+
+There are two ways to add a geocoder:
+
+=over 4
+
+=item * B<A geocoder object.>
+It is asked about every place.
+
+=item * B<A hash reference>, with these keys:
+
+=over 4
+
+=item * C<geocoder> - Required.  The geocoder object.
+
+=item * C<regex> - Optional.  A regular expression, made with C<qr//>.
+The geocoder is asked only about places whose names match it.
+
+=item * C<limit> - Optional.  A whole number.  The geocoder answers at
+most this many questions.  Each question it is asked makes the number one
+smaller.  When the number reaches C<0>, the geocoder is skipped.  A place
+that does not match C<regex> does not use up the limit.
+
+=back
+
+=back
 
     my $list = Geo::Coder::List->new()
-        ->push({ regex => qr/USA$/, geocoder => Geo::Coder::CA->new(), limit => 100 })
+        ->push({ regex => qr/USA$/, geocoder => Geo::Coder::US::Census->new(), limit => 100 })
         ->push(Geo::Coder::OSM->new());
+
+C<push> croaks if C<$geocoder> is missing or C<undef>.
 
 =head3 API SPECIFICATION
 
 =head4 INPUT
 
-    # Params::Validate::Strict schema
     {
-        geocoder => {
-            type     => OBJECT | HASHREF,
-            required => 1,
-            # HASHREF must contain:  geocoder => OBJECT
-            # HASHREF may contain:   regex    => Regexp
-            #                        limit    => SCALAR (positive integer)
-        },
+        geocoder => { type => 'object|hashref', optional => 0 },
     }
+
+    # A hashref geocoder holds the keys geocoder (an object, required),
+    # regex (a Regexp, optional) and limit (an integer, optional)
 
 =head4 OUTPUT
 
-    # Return::Set schema
-    OBJECT blessed into Geo::Coder::List   # $self, for chaining
+    {
+        type => 'object',
+        isa  => 'Geo::Coder::List',
+    }
 
 =cut
 
@@ -259,65 +404,6 @@ sub push
 
 	return $self;
 }
-
-# =============================================================================
-
-=head2 geocode
-
-Resolves a location string to geographic coordinates by trying each geocoder
-in turn.  The first successful result is returned and cached.
-
-In scalar context returns a single hashref (or C<undef> on failure).
-In list context returns all results from the winning geocoder.
-
-The C<geocoder> field of the returned hashref holds the geocoder object that
-supplied the result; it is set to the string C<'cache'> when the result was
-served from cache.
-
-See L<Geo::Coder::GooglePlaces::V3> for the canonical result structure.
-
-    my $result = $list->geocode(location => 'Paris, France');
-    if($result) {
-        printf "lat=%.4f lng=%.4f via %s\n",
-            $result->{geometry}{location}{lat},
-            $result->{geometry}{location}{lng},
-            ref($result->{geocoder}) || $result->{geocoder};
-    }
-
-    # List context returns all candidates from the winning geocoder
-    my @results = $list->geocode('London, UK');
-
-=head3 API SPECIFICATION
-
-=head4 INPUT
-
-    # Params::Validate::Strict schema
-    {
-        location => {
-            type     => SCALAR,
-            required => 1,
-            # Must contain at least one non-digit character
-        },
-    }
-
-=head4 OUTPUT
-
-    # Return::Set schema (scalar context)
-    HASHREF | undef
-    {
-        geometry => { location => { lat => Num, lng => Num } },
-        geocoder => OBJECT | 'cache',
-        lat      => Num,   # convenience alias
-        lng      => Num,   # convenience alias
-        lon      => Num,   # compatibility alias for lng
-        debug    => Int,   # source line of the normalisation branch taken
-        # ... provider-specific keys are preserved
-    }
-
-    # Return::Set schema (list context)
-    ARRAY of the above HASHREFs
-
-=cut
 
 # The rule when it is installed, and the one thing that can be said without it.
 # A reference is not a location however it would print: when the rule is there it
@@ -344,6 +430,99 @@ sub _could_be_a_location {
 	return 0 unless defined($location) && length($location);
 	return 1;
 }
+
+# =============================================================================
+
+=head2 geocode
+
+Finds the position of a place from its name.
+
+    my $result = $list->geocode(location => 'Paris, France');
+    my $result = $list->geocode('Paris, France');            # the same
+    my $result = $list->geocode({ location => 'Paris, France' });  # the same
+
+    if($result) {
+        printf "lat=%.4f lng=%.4f from %s\n",
+            $result->{geometry}{location}{lat},
+            $result->{geometry}{location}{lng},
+            ref($result->{geocoder}) || $result->{geocoder};
+    }
+
+These are the steps, in order:
+
+=over 4
+
+=item 1. If C<location> is missing, C<geocode> croaks.  If it is
+C<undef> or an empty string, C<geocode> warns and returns nothing.
+
+=item 2. Runs of white space are made into one space, and HTML entities
+are decoded: C<'Caf&eacute;'> becomes C<'Caf'> followed by the single
+character e-acute.  A reference to a string is treated as the string.
+
+=item 3. The text is checked.  A reference is never a place.  When
+L<Geo::Location::Predicate> is installed, it decides what else is not a
+place; for example, a string of only digits is not.  If the text is not a
+place, C<geocode> croaks.  The check is done after step 2, so
+C<'&#49;&#50;'> is refused as the digits C<'12'>.
+
+=item 4. The cache is checked: first L1, then L2.  If the place is there,
+the cached answer is returned, with C<geocoder> set to C<'cache'>.  If L1
+remembers that the place was not found, nothing is returned and no
+geocoder is asked.
+
+=item 5. Each geocoder in the chain is asked in turn.  A geocoder is
+skipped if the place does not match its C<regex>, or if its C<limit> is
+used up.  If a geocoder dies, the error is logged, a warning is given, and
+the next geocoder is asked.
+
+=item 6. The first answer that has both a latitude and a longitude wins.
+It is changed into the common structure (see L</DESCRIPTION>), stored in
+the cache, and returned.
+
+=item 7. If no geocoder gives a usable answer, the place is remembered as
+"not found" in L1, and nothing is returned.
+
+=back
+
+B<Scalar context> returns one hash reference, or C<undef>.
+
+B<List context> returns every answer from the geocoder that won, or an
+empty list.  This is useful when a name, such as C<'Springfield'>, belongs
+to many places.
+
+    my @all = $list->geocode('Springfield, USA');
+
+The C<geocoder> key of an answer holds the geocoder object that gave it.
+When the answer came from the cache, it holds the string C<'cache'>.
+
+=head3 API SPECIFICATION
+
+=head4 INPUT
+
+    {
+        location => { type => 'string', optional => 0, min => 1 },
+    }
+
+=head4 OUTPUT
+
+    {
+        type => 'hashref',
+        optional => 1,
+    }
+
+    # Return::Set schema, scalar context: a hashref, or undef when not found
+    #   {
+    #       geometry => { location => { lat => Num, lng => Num } },
+    #       lat      => Num,
+    #       lng      => Num,
+    #       lon      => Num,                   # the same as lng
+    #       geocoder => OBJECT | 'cache',
+    #       ...                                # fields from the provider
+    #   }
+    #
+    # List context: a list of hashrefs as above, or an empty list
+
+=cut
 
 sub geocode {
 	my $self = shift;
@@ -844,34 +1023,48 @@ sub geocode {
 
 =head2 ua
 
-Sets the L<LWP::UserAgent> (or compatible) object on every geocoder in the
-chain.  Useful when you need proxy support or custom timeouts across all
-backends at once.
-
-There is intentionally no read accessor since that would be meaningless
-(each geocoder could have a different UA).
+Gives a user agent (the object that makes the web requests) to every
+geocoder in the chain.  Use it to set a proxy or a time-out for all of
+them at once.
 
     use LWP::UserAgent;
-    my $ua = LWP::UserAgent->new();
+
+    my $ua = LWP::UserAgent->new(timeout => 10);
     $ua->env_proxy(1);
     $list->ua($ua);
+
+If C<$ua> has both C<clone()> and C<agent()> methods, as
+L<LWP::UserAgent> does, each geocoder is given its own copy.  The
+C<agent> string of each copy is set to the geocoder's class name and
+version, such as C<'Geo::Coder::OSM/0.03'>, so each service can see which
+module is calling it.  Otherwise every geocoder is given C<$ua> itself.
+
+Add the geocoders before you call C<ua>: geocoders added later do not get
+the user agent.
+
+There is no way to read the user agent back, because each geocoder may
+have a different one.
+
+If C<$ua> is missing or false, nothing changes and nothing is returned.
+C<ua> croaks with C<No geocoder found> if an entry in the chain has no
+geocoder.
 
 =head3 API SPECIFICATION
 
 =head4 INPUT
 
-    # Params::Validate::Strict schema
     {
-        ua => {
-            type     => OBJECT,
-            optional => 1,
-        },
+        ua => { type => 'object', optional => 1 },
     }
 
 =head4 OUTPUT
 
-    # Return::Set schema
-    OBJECT   # the same $ua that was passed in
+    {
+        type => 'object',
+        optional => 1,
+    }
+
+    # The same $ua that was passed in, or nothing when $ua is false
 
 =cut
 
@@ -914,38 +1107,51 @@ sub ua
 
 =head2 reverse_geocode
 
-Converts a latitude/longitude pair into a human-readable address string.
+Finds the address of a position: the opposite of C<geocode>.
 
-In scalar context returns a single address string (or C<undef>).
-In list context returns all address strings from the winning geocoder.
+    my $address = $list->reverse_geocode(latlng => '51.5034,-0.1276');
+    my $address = $list->reverse_geocode('51.5034,-0.1276');    # the same
+    print "Address: $address\n" if defined($address);
 
-    my $address = $list->reverse_geocode(latlng => '51.5074,-0.1278');
-    print "Address: $address\n" if $address;
+    my @addresses = $list->reverse_geocode(latlng => '51.5034,-0.1276');
 
-    my @addresses = $list->reverse_geocode(latlng => '51.5074,-0.1278');
+C<latlng> is the latitude, a comma, and the longitude, in that order.  It
+must be two plain decimal numbers written with the digits C<0> to C<9>.
+Spaces and a C<+> or C<-> sign are allowed.  Anything else, such as
+C<'51.5;-0.1'>, C<'1e5,2'> or C<'51.5'>, makes C<reverse_geocode> croak
+before any geocoder is asked.
+
+The geocoders are asked in turn, as for C<geocode>.  C<limit> is honoured;
+C<regex> is not.  If a geocoder complains that it does not know the
+C<latlng> parameter, it is asked again with only C<lat> and C<lon>.  If a
+geocoder dies for any other reason, a warning is given and the next
+geocoder is asked.
+
+B<Scalar context> returns one address string, or C<undef>.
+
+B<List context> returns every address from the first geocoder that has
+any, or an empty list.
+
+Addresses are cached under the C<latlng> string, so asking again for the
+same position does not ask any geocoder.
 
 =head3 API SPECIFICATION
 
 =head4 INPUT
 
-    # Params::Validate::Strict schema
     {
-        latlng => {
-            type    => SCALAR,
-            required => 1,
-            regex   => qr/^\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)
-                              \s*,\s*
-                          [-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*$/x,
-        },
+        latlng => { type => 'string', optional => 0, matches => qr/^\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*,\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*$/a },
     }
 
 =head4 OUTPUT
 
-    # Return::Set schema (scalar context)
-    SCALAR (address string) | undef
+    {
+        type => 'string',
+        optional => 1,
+    }
 
-    # Return::Set schema (list context)
-    ARRAY of SCALAR
+    # Scalar context: an address string, or undef when not found
+    # List context: a list of address strings, or an empty list
 
 =cut
 
@@ -1154,39 +1360,65 @@ sub reverse_geocode {
 
 =head2 log
 
-Returns an arrayref of log entries accumulated since the last C<flush()>.
-Each entry is a hashref with the keys: C<line>, C<location>, C<timetaken>,
-C<geocoder>, C<wantarray>, and either C<result> or C<error>.
+Returns the record of what has happened since the object was made, or
+since the last C<flush()>.  There is one entry for each question asked of
+a geocoder, and one for each answer that C<geocode()> serves from the
+cache.  C<reverse_geocode()> adds no entry when it answers from the
+cache.
 
-    foreach my $entry (@{ $list->log() }) {
+    for my $entry (@{ $list->log() }) {
         printf "%s: %.3fs via %s\n",
             $entry->{location},
             $entry->{timetaken},
             $entry->{geocoder};
     }
 
+Each entry is a hash reference with these keys:
+
+=over 4
+
+=item * C<location> - the place name or C<latlng> that was asked about
+
+=item * C<geocoder> - the class name of the geocoder, or C<'cache'>
+
+=item * C<timetaken> - how long the geocoder took, in seconds
+
+=item * C<line> - the line of your program that made the call
+
+=item * C<wantarray> - true if the call was made in list context
+
+=item * C<result> - the answer, when there was one; the string
+C<'not found'> when the geocoder had none
+
+=item * C<error> - the error, when the geocoder died or returned an
+error; this can be an exception object, not only a string
+
+=back
+
+The returned array reference is the object's own record, not a copy.
+
 =head3 API SPECIFICATION
 
 =head4 INPUT
 
-    # No parameters accepted
+    []
 
 =head4 OUTPUT
 
-    # Return::Set schema
-    ARRAYREF of HASHREF
-    [
-        {
-            line      => Int,
-            location  => Str,
-            timetaken => Num,
-            geocoder  => Str | 'cache',
-            wantarray => Bool,
-            result    => HASHREF | ARRAYREF | Str,   # on success
-            error     => Str,                        # on failure
-        },
-        ...
-    ]
+    {
+        type => 'arrayref',
+    }
+
+    # Each element:
+    #   {
+    #       line      => Int,
+    #       location  => Str,
+    #       timetaken => Num,
+    #       geocoder  => Str,                     # class name, or 'cache'
+    #       wantarray => Bool,
+    #       result    => HASHREF | ARRAYREF | Str,  # on success
+    #       error     => Str | OBJECT | HASHREF,    # on failure
+    #   }
 
 =cut
 
@@ -1201,22 +1433,26 @@ sub log {
 
 =head2 flush
 
-Clears all accumulated log entries and returns C<$self> to allow chaining.
+Empties the log and returns the object itself, so that it can be chained.
 
     $list->geocode('Paris, France');
     my $entries = $list->log();
-    $list->flush()->geocode('London, UK');   # chained
+    $list->flush()->geocode('London, UK');
+
+C<flush> does B<not> empty the cache.
 
 =head3 API SPECIFICATION
 
 =head4 INPUT
 
-    # No parameters accepted
+    []
 
 =head4 OUTPUT
 
-    # Return::Set schema
-    OBJECT blessed into Geo::Coder::List   # $self, for chaining
+    {
+        type => 'object',
+        isa  => 'Geo::Coder::List',
+    }
 
 =cut
 
@@ -1489,6 +1725,143 @@ sub _error {
 # DOCUMENTATION
 # =============================================================================
 
+=head1 COMMON PITFALLS
+
+=over 4
+
+=item * B<Scalar context and list context give different answers.>
+
+C<geocode()> and C<reverse_geocode()> return one answer in scalar
+context and all answers in list context.  Perl decides the context from
+the code around the call, and some places give list context when you may
+not expect it:
+
+    my %row = (name => $name, place => $list->geocode($name));  # list context!
+    print 'Found: ', $list->geocode($name);                     # list context!
+    return $list->geocode($name);                               # your caller decides
+
+When nothing is found, list context returns an I<empty list>, so in the
+first example the keys and values of C<%row> move out of step.  Use
+C<scalar()> to be sure:
+
+    my %row = (name => $name, place => scalar($list->geocode($name)));
+
+=item * B<C<undef> means "not found" and also "bad empty input".>
+
+C<geocode()> returns C<undef> both when no geocoder knows the place and
+when C<location> is C<undef> or empty (it also warns in that case).  Other
+bad input, such as a reference or a string of digits, does not return
+C<undef>: it croaks.  Wrap the call in C<eval> when the text comes from
+outside your program.
+
+=item * B<"Not found" is remembered for the life of the object.>
+
+When no geocoder finds a place, L1 remembers that, and later calls for
+the same place return C<undef> at once without asking any geocoder, even
+if a geocoder was only down for a moment.  C<flush()> does not forget it,
+and nor does a clone, which shares L1.  Make a new object with
+C<Geo::Coder::List-E<gt>new()> to ask again.  L2 never stores "not
+found".
+
+=item * B<An answer from L2 has only its position.>
+
+To keep L2 small, only C<geometry> is stored there (unless C<debug> is
+set).  An answer that comes from L2, for example in a new run of your
+program, has C<geometry>, C<lat>, C<lng>, C<lon> and C<geocoder> (set to
+C<'cache'>), but none of the provider's other fields, such as an address
+or a place type.  Answers from L1 keep every field.
+
+=item * B<The C<geocoder> key is not always an object.>
+
+It is the geocoder object when a geocoder answered, and the string
+C<'cache'> when the cache answered.  Do not call methods on it without
+checking.  To get a printable name in both cases:
+
+    my $source = ref($result->{geocoder}) || $result->{geocoder};
+
+=item * B<Changing an answer changes the cache.>
+
+The first answer for a place is the same hash that L1 stores.  If you
+change it, later answers for that place, which are copies of the L1 entry,
+include your change.  Copy the answer before you change it.
+
+=item * B<The hash you give to C<push()> is changed.>
+
+C<limit> counts down inside the hash reference that you pushed.  If you
+push the same hash reference into two lists, they share one limit.  A
+clone made with C<< $list->new() >> has its own copy.
+
+=item * B<The cache key is the exact text.>
+
+C<'Paris, France'>, C<'paris, france'> and C<'Paris,France'> are three
+different keys, and each one asks the geocoders again.  Only runs of
+white space are made into one space before the text is used as a key.
+
+=item * B<HTML entities are always decoded.>
+
+C<'AT&amp;T Park'> is looked up as C<'AT&T Park'>.  There is no way to
+look up text that really contains C<&amp;>.
+
+=item * B<Strings of digits depend on an optional module.>
+
+When L<Geo::Location::Predicate> is installed, C<geocode('12345')> croaks.
+When it is not installed, C<'12345'> is sent to the geocoders.  If you
+handle postcodes or ZIP codes, add the country, such as
+C<'12345, USA'>.
+
+=item * B<C<reverse_geocode()> ignores C<regex>.>
+
+A geocoder added with C<regex> is still asked to reverse geocode every
+position.  Only C<limit> is honoured.
+
+=item * B<The log grows until you empty it.>
+
+Every call adds to the log.  In a long-running program, such as a web
+server, call C<flush()> from time to time.
+
+=item * B<Debug output goes to standard output.>
+
+With C<debug> set, messages are printed to C<STDOUT>, not C<STDERR>, so
+they mix with your program's own output.
+
+=back
+
+=head1 ENCODING
+
+=over 4
+
+=item * B<Place names> (C<location> in C<geocode()>) may contain any
+Unicode text, including accented letters, other alphabets and emoji.
+Give them to C<geocode()> as Perl I<character> strings: if your text is
+UTF-8 bytes from a file or a web form, decode it first, for example with
+C<Encode::decode('UTF-8', $bytes)>.  HTML entities in the text are decoded
+into characters, so text that mixes UTF-8 bytes that are not yet decoded
+with entities becomes garbled.  The text is passed to each geocoder unchanged apart from
+that; whether a geocoder understands emoji is up to the geocoder.
+
+=item * B<White space.>  Runs of ASCII spaces, tabs and new lines are
+always made into one space.  Unicode spaces, such as the no-break space,
+may or may not be, depending on how Perl stores the string; do not rely on
+it.
+
+=item * B<Positions> (C<latlng> in C<reverse_geocode()>) must be ASCII.
+Only the digits C<0> to C<9> are accepted.  Other Unicode digits, such as
+Eastern Arabic or full-width digits, are refused.
+
+=item * B<Cache keys> are the cleaned text, so they can contain any
+character.  L1 and a plain-hash L2 accept them all.  An L2 object must
+accept character-string keys; L<CHI> does.
+
+=item * B<Answers> are returned as the geocoder gave them.  Most
+geocoders return character strings.
+
+=item * B<Debug output> prints place names to C<STDOUT>.  If they contain
+characters above 255, Perl warns C<Wide character in print> unless
+C<STDOUT> has an encoding layer, such as
+C<binmode(STDOUT, ':encoding(UTF-8)')>.
+
+=back
+
 =head1 AUTHOR
 
 Nigel Horne, C<< <njh at nigelhorne.com> >>
@@ -1508,6 +1881,8 @@ Known limitations:
 =item * When C<Geo::GeoNames> returns multiple candidates, only the first
 element of each sub-array is considered.
 
+=item * C<reverse_geocode()> does not honour C<regex>.
+
 =back
 
 =head1 SEE ALSO
@@ -1516,11 +1891,19 @@ element of each sub-array is considered.
 
 =item * L<Test Dashboard|https://nigelhorne.github.io/Geo-Coder-List/coverage/>
 
+=item * L<CHI>
+
 =item * L<Geo::Coder::All>
 
 =item * L<Geo::Coder::GooglePlaces>
 
 =item * L<Geo::Coder::Many>
+
+=item * L<Geo::Location::Predicate>
+
+=item * L<HTML::GoogleMaps::V3>
+
+=item * L<HTML::OSM>
 
 =item * L<Configure an Object at Runtime|Object::Configure>
 
@@ -1546,123 +1929,257 @@ L<https://metacpan.org/release/Geo-Coder-List>
 
 =back
 
-=encoding utf-8
+=head1 FORMAL SPECIFICATION
 
-=head2 FORMAL SPECIFICATION
+The specifications below use the Z notation.  They describe what each
+method does to the state of the object; they do not describe how.
 
-=head3 new
+=head2 State
 
-    List_State
-    ──────────────────────────────────────────────────────
-    geocoders : seq (Geocoder | RegexGeocoder)
-    L1        : LocationStr ↛ (GeoResult | NotFound)
-    log       : seq LogEntry
-    debug     : ℕ
-    cache?    : L2Cache
+    [Geocoder, Regex, Text, Result, LogEntry, Duration]
 
-    new
-    ──────────────────────────────────────────────────────
-    List_State
-    params? : ℙ(Key × Value)
-    ──────────────────────────────────────────────────────
-    geocoders = ⟨⟩
-    L1        = ∅
-    log       = ⟨⟩
-    debug     = params?.debug ∣ DEBUG_DEFAULT
-    cache     = params?.cache ∣ ⊥
+    Key         == Text
+    NotFound    ::= notFound
+    Entry       ::= plain⟨⟨Geocoder⟩⟩
+                  | routed⟨⟨Geocoder × ℙ Text × (ℤ ∪ {∞})⟩⟩
+                    -- the geocoder, the texts its regex matches, its limit
 
-=head3 push
+    ┌─ GeoCoderList ─────────────────────────────────────────────────
+    │ geocoders : seq Entry
+    │ L1        : Key ⇸ (Result ∪ NotFound)
+    │ L2        : Key ⇸ Result
+    │ log       : seq LogEntry
+    │ debug     : 0 ‥ 2
+    │ hit, part, miss : Duration
+    ├────────────────────────────────────────────────────────────────
+    │ notFound ∉ ran L2
+    │ ∀ r : ran L2 • dom r ⊆ {geometry, geocoder}  ∨  debug > 0
+    └────────────────────────────────────────────────────────────────
 
-    push
-    ──────────────────────────────────────────────────────
-    ΔList_State
-    g? : Geocoder | RegexGeocoder
-    ──────────────────────────────────────────────────────
-    geocoders' = geocoders ⌢ ⟨g?⟩
-    L1'        = L1
-    log'       = log
-    ──────────────────────────────────────────────────────
-    where RegexGeocoder ::= { regex    : Regex
-                             ; geocoder : Geocoder
-                             ; limit?  : ℕ }
+    usable : ℙ Result
+    usable = { r : Result | r.geometry.location.lat ≠ ⊥
+                          ∧ r.geometry.location.lng ≠ ⊥ }
 
-=head3 geocode
+    clean : Text → Text
+    -- runs of white space become one space; HTML entities are decoded
 
-    LocationStr ::= { s : seq Char | s ≠ ⟨⟩ ∧ ∃ c : s • c ∉ Digit }
-    GeoResult   ::= HASHREF with geometry.location.{lat,lng} : ℝ
+    isPlace : (Text ∪ Reference) → 𝔹
+    -- Geo::Location::Predicate::_valid_location when installed;
+    -- otherwise true for every non-empty Text and false for a Reference
 
-    geocode
-    ──────────────────────────────────────────────────────────────────────
-    ΔList_State
-    loc?    : LocationStr
-    result! : GeoResult | ⊥
-    ──────────────────────────────────────────────────────────────────────
-    loc? ∈ dom L1
-      ⟹ result! = L1(loc?)
-         ∧ log' = log ⌢ ⟨{geocoder ↦ cache; timetaken ↦ 0}⟩
+=head2 new
 
-    loc? ∉ dom L1
-      ⟹ (∃ i : 1..#geocoders •
-            applies(geocoders i, loc?)
-            ∧ result! = Normalize(geocoders i . geocode(loc?))
-            ∧ L1' = L1 ⊕ {loc? ↦ result!}
-            ∧ log' = log ⌢ ⟨{geocoder ↦ class(geocoders i)}⟩)
-         ∨ (result! = ⊥ ∧ L1' = L1 ⊕ {loc? ↦ ⊥})
+    ┌─ New ──────────────────────────────────────────────────────────
+    │ GeoCoderList′
+    │ args? : Key ⇸ Value
+    ├────────────────────────────────────────────────────────────────
+    │ geocoders′ = args?(geocoders) if geocoders ∈ dom args?, else ⟨⟩
+    │ L1′  = ∅
+    │ log′ = ⟨⟩
+    │ L2′  = args?(cache) if cache ∈ dom args?, else ∅
+    │ hit′ = 1 month ∧ part′ = 1 day ∧ miss′ = 1 week   -- unless given
+    └────────────────────────────────────────────────────────────────
 
-    applies(g, loc) ≙
-        (g isa Geocoder)
-      ∨ (g isa RegexGeocoder ∧ loc ∈ matches(g.regex) ∧ g.limit > 0)
+    ┌─ Clone ────────────────────────────────────────────────────────
+    │ GeoCoderList ; GeoCoderList′
+    │ args? : Key ⇸ Value
+    ├────────────────────────────────────────────────────────────────
+    │ geocoders′ = geocoders            -- equal values, distinct copies
+    │ L1′ = L1 ∧ L2′ = L2               -- the same stores, shared
+    │ log′ = ⟨⟩
+    └────────────────────────────────────────────────────────────────
 
-=head3 ua SPECIFICATION
+=head2 push
 
-    ua
-    ──────────────────────────────────────────────────────
-    ΞList_State
-    ua?  : UserAgent
-    ua!  : UserAgent
-    ──────────────────────────────────────────────────────
-    ∀ g : ran geocoders • g.ua = ua?
-    ua!  = ua?
+    ┌─ Push ─────────────────────────────────────────────────────────
+    │ ΔGeoCoderList
+    │ g? : Entry
+    ├────────────────────────────────────────────────────────────────
+    │ g? ≠ ⊥
+    │ geocoders′ = geocoders ⁀ ⟨g?⟩
+    │ L1′ = L1 ∧ L2′ = L2 ∧ log′ = log
+    └────────────────────────────────────────────────────────────────
 
-=head3 reverse_geocode
+    PushUndef ≙ [ ΞGeoCoderList ; g? : Entry | g? = ⊥ ] ⇒ croak
 
-    LatLngStr ::= { s : seq Char
-                  | s matches /^[-+]?\d+\.?\d*,[-+]?\d+\.?\d*$/ }
+=head2 geocode
 
-    reverse_geocode
-    ──────────────────────────────────────────────────────────────────────
-    ΔList_State
-    latlng? : LatLngStr
-    result! : seq Char | ⊥
-    ──────────────────────────────────────────────────────────────────────
-    latlng? ∈ dom L1
-      ⟹ result! = L1(latlng?)
+    asks : Entry × Text ⇸ 𝔹
+    asks(plain g, t)          = true
+    asks(routed(g, M, n), t)  = t ∈ M ∧ n > 0
 
-    latlng? ∉ dom L1
-      ⟹ (∃ i : 1..#geocoders •
-            applies(geocoders i, latlng?)
-            ∧ result! = geocoders i . reverse_geocode(latlng?)
-            ∧ L1' = L1 ⊕ {latlng? ↦ result!})
-         ∨ result! = ⊥
+    spend : Entry × Text → Entry
+    spend(routed(g, M, n), t) = routed(g, M, n − 1)   if t ∈ M ∧ n > 0
+    spend(e, t)               = e                      otherwise
 
-=head3 log
+    ┌─ Geocode ──────────────────────────────────────────────────────
+    │ ΔGeoCoderList
+    │ loc?    : Text ∪ Reference
+    │ result! : Result ∪ {⊥}
+    ├────────────────────────────────────────────────────────────────
+    │ let t == clean(loc?) •
+    │   ¬ isPlace(t) ⇒ croak
+    │
+    │   t ∈ dom L1 ∧ L1(t) ∈ Result
+    │     ⇒ result! = L1(t) ⊕ {geocoder ↦ cache}
+    │        ∧ geocoders′ = geocoders ∧ L1′ = L1
+    │
+    │   t ∈ dom L1 ∧ L1(t) = notFound
+    │     ⇒ result! = ⊥ ∧ geocoders′ = geocoders ∧ L1′ = L1
+    │
+    │   t ∉ dom L1
+    │     ⇒ (∃ i : dom geocoders •
+    │            asks(geocoders i, t)
+    │          ∧ (∀ j : 1 ‥ i − 1 • ¬ asks(geocoders j, t)
+    │                              ∨ answer(geocoders j, t) ∉ usable)
+    │          ∧ answer(geocoders i, t) ∈ usable
+    │          ∧ result! = answer(geocoders i, t)
+    │          ∧ L1′ = L1 ⊕ {t ↦ result!}
+    │          ∧ L2′ = L2 ⊕ {t ↦ result! ↾ {geometry, geocoder}})
+    │      ∨ (result! = ⊥ ∧ L1′ = L1 ⊕ {t ↦ notFound} ∧ L2′ = L2)
+    │
+    │   geocoders′ = ⟨ e : geocoders • spend(e, t) ⟩   -- for those asked
+    │   log′ = log ⁀ ⟨ one entry per geocoder asked, or one for the cache ⟩
+    └────────────────────────────────────────────────────────────────
 
-    log
-    ──────────────────────────────────────────────────────
-    ΞList_State
-    result! : seq LogEntry
-    ──────────────────────────────────────────────────────
-    result! = log
+=head2 ua
 
-=head3 flush
+    ┌─ UA ───────────────────────────────────────────────────────────
+    │ ΞGeoCoderList
+    │ ua? : UserAgent ∪ {⊥}
+    │ ua! : UserAgent ∪ {⊥}
+    ├────────────────────────────────────────────────────────────────
+    │ ua? = ⊥ ⇒ ua! = ⊥
+    │ ua? ≠ ⊥ ⇒ ua! = ua?
+    │         ∧ (∀ e : ran geocoders • geocoderOf(e) ≠ ⊥ ∨ croak)
+    │         ∧ (∀ e : ran geocoders •
+    │              geocoderOf(e).ua′ = clone(ua?)   if ua? can clone and agent
+    │              geocoderOf(e).ua′ = ua?          otherwise)
+    └────────────────────────────────────────────────────────────────
 
-    flush
-    ──────────────────────────────────────────────────────
-    ΔList_State
-    ──────────────────────────────────────────────────────
-    log'       = ⟨⟩
-    geocoders' = geocoders
-    L1'        = L1
+=head2 reverse_geocode
+
+    LatLng == { s : Text | s ∈ ⟦ ^\s*[-+]?D\s*,\s*[-+]?D\s*$ ⟧ }
+    -- D is a decimal number written in the ASCII digits 0-9
+
+    ┌─ ReverseGeocode ───────────────────────────────────────────────
+    │ ΔGeoCoderList
+    │ latlng?  : Text
+    │ address! : Text ∪ {⊥}
+    ├────────────────────────────────────────────────────────────────
+    │ latlng? ∉ LatLng ⇒ croak
+    │
+    │ latlng? ∈ dom L1 ⇒ address! = first(L1(latlng?)) ∧ L1′ = L1
+    │
+    │ latlng? ∉ dom L1
+    │   ⇒ (∃ i : dom geocoders •
+    │          limitOf(geocoders i) > 0
+    │        ∧ addresses(geocoders i, latlng?) ≠ ⟨⟩
+    │        ∧ address! = head addresses(geocoders i, latlng?)
+    │        ∧ L1′ = L1 ⊕ {latlng? ↦ address!})
+    │    ∨ (address! = ⊥ ∧ L1′ = L1)
+    └────────────────────────────────────────────────────────────────
+
+=head2 log
+
+    ┌─ Log ──────────────────────────────────────────────────────────
+    │ ΞGeoCoderList
+    │ entries! : seq LogEntry
+    ├────────────────────────────────────────────────────────────────
+    │ entries! = log
+    └────────────────────────────────────────────────────────────────
+
+=head2 flush
+
+    ┌─ Flush ────────────────────────────────────────────────────────
+    │ ΔGeoCoderList
+    │ self! : GeoCoderList
+    ├────────────────────────────────────────────────────────────────
+    │ log′ = ⟨⟩
+    │ geocoders′ = geocoders ∧ L1′ = L1 ∧ L2′ = L2
+    │ self! = θGeoCoderList′
+    └────────────────────────────────────────────────────────────────
+
+=head1 STATE DIAGRAM
+
+An object has three parts that change over time: its chain of geocoders,
+its cache (one state for each place name), and its log.  Each part is
+shown on its own below.
+
+=head2 The object and its chain
+
+    +-------------+  push($g)        +--------------+  push($g)
+    |   EMPTY     |----------------->|    READY     |<-----------+
+    | no geocoder |  adds $g to the  | 1+ geocoders |------------+
+    +-------------+  end of chain    +--------------+  adds $g to the end
+          |                                 |
+          | geocode($t)                     | new() on the object
+          | reverse_geocode($p)             | clone: copies the chain and
+          v                                 | limits, shares L1 and L2,
+    returns undef / ()                      | empties the log
+    nothing is asked, but a                 v
+    geocode() miss is still          +--------------+
+    remembered in L1                 | READY (clone)|
+                                     +--------------+
+
+=head2 The cache, for one place name $t
+
+    +-----------+ geocode($t): a geocoder gives a usable answer
+    |           |----------------------------------------------+
+    |  UNKNOWN  |  - answer stored in L1                       |
+    | not in L1 |  - copy with only geometry stored in L2,     |
+    |           |    kept for cache_hit_duration (1 month)     |
+    +-----------+  - log gets one entry per geocoder asked     |
+       |  ^                                                    v
+       |  |                                             +-----------+
+       |  | L2 entry expires, and a new object          |  FOUND    |<--+
+       |  | is used (L1 dies with its object)           |  L1 holds |   | geocode($t):
+       |  +---------------------------------------------| an answer |---+ no geocoder
+       |                                                +-----------+   asked; a copy
+       | geocode($t): no geocoder gives a usable answer                 returned with
+       |  - L1 stores "not found"; L2 is not written                    geocoder='cache';
+       |  - log gets one entry per geocoder asked                       log gets one
+       v                                                                cache entry
+    +-----------+
+    | NOT FOUND |<--+ geocode($t): nothing asked, undef / () returned,
+    | in L1     |---+ nothing logged
+    +-----------+
+          |
+          +-- leaves this state only when the object is destroyed;
+              flush() and clones do not leave it
+
+    Any state: geocode($t) with a reference, digits (when
+    Geo::Location::Predicate is installed) or entity-encoded digits
+    --> croaks; the state does not change.
+
+=head2 The limit of one geocoder pushed with limit => N
+
+    +--------------+ geocode($t), $t matches regex   +--------------+
+    |  ACTIVE      |-------------------------------->|  ACTIVE      |
+    |  limit = n   |  geocoder asked; limit = n - 1  |  limit = n-1 |
+    +--------------+                                 +--------------+
+       |      ^                                             |
+       |      | geocode($t), $t does not match regex:       | ... when the
+       |      | geocoder not asked, limit unchanged         | limit reaches 0
+       +------+                                             v
+                                                     +--------------+
+                                                     |  EXHAUSTED   |<--+
+                                                     |  limit <= 0  |---+
+                                                     +--------------+ geocode() and
+                                                                      reverse_geocode():
+                                                                      skipped, never asked
+
+=head2 The log
+
+    +-----------+  geocode() or reverse_geocode()   +-------------+
+    |  EMPTY    |---------------------------------->|  HAS        |<--+
+    |  log = [] |  appends one entry per geocoder   |  ENTRIES    |---+ geocode() /
+    +-----------+  asked, or one for a cache hit    +-------------+   reverse_geocode():
+         ^                                                 |          appends entries
+         |               flush(): log = [], returns $self  |
+         +-------------------------------------------------+
+         ^
+         | new() and clone: start EMPTY
 
 =head1 LICENSE AND COPYRIGHT
 

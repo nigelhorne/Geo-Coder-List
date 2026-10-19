@@ -1667,6 +1667,21 @@ subtest 'reverse_geocode: anything but a numeric pair croaks before any backend'
 	is($calls, 0, 'the backend was never asked');
 };
 
+subtest 'reverse_geocode: non-ASCII digits are not a numeric pair' => sub {
+	# Purpose: \d matches Unicode digits unless told not to; a backend reads
+	# none of them as numbers, so they must be refused like any other junk
+	my $calls = 0;
+	my $list  = _make_list(MockGeocoder::Alpha->new());
+	my $m     = mock_scoped 'MockGeocoder::Alpha::reverse_geocode' => _counting(\$calls, { display_name => 'X' });
+
+	# U+0665 U+0661 is Arabic-Indic 51; U+FF15 U+FF11 is fullwidth 51
+	for my $latlng ("\x{665}\x{661},\x{660}", "\x{FF15}\x{FF11},0") {
+		throws_ok { $list->reverse_geocode(latlng => $latlng) }
+			qr/^\Q$MSG_RG_USAGE\E/, 'Unicode digits refused';
+	}
+	is($calls, 0, 'the backend was never asked');
+};
+
 subtest 'reverse_geocode: a numeric pair with spaces and signs is accepted' => sub {
 	# Purpose: the guard must not be so strict that real input is refused
 	my $list = _make_list(MockGeocoder::Alpha->new());
