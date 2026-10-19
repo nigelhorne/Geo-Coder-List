@@ -20,7 +20,7 @@ https://pjcj.net
 <h1>Branch Coverage</h1>
 <table>
 <tr><td class="h" align="right">File:</td><td align="left">blib/lib/Geo/Coder/List.pm</td></tr>
-<tr><td class="h" align="right">Coverage:</td><td align="left" class="c1">88.6%</td></tr>
+<tr><td class="h" align="right">Coverage:</td><td align="left" class="c1">88.4%</td></tr>
 </table>
 <div><br/></div>
 <table>
@@ -102,87 +102,85 @@ https://pjcj.net
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($l-&gt;{&#39;features&#39;}[0]{&#39;geometry&#39;}{&#39;coordinates&#39;}) { }</td></tr>
 <tr><td class="h"><a id="L718">718</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $lat and defined $long) { }</td></tr>
 <tr><td class="h"><a id="L733">733</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($l-&gt;{&#39;standard&#39;}{&#39;countryname&#39;})</td></tr>
-<tr><td class="h"><a id="L738">738</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $l-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;})</td></tr>
-<tr><td class="h"><a id="L741">741</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
-<tr><td class="h"><a id="L767">767</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $good_result</td></tr>
-<tr><td class="h"><a id="L770">770</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
-<tr><td class="h"><a id="L772">772</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($self-&gt;{&#39;debug&#39;} &gt;= 2)</td></tr>
-<tr><td class="h"><a id="L784">784</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (defined $rc[0])</td></tr>
-<tr><td class="h"><a id="L786">786</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $rc[0]{&#39;long&#39;} and not defined $rc[0]{&#39;lng&#39;})</td></tr>
-<tr><td class="h"><a id="L789">789</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $rc[0]{&#39;long&#39;} and not defined $rc[0]{&#39;lon&#39;})</td></tr>
-<tr><td class="h"><a id="L794">794</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $good_result-&gt;{&#39;lat&#39;} and defined $good_result-&gt;{&#39;lng&#39;})</td></tr>
-<tr><td class="h"><a id="L799">799</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (wantarray)</td></tr>
-<tr><td class="h"><a id="L811">811</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
-<tr><td class="h"><a id="L816">816</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">wantarray ? :</td></tr>
-<tr><td class="h"><a id="L859">859</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $ua</td></tr>
-<tr><td class="h"><a id="L863">863</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">ref $g eq &#39;HASH&#39; ? :</td></tr>
-<tr><td class="h"><a id="L865">865</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $geocoder</td></tr>
-<tr><td class="h"><a id="L874">874</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($ua-&gt;can(&#39;clone&#39;) and $ua-&gt;can(&#39;agent&#39;)) { }</td></tr>
-<tr><td class="h"><a id="L878">878</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$version ? :</td></tr>
-<tr><td class="h"><a id="L932">932</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless my $latlng = $params-&gt;{&#39;latlng&#39;}</td></tr>
-<tr><td class="h"><a id="L940">940</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $rc = $self-&gt;_cache($latlng))</td></tr>
-<tr><td class="h"><a id="L950">950</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $geocoder eq &quot;HASH&quot;)</td></tr>
-<tr><td class="h"><a id="L951">951</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (exists $geocoder-&gt;{&#39;limit&#39;} and defined(my $limit = $geocoder-&gt;{&#39;limit&#39;}))</td></tr>
-<tr><td class="h"><a id="L952">952</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
-<tr><td class="h"><a id="L953">953</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($limit &lt;= 0)</td></tr>
-<tr><td class="h"><a id="L961">961</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
-<tr><td class="h"><a id="L963">963</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (wantarray) { }</td></tr>
-<tr><td class="h"><a id="L974">974</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s)</td></tr>
-<tr><td class="h"><a id="L981">981</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@)</td></tr>
-<tr><td class="h"><a id="L994">994</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;} &gt;= 2</td></tr>
-<tr><td class="h"><a id="L997">997</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $name = $loc-&gt;{&#39;display_name&#39;}) { }</td></tr>
+<tr><td class="h"><a id="L741">741</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $l-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;})</td></tr>
+<tr><td class="h"><a id="L748">748</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $l-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;} and defined $l-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lng&#39;})</td></tr>
+<tr><td class="h"><a id="L751">751</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
+<tr><td class="h"><a id="L777">777</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $good_result</td></tr>
+<tr><td class="h"><a id="L780">780</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
+<tr><td class="h"><a id="L782">782</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($self-&gt;{&#39;debug&#39;} &gt;= 2)</td></tr>
+<tr><td class="h"><a id="L790">790</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless (defined $good_result-&gt;{&#39;lat&#39;} and defined $good_result-&gt;{&#39;lng&#39;})</td></tr>
+<tr><td class="h"><a id="L795">795</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (wantarray)</td></tr>
+<tr><td class="h"><a id="L808">808</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
+<tr><td class="h"><a id="L813">813</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">wantarray ? :</td></tr>
+<tr><td class="h"><a id="L856">856</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $ua</td></tr>
+<tr><td class="h"><a id="L860">860</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">ref $g eq &#39;HASH&#39; ? :</td></tr>
+<tr><td class="h"><a id="L862">862</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $geocoder</td></tr>
+<tr><td class="h"><a id="L871">871</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($ua-&gt;can(&#39;clone&#39;) and $ua-&gt;can(&#39;agent&#39;)) { }</td></tr>
+<tr><td class="h"><a id="L875">875</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$version ? :</td></tr>
+<tr><td class="h"><a id="L929">929</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless my $latlng = $params-&gt;{&#39;latlng&#39;}</td></tr>
+<tr><td class="h"><a id="L937">937</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $rc = $self-&gt;_cache($latlng))</td></tr>
+<tr><td class="h"><a id="L947">947</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $geocoder eq &quot;HASH&quot;)</td></tr>
+<tr><td class="h"><a id="L948">948</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (exists $geocoder-&gt;{&#39;limit&#39;} and defined(my $limit = $geocoder-&gt;{&#39;limit&#39;}))</td></tr>
+<tr><td class="h"><a id="L949">949</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
+<tr><td class="h"><a id="L950">950</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($limit &lt;= 0)</td></tr>
+<tr><td class="h"><a id="L958">958</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
+<tr><td class="h"><a id="L960">960</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (wantarray) { }</td></tr>
+<tr><td class="h"><a id="L971">971</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s)</td></tr>
+<tr><td class="h"><a id="L978">978</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@)</td></tr>
+<tr><td class="h"><a id="L991">991</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;} &gt;= 2</td></tr>
+<tr><td class="h"><a id="L994">994</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $name = $loc-&gt;{&#39;display_name&#39;}) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($loc-&gt;{&#39;city&#39;}) { }</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">elsif ($loc-&gt;{&#39;features&#39;}) { }</td></tr>
-<tr><td class="h"><a id="L1029">1029</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s)</td></tr>
-<tr><td class="h"><a id="L1036">1036</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@)</td></tr>
-<tr><td class="h"><a id="L1050">1050</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $rc</td></tr>
-<tr><td class="h"><a id="L1051">1051</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (ref $rc)</td></tr>
-<tr><td class="h"><a id="L1063">1063</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;} &gt;= 2</td></tr>
-<tr><td class="h"><a id="L1065">1065</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $name = $rc-&gt;{&#39;display_name&#39;})</td></tr>
-<tr><td class="h"><a id="L1078">1078</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($rc-&gt;{&#39;city&#39;})</td></tr>
-<tr><td class="h"><a id="L1092">1092</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($rc-&gt;{&#39;features&#39;})</td></tr>
-<tr><td class="h"><a id="L1212">1212</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $usa = $loc-&gt;{&#39;usa&#39;}) { }</td></tr>
-<tr><td class="h"><a id="L1216">1216</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$name ? :</td></tr>
+<tr><td class="h"><a id="L1026">1026</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@ =~ /Unknown parameter.*latlng|latlng.*[Uu]nknown/s)</td></tr>
+<tr><td class="h"><a id="L1033">1033</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($@)</td></tr>
+<tr><td class="h"><a id="L1047">1047</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $rc</td></tr>
+<tr><td class="h"><a id="L1048">1048</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (ref $rc)</td></tr>
+<tr><td class="h"><a id="L1060">1060</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;} &gt;= 2</td></tr>
+<tr><td class="h"><a id="L1062">1062</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $name = $rc-&gt;{&#39;display_name&#39;})</td></tr>
+<tr><td class="h"><a id="L1075">1075</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($rc-&gt;{&#39;city&#39;})</td></tr>
+<tr><td class="h"><a id="L1089">1089</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($rc-&gt;{&#39;features&#39;})</td></tr>
+<tr><td class="h"><a id="L1209">1209</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (my $usa = $loc-&gt;{&#39;usa&#39;}) { }</td></tr>
+<tr><td class="h"><a id="L1213">1213</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$name ? :</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $usa-&gt;{&#39;usstaddress&#39;}</td></tr>
-<tr><td class="h"><a id="L1218">1218</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$name ? :</td></tr>
+<tr><td class="h"><a id="L1215">1215</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$name ? :</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $usa-&gt;{&#39;uscity&#39;}</td></tr>
-<tr><td class="h"><a id="L1219">1219</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">$name ? :</td></tr>
+<tr><td class="h"><a id="L1216">1216</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">$name ? :</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $usa-&gt;{&#39;state&#39;}</td></tr>
-<tr><td class="h"><a id="L1221">1221</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">$name ? :</td></tr>
-<tr><td class="h"><a id="L1226">1226</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$name ? :</td></tr>
+<tr><td class="h"><a id="L1218">1218</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">$name ? :</td></tr>
+<tr><td class="h"><a id="L1223">1223</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$name ? :</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $loc-&gt;{&#39;staddress&#39;}</td></tr>
-<tr><td class="h"><a id="L1227">1227</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$name ? :</td></tr>
+<tr><td class="h"><a id="L1224">1224</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$name ? :</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $loc-&gt;{&#39;city&#39;}</td></tr>
-<tr><td class="h"><a id="L1228">1228</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">$name ? :</td></tr>
+<tr><td class="h"><a id="L1225">1225</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">$name ? :</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $loc-&gt;{&#39;prov&#39;}</td></tr>
-<tr><td class="h"><a id="L1270">1270</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (scalar @_)</td></tr>
-<tr><td class="h"><a id="L1274">1274</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">defined $value ? :</td></tr>
-<tr><td class="h"><a id="L1279">1279</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($self-&gt;{&#39;cache&#39;})</td></tr>
-<tr><td class="h"><a id="L1282">1282</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $value eq &#39;ARRAY&#39;) { }</td></tr>
+<tr><td class="h"><a id="L1267">1267</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (scalar @_)</td></tr>
+<tr><td class="h"><a id="L1271">1271</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">defined $value ? :</td></tr>
+<tr><td class="h"><a id="L1276">1276</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($self-&gt;{&#39;cache&#39;})</td></tr>
+<tr><td class="h"><a id="L1279">1279</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $value eq &#39;ARRAY&#39;) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif (ref $value eq &#39;HASH&#39;) { }</td></tr>
-<tr><td class="h"><a id="L1286">1286</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (&amp;blessed($item) and ref $item-&gt;{&#39;geocoder&#39;})</td></tr>
-<tr><td class="h"><a id="L1290">1290</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ref $item eq &quot;HASH&quot;</td></tr>
-<tr><td class="h"><a id="L1296">1296</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($self-&gt;{&#39;debug&#39;})</td></tr>
-<tr><td class="h"><a id="L1298">1298</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $k eq &quot;geometry&quot;</td></tr>
-<tr><td class="h"><a id="L1302">1302</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $item-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;})</td></tr>
-<tr><td class="h"><a id="L1322">1322</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($self-&gt;{&#39;debug&#39;})</td></tr>
-<tr><td class="h"><a id="L1324">1324</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $k eq &quot;geometry&quot;</td></tr>
-<tr><td class="h"><a id="L1328">1328</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $value-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;}) { }</td></tr>
+<tr><td class="h"><a id="L1283">1283</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (&amp;blessed($item) and ref $item-&gt;{&#39;geocoder&#39;})</td></tr>
+<tr><td class="h"><a id="L1287">1287</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ref $item eq &quot;HASH&quot;</td></tr>
+<tr><td class="h"><a id="L1293">1293</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($self-&gt;{&#39;debug&#39;})</td></tr>
+<tr><td class="h"><a id="L1295">1295</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $k eq &quot;geometry&quot;</td></tr>
+<tr><td class="h"><a id="L1299">1299</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $item-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;})</td></tr>
+<tr><td class="h"><a id="L1319">1319</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($self-&gt;{&#39;debug&#39;})</td></tr>
+<tr><td class="h"><a id="L1321">1321</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless $k eq &quot;geometry&quot;</td></tr>
+<tr><td class="h"><a id="L1325">1325</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (defined $value-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;}) { }</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">elsif (defined $value-&gt;{&#39;geometry&#39;}) { }</td></tr>
-<tr><td class="h"><a id="L1349">1349</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (ref $value and ref $value-&gt;{&#39;geocoder&#39;})</td></tr>
-<tr><td class="h"><a id="L1355">1355</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
-<tr><td class="h"><a id="L1358">1358</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not defined $value) { }</td></tr>
+<tr><td class="h"><a id="L1346">1346</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (ref $value and ref $value-&gt;{&#39;geocoder&#39;})</td></tr>
+<tr><td class="h"><a id="L1352">1352</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $self-&gt;{&#39;debug&#39;}</td></tr>
+<tr><td class="h"><a id="L1355">1355</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not defined $value) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif (ref $self-&gt;{&#39;cache&#39;} eq &#39;HASH&#39;) { }</td></tr>
-<tr><td class="h"><a id="L1376">1376</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not defined $rc and $self-&gt;{&#39;cache&#39;})</td></tr>
-<tr><td class="h"><a id="L1377">1377</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $self-&gt;{&#39;cache&#39;} eq &#39;HASH&#39;) { }</td></tr>
-<tr><td class="h"><a id="L1384">1384</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $rc</td></tr>
-<tr><td class="h"><a id="L1387">1387</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ref $rc and ref $rc eq &quot;Geo::Coder::List::_NotFound&quot;</td></tr>
-<tr><td class="h"><a id="L1390">1390</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $rc eq &quot;HASH&quot;)</td></tr>
-<tr><td class="h"><a id="L1391">1391</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $rc-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;}</td></tr>
-<tr><td class="h"><a id="L1404">1404</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (my $logger = $self-&gt;{&#39;logger&#39;})</td></tr>
-<tr><td class="h"><a id="L1407">1407</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($self-&gt;{&#39;debug&#39;})</td></tr>
-<tr><td class="h"><a id="L1416">1416</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (my $logger = $self-&gt;{&#39;logger&#39;}) { }</td></tr>
-<tr><td class="h"><a id="L1427">1427</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (my $logger = $self-&gt;{&#39;logger&#39;}) { }</td></tr>
+<tr><td class="h"><a id="L1373">1373</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not defined $rc and $self-&gt;{&#39;cache&#39;})</td></tr>
+<tr><td class="h"><a id="L1374">1374</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $self-&gt;{&#39;cache&#39;} eq &#39;HASH&#39;) { }</td></tr>
+<tr><td class="h"><a id="L1381">1381</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $rc</td></tr>
+<tr><td class="h"><a id="L1384">1384</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ref $rc and ref $rc eq &quot;Geo::Coder::List::_NotFound&quot;</td></tr>
+<tr><td class="h"><a id="L1387">1387</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $rc eq &quot;HASH&quot;)</td></tr>
+<tr><td class="h"><a id="L1388">1388</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $rc-&gt;{&#39;geometry&#39;}{&#39;location&#39;}{&#39;lat&#39;}</td></tr>
+<tr><td class="h"><a id="L1401">1401</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (my $logger = $self-&gt;{&#39;logger&#39;})</td></tr>
+<tr><td class="h"><a id="L1404">1404</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($self-&gt;{&#39;debug&#39;})</td></tr>
+<tr><td class="h"><a id="L1413">1413</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (my $logger = $self-&gt;{&#39;logger&#39;}) { }</td></tr>
+<tr><td class="h"><a id="L1424">1424</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (my $logger = $self-&gt;{&#39;logger&#39;}) { }</td></tr>
 </table>
 </body>
 </html>
