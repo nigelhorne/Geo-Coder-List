@@ -1,7 +1,7 @@
 Revision history for Geo-Coder-List
 
-0.39
-	[ Incompatible changes ]
+0.39	Mon Oct 19 12:54:37 PM EDT 2026
+	[ Enhancements ]
 	- reverse_geocode(): croak on a latlng that is not a numeric pair written in
 	  the ASCII digits 0-9; it used to be split and sent to every backend
 	- geocode(): a location that does not match a geocoder's regex no longer
@@ -14,8 +14,6 @@ Revision history for Geo-Coder-List
 	- LWP::Protocol::https and IPC::System::Simple are no longer runtime
 	  prerequisites, since the module uses neither; install them yourself if
 	  you relied on this module to pull them in
-
-	[ Enhancements ]
 	- geocode(): the location rule is Geo::Location::Predicate's, which is a
 	  distribution of its own now, so this module declares it as a
 	  recommendation in META instead of requiring Geo::Coder::Free, and nothing
