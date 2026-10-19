@@ -23,9 +23,33 @@ Revision history for Geo-Coder-List
 	  turns into contains a non-digit
 	- Check a reference against Geo::Location::Predicate's rule when that module
 	  is installed, so that the check cannot drift away from Geo::Coder::Free
+	- geocode(): a result with a latitude but no longitude is passed over so the
+	  next geocoder can answer, instead of croaking "BUG: ... not sensible"
+	- geocode(): a bare scalar ahead of a valid result no longer dies with
+	  "Can't use string as a HASH ref"
+	- geocode(): with an L2 cache, the result returned (and held in L1) was
+	  stripped to geometry and lost lat/lng and its geocoder; only the L2 copy is
+	  stripped now
+	- geocode(): the location rule is asked of the HTML-decoded string, so
+	  '&#49;&#50;' is refused as the digits it is
+	- geocode(): a location outside a geocoder's regex no longer spends its limit
+	- geocode(): a plain string in the cache is not returned as a result
+	- geocode(), reverse_geocode(): the caller's $@ is left alone
+	- An L2 cache whose get() or set() dies is warned about and treated as a
+	  miss, rather than failing the lookup
+	- _cache(): a result with no geometry is cached for cache_miss_duration; the
+	  lat check auto-vivified geometry, so it was always cache_part_duration
+	- reverse_geocode(): a list-context cache hit returned an arrayref, and a
+	  scalar call after a list call returned one too
+	- reverse_geocode(): in list context a geocoder with no address no longer
+	  ends the search, and the empty answer is not cached
+	- reverse_geocode(): croak on a latlng that is not a numeric pair
+	- new(): a clone has its own geocoder chain, so pushing onto it or spending
+	  one of its limits leaves the original alone
 
 	[ Testing ]
 	- Added t/reference.t, the same test as the other Geo::Coder distributions
+	- t/function.t: hostile-input, mid-flight failure and helper tests
 
 0.38	Fri Jul 10 13:35:31 EDT 2026
 	[ Bug fixes ]

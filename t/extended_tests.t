@@ -651,13 +651,10 @@ subtest '_cache(): HASH with partial geometry uses cache_part_duration TTL' => s
 	is($calls[0]{ttl}, $TTL_PART, "Partial geometry HASH: TTL is '$TTL_PART'");
 };
 
-subtest '_cache(): HASH with no geometry -- auto-vivification collapses to part TTL' => sub {
-	# Purpose: document that the cache_miss_duration 'else' branch is unreachable.
-	# When checking defined($value->{geometry}{location}{lat}), Perl auto-vivifies
-	# $value->{geometry} as an empty hashref.  The subsequent
-	# elsif(defined($value->{geometry})) is then ALWAYS true, so the else branch
-	# (cache_miss_duration / '1 week') can never be reached.
-	# The effective TTL for a no-geometry HASH is therefore cache_part_duration.
+subtest '_cache(): HASH with no geometry uses cache_miss_duration TTL' => sub {
+	# Purpose: a result with no geometry at all is a miss, not a partial
+	# result, so it gets the miss TTL.  The lat check must not auto-vivify
+	# $value->{geometry} and so turn the miss into a partial result.
 	my $chi = ExtMock::CHI->new();
 	my $obj = Geo::Coder::List->new(cache => $chi);
 
@@ -666,9 +663,8 @@ subtest '_cache(): HASH with no geometry -- auto-vivification collapses to part 
 
 	my @calls = @{$chi->{calls}};
 	is(scalar @calls, 1, 'No-geometry HASH: set() called once');
-	# Due to auto-vivification, the effective TTL is cache_part_duration, not miss
-	is($calls[0]{ttl}, $TTL_PART,
-		"No-geometry HASH: TTL is '$TTL_PART' (auto-vivification makes miss branch dead)")
+	is($calls[0]{ttl}, $TTL_MISS, "No-geometry HASH: TTL is '$TTL_MISS'");
+	ok(!exists $val->{geometry}, 'No-geometry HASH: geometry not auto-vivified');
 };
 
 subtest '_cache(): HASH with no geometry -- _cache write returns undef' => sub {
@@ -711,11 +707,9 @@ subtest '_cache(): ARRAY item with partial geometry uses cache_part_duration TTL
 	is($calls[0]{ttl}, $TTL_PART, "Array partial geometry: TTL is '$TTL_PART'");
 };
 
-subtest '_cache(): ARRAY item with no geometry -- auto-vivification collapses to part TTL' => sub {
-	# Purpose: document that the ternary cache_miss_duration arm is unreachable.
-	# defined($item->{geometry}{location}{lat}) auto-vivifies $item->{geometry},
-	# so the subsequent defined($item->{geometry}) ternary test is always TRUE.
-	# The effective TTL is therefore cache_part_duration in all no-lat cases.
+subtest '_cache(): ARRAY item with no geometry uses cache_miss_duration TTL' => sub {
+	# Purpose: as for a HASH, an item with no geometry is a miss, so the
+	# ternary's miss arm must be reachable
 	my $chi = ExtMock::CHI->new();
 	my $obj = Geo::Coder::List->new(cache => $chi);
 
@@ -724,8 +718,7 @@ subtest '_cache(): ARRAY item with no geometry -- auto-vivification collapses to
 
 	my @calls = @{$chi->{calls}};
 	is(scalar @calls, 1, 'Array no-geometry: set() called once');
-	is($calls[0]{ttl}, $TTL_PART,
-		"Array no-geometry: TTL is '$TTL_PART' (auto-vivification makes miss arm dead)")
+	is($calls[0]{ttl}, $TTL_MISS, "Array no-geometry: TTL is '$TTL_MISS'");
 };
 
 subtest '_cache(): ARRAY item with partial geometry -- write returns undef' => sub {
@@ -836,11 +829,16 @@ subtest '_cache(): blessed ARRAY item -- geocoder ref is stringified for L2' => 
 
 	$obj->_cache('blessed-item-key', [ $blessed_item ]);
 
-	# After the write, the item's geocoder field must be a string (class name)
-	ok(!ref($blessed_item->{geocoder}),
-		'Blessed item in ARRAY: geocoder ref stringified after _cache write');
-	is($blessed_item->{geocoder}, 'FakeGeocoder',
-		'Blessed item in ARRAY: geocoder stringified to class name');
+	# The copy stored in L2 has the class name; the caller's item keeps
+	# its geocoder object, since stripping for storage is L2's business
+	my $stored = $l2{'blessed-item-key'}[0];
+	ok(!ref($stored->{geocoder}),
+		'Blessed item in ARRAY: geocoder ref stringified in L2');
+	is($stored->{geocoder}, 'FakeGeocoder',
+		'Blessed item in ARRAY: geocoder stringified to class name in L2');
+	isa_ok($stored, 'SomeResultClass', 'Blessed item in ARRAY: L2 copy keeps its class');
+	is($blessed_item->{geocoder}, $fake_geocoder,
+		"Blessed item in ARRAY: caller's item is not modified");
 };
 
 # =============================================================================
@@ -1230,27 +1228,4 @@ done_testing();
 #        && ref($rc[0][0]) eq 'HASH'
 #        && scalar(keys %{$rc[0][0]}) == 0
 #
-# 2. lib/Geo/Coder/List.pm line 1260-1263 (_cache HASH):
-#    } else {
-#        $duration = $self->{'cache_miss_duration'};   # '1 week'
-#        $rc = undef;
-#    }
-#
-#    REASON: The preceding check
-#        defined($value->{geometry}{location}{lat})
-#    auto-vivifies $value->{geometry} as {}.  The subsequent
-#        elsif(defined($value->{geometry}))
-#    is therefore ALWAYS true.  The else branch can never execute.
-#    Fix: use exists() instead of defined() for the geometry check, or
-#    check for the key before the lat access.
-#
-# 3. lib/Geo/Coder/List.pm lines 1234-1236 (_cache ARRAY):
-#    $duration //= defined($item->{geometry})
-#        ? $self->{'cache_part_duration'}
-#        : $self->{'cache_miss_duration'};
-#
-#    REASON: Same auto-vivification issue.  The access
-#        defined($item->{geometry}{location}{lat})
-#    at line 1232 auto-vivifies $item->{geometry}.  The ternary's false
-#    arm (cache_miss_duration) can never be reached.
 # =============================================================================

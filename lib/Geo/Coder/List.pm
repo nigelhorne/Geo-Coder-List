@@ -28,7 +28,7 @@ use HTML::Entities;
 use Object::Configure 0.13;
 use Params::Get 0.04;
 use Readonly;
-use Scalar::Util qw(blessed);
+use Scalar::Util qw(blessed reftype);
 use Time::HiRes;
 
 =head1 NAME
@@ -58,6 +58,9 @@ my $NOT_FOUND_SENTINEL = bless {}, _NOT_FOUND_CLASS;
 
 # String placed in the 'geocoder' field of a result served from cache
 Readonly::Scalar my $CACHE_SOURCE => 'cache';
+
+# A latlng argument to reverse_geocode(): two decimal numbers and a comma
+Readonly::Scalar my $LATLNG_RE => qr/^\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*,\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*$/;
 
 # String used as the 'result' value in log entries for a geocoder miss
 Readonly::Scalar my $RESULT_NONE => 'not found';
@@ -177,7 +180,13 @@ sub new
 	} elsif(blessed($class)) {
 		# Shallow clone merged with new params; log is always fresh so the
 		# clone starts with an empty event history independent of the original
-		return bless { %{$class}, %{$params}, log => [] }, ref($class);
+		# The chain is copied, hashref entries included, so pushing onto the
+		# clone or spending one of its limits leaves the original's alone
+		my $clone = bless { %{$class}, %{$params}, log => [] }, ref($class);
+		$clone->{'geocoders'} = [
+			map { ref($_) eq 'HASH' ? { %{$_} } : $_ } @{$clone->{'geocoders'} // []}
+		];
+		return $clone;
 	}
 
 	# Let Object::Configure overlay defaults from environment / config files
@@ -339,6 +348,9 @@ sub _could_be_a_location {
 sub geocode {
 	my $self = shift;
 
+	# The geocoders are called inside eval; the caller's $@ is not ours to change
+	local $@;
+
 	# Params::Get enforces 'location'; calling geocode() with no args causes
 	# get_params itself to croak with "Usage:" matching t/carp.t expectations
 	my $params = Params::Get::get_params('location', @_);
@@ -361,6 +373,15 @@ sub geocode {
 		return;
 	}
 
+	# Collapse runs of whitespace and expand any HTML entities before the rule
+	# is asked: '&#49;&#50;' is the string of digits '12' once decoded, and it
+	# is the decoded string that is looked up.  A reference is left as it is
+	# for the rule to refuse.
+	if(!ref($location)) {
+		$location =~ s/\s\s+/ /g;
+		$location = decode_entities($location);
+	}
+
 	# What counts as a location is Geo::Location::Predicate's answer, not a
 	# second copy of it here: a reference is not a location however it would print,
 	# and a string of digits is what a numeric column holds when the wrong one has
@@ -371,9 +392,6 @@ sub geocode {
 		return;
 	}
 
-	# Collapse runs of whitespace and expand any HTML entities
-	$location =~ s/\s\s+/ /g;
-	$location = decode_entities($location);
 	# Propagate the cleaned-up string so geocoders also receive the decoded form
 	$params->{'location'} = $location;
 
@@ -387,6 +405,13 @@ sub geocode {
 	# _cache() returns undef for both "not in cache" and "cached not-found";
 	# the not-found sentinel is handled internally so callers see undef either way
 	my $cached = $self->_cache($location);
+
+	# Only a reference is a geocode result.  A plain string in the cache under
+	# this key - a reverse_geocode() address, or a corrupted store - is not,
+	# and is looked up again rather than returned as if it were one.
+	if(defined($cached) && !ref($cached)) {
+		undef $cached;
+	}
 
 	if(defined $cached) {
 		# A defined value means we have a genuine cached positive result
@@ -457,6 +482,17 @@ sub geocode {
 
 		# Unpack a hashref entry and apply regex / limit guards
 		if(ref($geocoder) eq 'HASH') {
+			# Skip this entry if the location does not match its regex.  This
+			# comes before the limit so that a location the geocoder is never
+			# asked about does not spend one of its queries.
+			if(my $regex = $geocoder->{'regex'}) {
+				print 'consider ', ref($geocoder->{geocoder}), ": $regex\n"
+					if($self->{'debug'});
+				if($location !~ $regex) {
+					next;
+				}
+			}
+
 			# Decrement and check the per-geocoder query limit
 			if(exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
 				print "limit: $limit\n" if($self->{'debug'});
@@ -464,15 +500,6 @@ sub geocode {
 					next;
 				}
 				$geocoder->{'limit'}--;
-			}
-
-			# Skip this entry if the location does not match its regex
-			if(my $regex = $geocoder->{'regex'}) {
-				print 'consider ', ref($geocoder->{geocoder}), ": $regex\n"
-					if($self->{'debug'});
-				if($location !~ $regex) {
-					next;
-				}
 			}
 
 			# Unwrap the actual geocoder object from the hashref
@@ -924,17 +951,31 @@ In list context returns all address strings from the winning geocoder.
 
 sub reverse_geocode {
 	my $self = shift;
+
+	# The geocoders are called inside eval; the caller's $@ is not ours to change
+	local $@;
+
 	my $params = Params::Get::get_params('latlng', \@_);
 
 	my $latlng = $params->{'latlng'} or Carp::croak('Usage: reverse_geocode(latlng => $location)');
+
+	# Only a numeric pair is a position; anything else would be split into
+	# nonsense coordinates and sent to every backend
+	Carp::croak('Usage: reverse_geocode(latlng => $location)')
+		if(ref($latlng) || ($latlng !~ $LATLNG_RE));
 
 	# Split into components; populate convenience keys for geocoders that want them
 	my ($latitude, $longitude) = split(/,/, $latlng);
 	$params->{'lat'} //= $latitude;
 	$params->{'lon'} //= $longitude;
 
-	# Check L1 / L2 cache before hitting any backend
-	if(my $rc = $self->_cache($latlng)) {
+	# Check L1 / L2 cache before hitting any backend.  A list-context call
+	# caches every address as an arrayref and a scalar-context call caches
+	# one string, so the entry is unpacked for the context asking for it.
+	if(defined(my $rc = $self->_cache($latlng))) {
+		if(ref($rc) eq 'ARRAY') {
+			return wantarray ? @{$rc} : $rc->[0];
+		}
 		return $rc;
 	}
 
@@ -1013,6 +1054,10 @@ sub reverse_geocode {
 				wantarray => 1,
 				result    => \@rc,
 			};
+
+			# A geocoder with no address for the position has not answered;
+			# the next one may
+			next unless(scalar(@rc));
 
 			$self->_cache($latlng, \@rc);
 			return @rc;
@@ -1274,38 +1319,24 @@ sub _cache {
 		my $rc = $value;
 
 		if($self->{'cache'}) {
+			# L2 is written from copies: the caller is returned $value and L1
+			# holds it, so what is stripped for storage must not be stripped
+			# from what they see
+			my $l2value = $value;
 			my $duration;
 
 			if(ref($value) eq 'ARRAY') {
-				foreach my $item (@{$value}) {
-					# Blessed objects (e.g. Geo::Location::Point) may hold
-					# unserializable handles; stringify their geocoder field too
-					if(blessed($item) && ref($item->{'geocoder'})) {
-						$item->{'geocoder'} = ref($item->{'geocoder'});
-					}
+				$l2value = [ map { _l2_copy($_, $self->{'debug'}) } @{$value} ];
 
+				foreach my $item (@{$l2value}) {
 					next unless ref($item) eq 'HASH';
 
-					# Serialise the geocoder object to its class name for storage
-					$item->{'geocoder'} = ref($item->{'geocoder'});
-
-					# Strip everything except geometry to keep the L2 entry small
-					unless($self->{'debug'}) {
-						while(my ($k, $v) = each %{$item}) {
-							delete $item->{$k} unless($k eq 'geometry');
-						}
-					}
-
-					unless(defined($item->{geometry}{location}{lat})) {
-						# Partial or temporary failure: use the shorter TTL.
-						# UNREACHABLE ARM: the access above auto-vivifies
-						# $item->{geometry} as {}, so defined($item->{geometry})
-						# is always true here; the false arm never executes.
-						# Original ternary preserved for documentation:
-						# $duration //= defined($item->{geometry})
-						#     ? $self->{'cache_part_duration'}
-						#     : $self->{'cache_miss_duration'};
-						$duration //= $self->{'cache_part_duration'};
+					unless(_has_lat($item)) {
+						# Geometry without a lat may be a transient failure, so
+						# retry soon; no geometry at all is a miss
+						$duration //= defined($item->{geometry})
+							? $self->{'cache_part_duration'}
+							: $self->{'cache_miss_duration'};
 						$rc = undef;
 					}
 				}
@@ -1314,50 +1345,39 @@ sub _cache {
 				$duration //= $self->{'cache_hit_duration'};
 
 			} elsif(ref($value) eq 'HASH') {
-				$value->{'geocoder'} = ref($value->{'geocoder'});
+				$l2value = _l2_copy($value, $self->{'debug'});
 
-				unless($self->{'debug'}) {
-					while(my ($k, $v) = each %{$value}) {
-						delete $value->{$k} unless($k eq 'geometry');
-					}
-				}
-
-				if(defined($value->{geometry}{location}{lat})) {
+				if(_has_lat($l2value)) {
 					# Confirmed location: cache for a full month
 					$duration = $self->{'cache_hit_duration'};
-				} elsif(defined($value->{geometry})) {
+				} elsif(defined($l2value->{geometry})) {
 					# Partial geometry: may be a transient failure, retry soon
 					$duration = $self->{'cache_part_duration'};
 					$rc = undef;
+				} else {
+					# No geometry at all: place probably does not exist
+					$duration = $self->{'cache_miss_duration'};
+					$rc = undef;
 				}
-				# UNREACHABLE: the else branch below is dead.  The access
-				# defined($value->{geometry}{location}{lat}) above auto-vivifies
-				# $value->{geometry} as {}, so the elsif is always taken when
-				# the if fails.  Original else preserved for documentation:
-				# } else {
-				#     # No geometry at all: place probably does not exist
-				#     $duration = $self->{'cache_miss_duration'};
-				#     $rc = undef;
-				# }
 			} else {
-				# Scalar string or a blessed object (e.g. Geo::Location::Point).
-				# Blessed objects may hold unserializable handles; stringify the
-				# geocoder field so CHI (Storable) can freeze the value safely.
-				if(ref($value) && ref($value->{'geocoder'})) {
-					$value->{'geocoder'} = ref($value->{'geocoder'});
-				}
+				# Scalar string or a blessed object (e.g. Geo::Location::Point)
+				$l2value = _l2_copy($value, 1);
 				$duration = $self->{'cache_hit_duration'};
 			}
 
-			print Data::Dumper->new([$value])->Dump() if($self->{'debug'});
+			print Data::Dumper->new([$l2value])->Dump() if($self->{'debug'});
 
 			# Do not push the not-found sentinel into L2
 			if(!defined($value)) {
 				# value is not-found; L1 sentinel is sufficient
 			} elsif(ref($self->{'cache'}) eq 'HASH') {
-				$self->{'cache'}->{$key} = $value;
+				$self->{'cache'}->{$key} = $l2value;
 			} else {
-				$self->{'cache'}->set($key, $value, $duration);
+				# L2 is only an optimisation: a store that is down must not
+				# lose the caller the result that has already been found
+				local $@;
+				eval { $self->{'cache'}->set($key, $l2value, $duration); 1 }
+					or $self->_warn(__PACKAGE__, ": cache set failed for '$key': $@");
 			}
 		}
 
@@ -1374,7 +1394,11 @@ sub _cache {
 		if(ref($self->{'cache'}) eq 'HASH') {
 			$rc = $self->{'cache'}->{$key};
 		} else {
-			$rc = $self->{'cache'}->get($key);
+			# A store that cannot be read is treated as a miss, so the lookup
+			# goes to the geocoders rather than failing
+			local $@;
+			$rc = eval { $self->{'cache'}->get($key) };
+			$self->_warn(__PACKAGE__, ": cache get failed for '$key': $@") if($@);
 		}
 	}
 
@@ -1392,6 +1416,38 @@ sub _cache {
 	}
 
 	return $rc;
+}
+
+# A copy of one result fit for L2.  The geocoder object becomes its class name,
+# since a handle it holds may not serialise, and unless $keep_all only geometry
+# is kept, to keep the entry small.  Anything that is not a HASH-based
+# reference is returned as it is.
+sub _l2_copy {
+	my ($item, $keep_all) = @_;
+
+	return $item unless ref($item) && (reftype($item) eq 'HASH');
+
+	my $copy = { %{$item} };
+	$copy = bless $copy, ref($item) if blessed($item);
+
+	$copy->{'geocoder'} = ref($copy->{'geocoder'}) if ref($copy->{'geocoder'});
+
+	# A blessed object keeps its fields: its accessors may rely on them
+	unless($keep_all || blessed($item)) {
+		delete @{$copy}{grep { $_ ne 'geometry' } keys %{$copy}};
+	}
+
+	return $copy;
+}
+
+# Whether a result carries a latitude, looked for without auto-vivifying the
+# path to it in a structure that may be shared with the caller
+sub _has_lat {
+	my $item = shift;
+
+	return 0 unless ref($item->{geometry}) eq 'HASH';
+	return 0 unless ref($item->{geometry}{location}) eq 'HASH';
+	return defined($item->{geometry}{location}{lat}) ? 1 : 0;
 }
 
 # Emit a debug message somewhere
