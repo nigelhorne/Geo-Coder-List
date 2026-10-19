@@ -1369,6 +1369,27 @@ subtest 'geocode: markup and control characters reach the backend inert' => sub 
 	is($seen, $hostile, 'backend received the string unchanged');
 };
 
+subtest 'geocode: every candidate in a wrapped result list is considered' => sub {
+	# Purpose: Geo::GeoNames wraps results in arrays.  A usable candidate
+	# that is not the first element of its array must not be thrown away,
+	# and a wrapped empty hash must be a miss, not a crash.
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $m    = mock_scoped 'MockGeocoder::Alpha::geocode' => sub {
+		return [ { name => 'no coordinates' }, _osm_result($LAT_DC, $LNG_DC) ];
+	};
+	my $r = $list->geocode($LOC_DC);
+	is($r->{lat}, $LAT_DC, 'the second element of the array answered');
+
+	my @all = Geo::Coder::List->new()->push(MockGeocoder::Alpha->new())->geocode($LOC_LONDON);
+	is(scalar(@all), 2, 'list context: both wrapped candidates returned');
+
+	my $empty = _make_list(MockGeocoder::Beta->new());
+	my $e = mock_scoped 'MockGeocoder::Beta::geocode' => sub { return [ {} ] };
+	my $miss;
+	lives_ok { $miss = $empty->geocode($LOC_DC) } 'a wrapped empty hash does not crash';
+	ok(!defined($miss), 'and is not found');
+};
+
 subtest 'geocode: a very long location is collapsed and passed once' => sub {
 	# Purpose: resource exhaustion - a huge input must be handled in one pass,
 	# with whitespace runs collapsed, not rejected or truncated silently
@@ -1733,6 +1754,19 @@ subtest 'reverse_geocode: list context with no address anywhere does not cache t
 	my $s = $list->reverse_geocode(latlng => $LATLNG_DC);
 	ok(!defined($s), 'scalar context: undef, not a cached arrayref');
 	is($calls, 2, 'the backend was asked again');
+};
+
+subtest 'reverse_geocode: list context takes plain-string addresses and skips junk' => sub {
+	# Purpose: scalar context already accepts a plain string as the address;
+	# list context used to dereference it as a HASH and die
+	my $list = _make_list(MockGeocoder::Alpha->new());
+	my $m    = mock_scoped 'MockGeocoder::Alpha::reverse_geocode' => sub {
+		return ('1 Main St', undef, '', [ 'not an address' ], { display_name => '2 High St' });
+	};
+
+	my @r;
+	lives_ok { @r = $list->reverse_geocode(latlng => $LATLNG_DC) } 'mixed answers do not die';
+	is_deeply(\@r, [ '1 Main St', '2 High St' ], 'strings and display_name kept; undef, empty and array refs skipped');
 };
 
 subtest 'reverse_geocode: a backend dying for another reason is not retried' => sub {

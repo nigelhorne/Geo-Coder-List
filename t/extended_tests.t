@@ -5,9 +5,6 @@
 #
 # Each subtest targets a specific branch in lib/Geo/Coder/List.pm that was
 # identified as untested via code reading.  Sections map to module sections.
-#
-# PATHS IDENTIFIED AS POTENTIALLY UNREACHABLE (see bottom of file for detail):
-#   * Line 495: ARRAY empty-first-element branch (auto-vivification hazard)
 
 use strict;
 use warnings;
@@ -1210,22 +1207,3 @@ subtest 'reverse_geocode(): scalar context retry -- lat and lon are correct' => 
 };
 
 done_testing();
-
-# =============================================================================
-# UNREACHABLE / DEAD-CODE ANALYSIS
-# Paths identified as unreachable or having unreachable branches.
-# Listed here for author review.
-#
-# 1. lib/Geo/Coder/List.pm line 495:
-#    ((ref($rc[0]) eq 'ARRAY') && (scalar(keys %{$rc[0][0]}) == 0))
-#
-#    REASON: If $rc[0] is an ARRAY ref, $rc[0][0] is its first element.
-#    Under "use strict refs", keys(%{undef}) raises "Not a HASH reference".
-#    The condition is only safe when $rc[0][0] is an explicit empty hashref {}.
-#    No known geocoder produces that structure.
-#    Safer rewrite:
-#        ref($rc[0]) eq 'ARRAY'
-#        && ref($rc[0][0]) eq 'HASH'
-#        && scalar(keys %{$rc[0][0]}) == 0
-#
-# =============================================================================

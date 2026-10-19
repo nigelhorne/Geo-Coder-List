@@ -114,6 +114,64 @@ How long L2 keeps an answer depends on the answer:
 
     A place that was not found is remembered in L1 only, never in L2.
 
+## Supported Answer Formats
+
+Each geocoding service answers in its own format.  `geocode()` finds the
+latitude and longitude in each of the formats below and copies them into
+the common structure.  Any geocoder whose answers use one of these formats
+works without extra code.  The provider's own fields are kept as well.
+
+```
+Service (module)                Where the position is found
+------------------------------  -----------------------------------------
+OpenStreetMap, RandMcNally      lat, lon
+Bing Maps                       BestLocation.Coordinates.Latitude/Longitude
+Bing Maps (other form)          point.coordinates [lat, lng]
+geocoder.ca (Geo::Coder::CA)    latt, longt
+postcodes.io, Geo::Coder::Free  latitude, longitude
+HERE / Ovi                      properties.geoLatitude/geoLongitude
+DataScienceToolkit              results[0].geometry.location.lat/lng
+OpenCage                        results[0].geometry.lat/lng
+GeocodeFarm                     RESULTS[0].COORDINATES.latitude/longitude
+US Census Bureau                result.addressMatches[0].coordinates.y/x
+GeoNames                        lat, lng
+Mapbox                          features[0].center [lng, lat]
+GeoApify                        features[0].geometry.coordinates [lng, lat]
+Google, and anything already    geometry.location.lat/lng
+in the common structure
+```
+
+Notice that Mapbox and GeoApify give the longitude **first**.
+
+Some services need special handling, which is done for you:
+
+- **Geo::Location::Point.**
+A geocoder may answer with a [Geo::Location::Point](https://metacpan.org/pod/Geo%3A%3ALocation%3A%3APoint) object.  Its
+`geometry` is filled in from its own `lat` and `lng` (or `lon`).
+- **postcodes.io.**
+Its `local_type` field is copied to `type`, with the first letter made
+lower case.
+- **geocoder.xyz.**
+Its `standard.countryname` field is copied to `address.country`.
+- **GeoNames.**
+[Geo::GeoNames](https://metacpan.org/pod/Geo%3A%3AGeoNames) is called with the place name alone, not with
+`location => ...`.  If it has no `username`, it fails with
+`lost username`, which is logged, and the next geocoder is asked.
+GeoNames puts its answers in arrays; every answer in them is considered.
+- **US Census Bureau.**
+An answer with no `addressMatches` means "not found", and the next
+geocoder is asked.
+- **GeoApify.**
+An answer with an empty `features` list means "not found", and the next
+geocoder is asked.
+- **Errors.**
+An answer with a top-level `error` key is treated as a refusal, not as a
+place.  The error is logged, and the next geocoder is asked.
+
+Every answer that went through this process also has a `debug` key.  It
+holds the line number, in this module, of the code that read the answer.
+It is there to help when a new format is not read correctly.
+
 ## Subroutines/Methods
 
 ### New
@@ -292,7 +350,10 @@ the cache, and returned.
 
 **List context** returns every answer from the geocoder that won, or an
 empty list.  This is useful when a name, such as `'Springfield'`, belongs
-to many places.
+to many places.  Answers that the geocoder returned inside an array are
+taken out of it, so the list never contains array references.  Answers
+without a position may be in the list too; check `geometry` before you
+use each one.
 
 ```perl
 my @all = $list->geocode('Springfield, USA');
@@ -326,6 +387,7 @@ When the answer came from the cache, it holds the string `'cache'`.
 #       lng      => Num,
 #       lon      => Num,                   # the same as lng
 #       geocoder => OBJECT | 'cache',
+#       debug    => Int,                   # line that read the answer
 #       ...                                # fields from the provider
 #   }
 #
@@ -397,7 +459,7 @@ my @addresses = $list->reverse_geocode(latlng => '51.5034,-0.1276');
 
 `latlng` is the latitude, a comma, and the longitude, in that order.  It
 must be two plain decimal numbers written with the digits `0` to `9`.
-Spaces and a `+` or `-` sign are allowed.  Anything else, such as
+Spaces, tabs and a `+` or `-` sign are allowed.  Anything else, such as
 `'51.5;-0.1'`, `'1e5,2'` or `'51.5'`, makes `reverse_geocode` croak
 before any geocoder is asked.
 
@@ -412,6 +474,18 @@ geocoder is asked.
 **List context** returns every address from the first geocoder that has
 any, or an empty list.
 
+An address is taken from the first of these that the answer has:
+
+- `display_name` (OpenStreetMap, and others that copy it)
+- the fields of geocoder.ca: `stnumber`, `staddress`, `city` and
+`prov` for Canada, giving for example
+`'1 Sussex Dr, Ottawa, ON'`; or the `usa` fields for the United States,
+giving for example `'1600 Pennsylvania Ave, Washington, DC, USA'`
+- `features[0].properties.formatted` (GeoApify); only the first
+feature is used
+
+If a geocoder returns a plain string, the string is the address.
+
 Addresses are cached under the `latlng` string, so asking again for the
 same position does not ask any geocoder.
 
@@ -421,7 +495,7 @@ same position does not ask any geocoder.
 
 ```perl
 {
-    latlng => { type => 'string', optional => 0, matches => qr/^\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*,\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*$/a },
+    latlng => { type => 'string', optional => 0, matches => qr/^[ \t]*[-+]?(?:[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)[ \t]*,[ \t]*[-+]?(?:[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)[ \t]*$/ },
 }
 ```
 
@@ -625,7 +699,9 @@ $list->flush()->geocode('London, UK');
 - **Debug output goes to standard output.**
 
     With `debug` set, messages are printed to `STDOUT`, not `STDERR`, so
-    they mix with your program's own output.
+    they mix with your program's own output.  The same messages are always
+    given to the configured `logger` at debug level, whether `debug` is set
+    or not, so a logger is the way to collect them somewhere else.
 
 ## Encoding
 
@@ -667,8 +743,6 @@ Please report any bugs or feature requests to
 Known limitations:
 
 - `reverse_geocode()` does not yet support [Geo::Location::Point](https://metacpan.org/pod/Geo%3A%3ALocation%3A%3APoint) objects.
-- When `Geo::GeoNames` returns multiple candidates, only the first
-element of each sub-array is considered.
 - `reverse_geocode()` does not honour `regex`.
 
 ## See Also
@@ -841,8 +915,9 @@ spend(e, t)               = e                      otherwise
 ### Reverse\_Geocode
 
 ```
-LatLng == { s : Text | s ∈ ⟦ ^\s*[-+]?D\s*,\s*[-+]?D\s*$ ⟧ }
--- D is a decimal number written in the ASCII digits 0-9
+LatLng == { s : Text | s ∈ ⟦ ^W*[-+]?D W*,W*[-+]?D W*$ ⟧ }
+-- D is a decimal number written in the ASCII digits 0-9;
+-- W is a space or a tab
 
 ┌─ ReverseGeocode ───────────────────────────────────────────────
 │ ΔGeoCoderList

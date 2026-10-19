@@ -6,7 +6,6 @@ use 5.10.1;
 
 use strict;
 use warnings;
-use autodie qw(:all);
 
 use Carp;
 use Data::Dumper;
@@ -30,8 +29,6 @@ use Params::Get 0.04;
 use Readonly;
 use Scalar::Util qw(blessed reftype);
 use Time::HiRes;
-
-=encoding utf-8
 
 =head1 NAME
 
@@ -62,9 +59,10 @@ my $NOT_FOUND_SENTINEL = bless {}, _NOT_FOUND_CLASS;
 Readonly::Scalar my $CACHE_SOURCE => 'cache';
 
 # A latlng argument to reverse_geocode(): two decimal numbers and a comma.
-# /a keeps \d and \s to ASCII: without it Arabic-Indic and other Unicode
-# digits would pass, and no backend reads them as numbers.
-Readonly::Scalar my $LATLNG_RE => qr/^\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*,\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*$/a;
+# The classes are spelt out rather than written \d and \s: those match
+# Arabic-Indic and other Unicode digits, which no backend reads as numbers,
+# and the /a flag that would restrict them needs Perl 5.14.
+Readonly::Scalar my $LATLNG_RE => qr/^[ \t]*[-+]?(?:[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)[ \t]*,[ \t]*[-+]?(?:[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)[ \t]*$/;
 
 # String used as the 'result' value in log entries for a geocoder miss
 Readonly::Scalar my $RESULT_NONE => 'not found';
@@ -199,6 +197,72 @@ A place that was not found is remembered in L1 only, never in L2.
 
 =back
 
+=head1 SUPPORTED ANSWER FORMATS
+
+Each geocoding service answers in its own format.  C<geocode()> finds the
+latitude and longitude in each of the formats below and copies them into
+the common structure.  Any geocoder whose answers use one of these formats
+works without extra code.  The provider's own fields are kept as well.
+
+    Service (module)                Where the position is found
+    ------------------------------  -----------------------------------------
+    OpenStreetMap, RandMcNally      lat, lon
+    Bing Maps                       BestLocation.Coordinates.Latitude/Longitude
+    Bing Maps (other form)          point.coordinates [lat, lng]
+    geocoder.ca (Geo::Coder::CA)    latt, longt
+    postcodes.io, Geo::Coder::Free  latitude, longitude
+    HERE / Ovi                      properties.geoLatitude/geoLongitude
+    DataScienceToolkit              results[0].geometry.location.lat/lng
+    OpenCage                        results[0].geometry.lat/lng
+    GeocodeFarm                     RESULTS[0].COORDINATES.latitude/longitude
+    US Census Bureau                result.addressMatches[0].coordinates.y/x
+    GeoNames                        lat, lng
+    Mapbox                          features[0].center [lng, lat]
+    GeoApify                        features[0].geometry.coordinates [lng, lat]
+    Google, and anything already    geometry.location.lat/lng
+    in the common structure
+
+Notice that Mapbox and GeoApify give the longitude B<first>.
+
+Some services need special handling, which is done for you:
+
+=over 4
+
+=item * B<Geo::Location::Point.>
+A geocoder may answer with a L<Geo::Location::Point> object.  Its
+C<geometry> is filled in from its own C<lat> and C<lng> (or C<lon>).
+
+=item * B<postcodes.io.>
+Its C<local_type> field is copied to C<type>, with the first letter made
+lower case.
+
+=item * B<geocoder.xyz.>
+Its C<standard.countryname> field is copied to C<address.country>.
+
+=item * B<GeoNames.>
+L<Geo::GeoNames> is called with the place name alone, not with
+C<location =E<gt> ...>.  If it has no C<username>, it fails with
+C<lost username>, which is logged, and the next geocoder is asked.
+GeoNames puts its answers in arrays; every answer in them is considered.
+
+=item * B<US Census Bureau.>
+An answer with no C<addressMatches> means "not found", and the next
+geocoder is asked.
+
+=item * B<GeoApify.>
+An answer with an empty C<features> list means "not found", and the next
+geocoder is asked.
+
+=item * B<Errors.>
+An answer with a top-level C<error> key is treated as a refusal, not as a
+place.  The error is logged, and the next geocoder is asked.
+
+=back
+
+Every answer that went through this process also has a C<debug> key.  It
+holds the line number, in this module, of the code that read the answer.
+It is there to help when a new format is not read correctly.
+
 =head1 SUBROUTINES/METHODS
 
 =head2 new
@@ -296,7 +360,9 @@ sub new
 			carp(__PACKAGE__, ' use ->new() not ::new() to instantiate');
 			return;
 		}
-		# FIXME: cloning does not work when called as ::new() with arguments
+		# With no arguments there is nothing to lose, so build a default
+		# object; with arguments the caller has mistaken the calling form and
+		# is told so above, rather than having the arguments silently ignored
 		$class = __PACKAGE__;
 	} elsif(blessed($class)) {
 		# Shallow clone merged with new params; log is always fresh so the
@@ -488,7 +554,10 @@ B<Scalar context> returns one hash reference, or C<undef>.
 
 B<List context> returns every answer from the geocoder that won, or an
 empty list.  This is useful when a name, such as C<'Springfield'>, belongs
-to many places.
+to many places.  Answers that the geocoder returned inside an array are
+taken out of it, so the list never contains array references.  Answers
+without a position may be in the list too; check C<geometry> before you
+use each one.
 
     my @all = $list->geocode('Springfield, USA');
 
@@ -517,6 +586,7 @@ When the answer came from the cache, it holds the string C<'cache'>.
     #       lng      => Num,
     #       lon      => Num,                   # the same as lng
     #       geocoder => OBJECT | 'cache',
+    #       debug    => Int,                   # line that read the answer
     #       ...                                # fields from the provider
     #   }
     #
@@ -574,7 +644,7 @@ sub geocode {
 	# Propagate the cleaned-up string so geocoders also receive the decoded form
 	$params->{'location'} = $location;
 
-	print "location: $location\n" if($self->{'debug'});
+	$self->_debug("location: $location\n");
 
 	# Capture the caller's line number once for all log entries in this call
 	my @call_details = caller(0);
@@ -616,7 +686,7 @@ sub geocode {
 				wantarray => 0,
 				result    => $rc,
 			};
-			print __PACKAGE__, ': ', __LINE__, ": cached\n" if($self->{'debug'});
+			$self->_debug(__PACKAGE__, ': ', __LINE__, ": cached\n");
 			return $rc;
 		}
 
@@ -629,7 +699,7 @@ sub geocode {
 			wantarray => 1,
 			result    => \@rc,
 		};
-		print __PACKAGE__, ': ', __LINE__, ": cached\n" if($self->{'debug'});
+		$self->_debug(__PACKAGE__, ': ', __LINE__, ": cached\n");
 
 		# Determine if every element is empty; if so return nothing
 		my $allempty = 1;
@@ -649,7 +719,7 @@ sub geocode {
 	if(exists $self->{'locations'}{$location}) {
 		my $stored = $self->{'locations'}{$location};
 		if(ref($stored) && ref($stored) eq _NOT_FOUND_CLASS) {
-			print "No matches (cached)\n" if($self->{'debug'});
+			$self->_debug("No matches (cached)\n");
 			return wantarray ? () : undef;
 		}
 	}
@@ -665,8 +735,7 @@ sub geocode {
 			# comes before the limit so that a location the geocoder is never
 			# asked about does not spend one of its queries.
 			if(my $regex = $geocoder->{'regex'}) {
-				print 'consider ', ref($geocoder->{geocoder}), ": $regex\n"
-					if($self->{'debug'});
+				$self->_debug('consider ', ref($geocoder->{geocoder}), ": $regex\n");
 				if($location !~ $regex) {
 					next;
 				}
@@ -674,7 +743,7 @@ sub geocode {
 
 			# Decrement and check the per-geocoder query limit
 			if(exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
-				print "limit: $limit\n" if($self->{'debug'});
+				$self->_debug("limit: $limit\n");
 				if($limit <= 0) {
 					next;
 				}
@@ -691,10 +760,9 @@ sub geocode {
 
 		eval {
 			# Geo::GeoNames uses a positional argument, not a hash
-			print 'trying ', ref($geocoder), "\n" if($self->{'debug'});
+			$self->_debug('trying ', ref($geocoder), "\n");
 			if(ref($geocoder) eq 'Geo::GeoNames') {
-				print 'username => ', $geocoder->username(), "\n"
-					if($self->{'debug'});
+				$self->_debug('username => ', $geocoder->username(), "\n");
 				die 'lost username' if(!defined($geocoder->username()));
 				@rc = $geocoder->geocode($location);
 			} else {
@@ -734,15 +802,14 @@ sub geocode {
 			next ENCODER;
 		}
 
-		# Reject empty result sets and trivially empty hashes / arrays
+		# Geo::GeoNames wraps its results in arrays.  Every element of such an
+		# array is a candidate, so they are unwrapped into one list here, and a
+		# wrapped empty hash is then caught by the check below like any other
+		@rc = map { ref($_) eq 'ARRAY' ? @{$_} : $_ } @rc;
+
+		# Reject empty result sets and trivially empty hashes
 		if((scalar(@rc) == 0) ||
-		   ((ref($rc[0]) eq 'HASH')  && (scalar(keys %{$rc[0]}) == 0)) ||
-		   # UNREACHABLE: if $rc[0] is an ARRAY ref, $rc[0][0] may be undef,
-		   # which causes keys(%{undef}) to die under strict refs.  No known
-		   # geocoder returns an ARRAY-of-ARRAYs with an empty-hash sub-element.
-		   # A safe rewrite would guard with: ref($rc[0][0]) eq 'HASH' first.
-		   # ((ref($rc[0]) eq 'ARRAY') && (scalar(keys %{$rc[0][0]}) == 0)) ||
-		   0) {
+		   ((ref($rc[0]) eq 'HASH') && (scalar(keys %{$rc[0]}) == 0))) {
 			my $log = {
 				line      => $call_details[2],
 				location  => $location,
@@ -762,12 +829,6 @@ sub geocode {
 		my $good_result;
 
 		POSSIBLE_LOCATION: foreach my $l (@rc) {
-			# Geo::GeoNames wraps each result in a one-element array
-			if(ref($l) eq 'ARRAY') {
-				# FIXME: only the first element of the sub-array is considered
-				$l = $l->[0];
-			}
-
 			# Skip undefined or empty-string candidates
 			if((!defined($l)) || ($l eq '')) {
 				my $log = {
@@ -789,8 +850,8 @@ sub geocode {
 			# Stamp the source geocoder on the result before normalisation
 			$l->{'geocoder'} = ref($geocoder);
 
-			print ref($geocoder), ': ',
-				Data::Dumper->new([\$l])->Dump() if($self->{'debug'} >= 2);
+			$self->_debug(ref($geocoder), ': ',
+				Data::Dumper->new([\$l])->Dump()) if($self->{'debug'} >= 2);
 
 			# Geo::Location::Point objects carry their own accessors;
 			# upgrade the geocoder field and populate the canonical geometry
@@ -952,9 +1013,8 @@ sub geocode {
 				# passed over so that a later element, or the next geocoder, can
 				# answer instead
 				if(defined($l->{geometry}{location}{lat}) && defined($l->{geometry}{location}{lng})) {
-					print $l->{geometry}{location}{lat}, '/',
-						$l->{geometry}{location}{lng}, "\n"
-						if($self->{'debug'});
+					$self->_debug($l->{geometry}{location}{lat}, '/',
+						$l->{geometry}{location}{lng}, "\n");
 
 					# Store the geocoder object (not just its name) on the result
 					$l->{geocoder} = $geocoder;
@@ -982,13 +1042,13 @@ sub geocode {
 		# Only attempt to return / cache if normalisation actually succeeded
 		next ENCODER unless defined $good_result;
 
-		print 'Number of matches from ', ref($geocoder), ': ',
-			scalar(@rc), "\n" if($self->{'debug'});
+		$self->_debug('Number of matches from ', ref($geocoder), ': ',
+			scalar(@rc), "\n");
 
 		if($self->{'debug'} >= 2) {
 			# Use 'local' to avoid permanently altering the global Maxdepth
 			local $Data::Dumper::Maxdepth = 10;
-			print Data::Dumper->new([\@rc])->Dump();
+			$self->_debug(Data::Dumper->new([\@rc])->Dump());
 		}
 
 		# Only a result with both coordinates is accepted above, so this can
@@ -1011,7 +1071,7 @@ sub geocode {
 
 	# ── No geocoder produced a usable result ──────────────────────────────
 
-	print "No matches\n" if($self->{'debug'});
+	$self->_debug("No matches\n");
 
 	# Cache the not-found result so repeated calls do not hammer all backends
 	$self->_cache($location, undef);
@@ -1117,7 +1177,7 @@ Finds the address of a position: the opposite of C<geocode>.
 
 C<latlng> is the latitude, a comma, and the longitude, in that order.  It
 must be two plain decimal numbers written with the digits C<0> to C<9>.
-Spaces and a C<+> or C<-> sign are allowed.  Anything else, such as
+Spaces, tabs and a C<+> or C<-> sign are allowed.  Anything else, such as
 C<'51.5;-0.1'>, C<'1e5,2'> or C<'51.5'>, makes C<reverse_geocode> croak
 before any geocoder is asked.
 
@@ -1132,6 +1192,24 @@ B<Scalar context> returns one address string, or C<undef>.
 B<List context> returns every address from the first geocoder that has
 any, or an empty list.
 
+An address is taken from the first of these that the answer has:
+
+=over 4
+
+=item * C<display_name> (OpenStreetMap, and others that copy it)
+
+=item * the fields of geocoder.ca: C<stnumber>, C<staddress>, C<city> and
+C<prov> for Canada, giving for example
+C<'1 Sussex Dr, Ottawa, ON'>; or the C<usa> fields for the United States,
+giving for example C<'1600 Pennsylvania Ave, Washington, DC, USA'>
+
+=item * C<features[0].properties.formatted> (GeoApify); only the first
+feature is used
+
+=back
+
+If a geocoder returns a plain string, the string is the address.
+
 Addresses are cached under the C<latlng> string, so asking again for the
 same position does not ask any geocoder.
 
@@ -1140,7 +1218,7 @@ same position does not ask any geocoder.
 =head4 INPUT
 
     {
-        latlng => { type => 'string', optional => 0, matches => qr/^\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*,\s*[-+]?(?:\d*\.?\d+|\d+\.?\d*)\s*$/a },
+        latlng => { type => 'string', optional => 0, matches => qr/^[ \t]*[-+]?(?:[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)[ \t]*,[ \t]*[-+]?(?:[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)[ \t]*$/ },
     }
 
 =head4 OUTPUT
@@ -1193,7 +1271,7 @@ sub reverse_geocode {
 		# Apply the per-geocoder limit guard for hashref entries
 		if(ref($geocoder) eq 'HASH') {
 			if(exists($geocoder->{'limit'}) && defined(my $limit = $geocoder->{'limit'})) {
-				print "limit: $limit\n" if($self->{'debug'});
+				$self->_debug("limit: $limit\n");
 				if($limit <= 0) {
 					next;
 				}
@@ -1202,7 +1280,7 @@ sub reverse_geocode {
 			$geocoder = $g->{'geocoder'};
 		}
 
-		print 'trying ', ref($geocoder), "\n" if($self->{'debug'});
+		$self->_debug('trying ', ref($geocoder), "\n");
 
 		if(wantarray) {
 			# ── List context: collect all address strings from this geocoder ───
@@ -1235,9 +1313,19 @@ sub reverse_geocode {
 				next;
 			}
 
-			print Data::Dumper->new([\@locs])->Dump() if($self->{'debug'} >= 2);
+			$self->_debug(Data::Dumper->new([\@locs])->Dump()) if($self->{'debug'} >= 2);
 
 			foreach my $loc (@locs) {
+				next unless(defined($loc));
+
+				# A plain string is the address itself, as it is in scalar
+				# context; anything else that is not a HASH has none to give
+				if(!ref($loc)) {
+					CORE::push @rc, $loc if(length($loc));
+					next;
+				}
+				next unless(reftype($loc) eq 'HASH');
+
 				if(my $name = $loc->{'display_name'}) {
 					# OSM returns the full address in display_name
 					CORE::push @rc, $name;
@@ -1308,7 +1396,7 @@ sub reverse_geocode {
 				return $rc;
 			}
 
-			print Data::Dumper->new([$rc])->Dump() if($self->{'debug'} >= 2);
+			$self->_debug(Data::Dumper->new([$rc])->Dump()) if($self->{'debug'} >= 2);
 
 			if(my $name = $rc->{'display_name'}) {
 				# OSM
@@ -1601,7 +1689,7 @@ sub _cache {
 				$duration = $self->{'cache_hit_duration'};
 			}
 
-			print Data::Dumper->new([$l2value])->Dump() if($self->{'debug'});
+			$self->_debug(Data::Dumper->new([$l2value])->Dump()) if($self->{'debug'});
 
 			# Do not push the not-found sentinel into L2
 			if(!defined($value)) {
@@ -1690,11 +1778,17 @@ sub _has_lat {
 sub _debug {
 	my $self = shift;
 
+	# Callers may end the message with a newline or not; it is printed with
+	# exactly one, and given to the logger with none
+	my $message = join('', map { $_ // '' } @_);
+	$message .= "\n" unless($message =~ /\n\z/);
+
 	if(my $logger = $self->{logger}) {
-		$logger->debug(@_);
+		(my $line = $message) =~ s/\n\z//;
+		$logger->debug($line);
 	}
 	if($self->{debug}) {
-		print @_, "\n";
+		print $message;
 	}
 }
 
@@ -1822,7 +1916,9 @@ server, call C<flush()> from time to time.
 =item * B<Debug output goes to standard output.>
 
 With C<debug> set, messages are printed to C<STDOUT>, not C<STDERR>, so
-they mix with your program's own output.
+they mix with your program's own output.  The same messages are always
+given to the configured C<logger> at debug level, whether C<debug> is set
+or not, so a logger is the way to collect them somewhere else.
 
 =back
 
@@ -1878,9 +1974,6 @@ Known limitations:
 
 =item * C<reverse_geocode()> does not yet support L<Geo::Location::Point> objects.
 
-=item * When C<Geo::GeoNames> returns multiple candidates, only the first
-element of each sub-array is considered.
-
 =item * C<reverse_geocode()> does not honour C<regex>.
 
 =back
@@ -1928,6 +2021,8 @@ L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-Coder-List>
 L<https://metacpan.org/release/Geo-Coder-List>
 
 =back
+
+=encoding utf-8
 
 =head1 FORMAL SPECIFICATION
 
@@ -2059,8 +2154,9 @@ method does to the state of the object; they do not describe how.
 
 =head2 reverse_geocode
 
-    LatLng == { s : Text | s ∈ ⟦ ^\s*[-+]?D\s*,\s*[-+]?D\s*$ ⟧ }
-    -- D is a decimal number written in the ASCII digits 0-9
+    LatLng == { s : Text | s ∈ ⟦ ^W*[-+]?D W*,W*[-+]?D W*$ ⟧ }
+    -- D is a decimal number written in the ASCII digits 0-9;
+    -- W is a space or a tab
 
     ┌─ ReverseGeocode ───────────────────────────────────────────────
     │ ΔGeoCoderList
