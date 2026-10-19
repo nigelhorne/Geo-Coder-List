@@ -8,7 +8,6 @@
 #
 # PATHS IDENTIFIED AS POTENTIALLY UNREACHABLE (see bottom of file for detail):
 #   * Line 495: ARRAY empty-first-element branch (auto-vivification hazard)
-#   * Line 734: defined($rc[0]) false while good_result is set (latent bug)
 
 use strict;
 use warnings;
@@ -272,25 +271,64 @@ subtest 'geocode(): legacy "long" key normalised to "lng" and "lon"' => sub {
 };
 
 # =============================================================================
-# SECTION 5: geocode() -- BUG croak path
+# SECTION 5: geocode() -- result with lat but no lng
 #
-# Lines 744-747: if good_result has lat set but lng is undef the module
-# croaks with "BUG: ... HASH exists but is not sensible".
+# A result is usable only when both coordinates are present.  One with lat
+# alone is passed over, so the next geocoder in the chain can answer; it must
+# not croak, since it is the geocoder's answer that is incomplete, not this
+# module.
 # =============================================================================
 
-subtest 'geocode(): BUG croak when result has lat but no lng' => sub {
-	# Purpose: canonical geometry has lat but geometry.location.lng is absent;
-	# the module must croak with the documented BUG error string.
+subtest 'geocode(): lat without lng falls through to the next geocoder' => sub {
+	# Purpose: a half result from the first geocoder must not stop the chain
+	my $list = Geo::Coder::List->new();
+	$list->push(ExtMock::A->new());
+	$list->push(ExtMock::B->new());
+
+	# geometry.location.lat is present; lng is deliberately absent everywhere
+	my $gA = mock_scoped 'ExtMock::A::geocode' => sub {
+		return { geometry => { location => { lat => $LAT_DC } } };
+	};
+	my $gB = mock_scoped 'ExtMock::B::geocode' => sub { _osm($LAT_NY, $LNG_NY) };
+
+	my $r;
+	lives_ok { $r = $list->geocode($LOC_DC) } 'lat without lng does not croak';
+	ok(defined $r, 'Fallback geocoder returned a result');
+	is(ref($r->{geocoder}), 'ExtMock::B', 'Result came from second geocoder');
+	is($r->{lat}, $LAT_NY, 'lat is from the second geocoder');
+};
+
+subtest 'geocode(): lat without lng from the only geocoder is not found' => sub {
+	# Purpose: with nothing to fall back to, the half result is a miss
 	my $list = _list_a();
 	my $g = mock_scoped 'ExtMock::A::geocode' => sub {
-		# geometry.location.lat is present; lng is deliberately absent
 		return { geometry => { location => { lat => $LAT_DC } } };
 	};
 
-	# The module must croak (not just warn) with the exact BUG message
-	throws_ok { $list->geocode($LOC_DC) }
-		qr/BUG:.*HASH exists but is not sensible/,
-		'BUG croak fires when lat set but lng absent';
+	my $r;
+	lives_ok { $r = $list->geocode($LOC_DC) } 'lat without lng does not croak';
+	ok(!defined $r, 'Half result is not returned');
+};
+
+subtest 'geocode(): bare scalar before a valid result is skipped' => sub {
+	# Purpose: a non-reference first element used to be dereferenced as a
+	# HASH after the loop, dying under strict refs
+	for my $lead (0, 'junk') {
+		my $list = _list_a();
+		my $g = mock_scoped 'ExtMock::A::geocode' => sub {
+			return ($lead, _osm($LAT_DC, $LNG_DC));
+		};
+
+		my $r;
+		lives_ok { $r = $list->geocode("$LOC_DC $lead") } "leading '$lead': scalar context does not die";
+		is($r->{lat}, $LAT_DC, "leading '$lead': valid second element returned");
+
+		$list = _list_a();
+		my @r;
+		lives_ok { @r = $list->geocode("$LOC_LONDON $lead") } "leading '$lead': list context does not die";
+		is(scalar(@r), 1, "leading '$lead': only the reference is returned");
+		is($r[0]{lat}, $LAT_DC, "leading '$lead': list result is the valid element");
+	}
 };
 
 # =============================================================================
@@ -1192,15 +1230,7 @@ done_testing();
 #        && ref($rc[0][0]) eq 'HASH'
 #        && scalar(keys %{$rc[0][0]}) == 0
 #
-# 2. lib/Geo/Coder/List.pm lines 734-756:
-#    if(defined($rc[0])) { ... return $good_result }
-#
-#    REASON: A geocoder returning (undef, {lat=>1,lon=>2}) would cause
-#    $good_result to be set but defined($rc[0]) to be FALSE.  The valid
-#    result is then silently discarded.  No known geocoder produces a
-#    leading undef.  Latent bug: the guard should be "if(defined($good_result))".
-#
-# 3. lib/Geo/Coder/List.pm line 1260-1263 (_cache HASH):
+# 2. lib/Geo/Coder/List.pm line 1260-1263 (_cache HASH):
 #    } else {
 #        $duration = $self->{'cache_miss_duration'};   # '1 week'
 #        $rc = undef;
@@ -1214,7 +1244,7 @@ done_testing();
 #    Fix: use exists() instead of defined() for the geometry check, or
 #    check for the key before the lat access.
 #
-# 4. lib/Geo/Coder/List.pm lines 1234-1236 (_cache ARRAY):
+# 3. lib/Geo/Coder/List.pm lines 1234-1236 (_cache ARRAY):
 #    $duration //= defined($item->{geometry})
 #        ? $self->{'cache_part_duration'}
 #        : $self->{'cache_miss_duration'};

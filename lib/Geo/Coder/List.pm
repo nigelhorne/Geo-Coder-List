@@ -735,7 +735,17 @@ sub geocode {
 					}
 				}
 
+				# A result whose geometry has lat but no lng may still carry the
+				# longitude at the top level, some geocoders using the legacy
+				# 'long' key for it
 				if(defined($l->{geometry}{location}{lat})) {
+					$l->{geometry}{location}{lng} //= $l->{'lng'} // $l->{'lon'} // $l->{'long'};
+				}
+
+				# Only a result with both coordinates is usable; anything less is
+				# passed over so that a later element, or the next geocoder, can
+				# answer instead
+				if(defined($l->{geometry}{location}{lat}) && defined($l->{geometry}{location}{lng})) {
 					print $l->{geometry}{location}{lat}, '/',
 						$l->{geometry}{location}{lng}, "\n"
 						if($self->{'debug'});
@@ -775,35 +785,22 @@ sub geocode {
 			print Data::Dumper->new([\@rc])->Dump();
 		}
 
-		# NOTE (latent unreachable path): if a geocoder returned a list whose
-		# first element is undef (e.g. (undef, {lat=>1,lon=>2})), $good_result
-		# would be set from a later element but defined($rc[0]) is false, so
-		# the block below is skipped and the valid result is silently discarded.
-		# No known geocoder produces a leading undef, making this scenario
-		# unreachable in practice.  A safer guard would be defined($good_result).
-		if(defined($rc[0])) {
-			# Normalise the legacy 'long' key some geocoders emit
-			if(defined($rc[0]->{'long'}) && !defined($rc[0]->{'lng'})) {
-				$rc[0]->{'lng'} = $rc[0]->{'long'};
-			}
-			if(defined($rc[0]->{'long'}) && !defined($rc[0]->{'lon'})) {
-				$rc[0]->{'lon'} = $rc[0]->{'long'};
-			}
-
-			# Sanity check: the good result must have lat and lng
-			if((!defined($good_result->{lat})) || (!defined($good_result->{lng}))) {
-				$self->_warn(Data::Dumper->new([\@rc])->Dump());
-				$self->_error("BUG: '$location': HASH exists but is not sensible");
-			}
-
-			if(wantarray) {
-				$self->_cache($location, \@rc);
-				return @rc;
-			}
-
-			$self->_cache($location, $good_result);
-			return $good_result;
+		# Only a result with both coordinates is accepted above, so this can
+		# fail only if the normalisation itself is wrong
+		if((!defined($good_result->{lat})) || (!defined($good_result->{lng}))) {
+			$self->_warn(Data::Dumper->new([\@rc])->Dump());
+			$self->_error("BUG: '$location': HASH exists but is not sensible");
 		}
+
+		if(wantarray) {
+			# A bare scalar the loop passed over is not a result
+			@rc = grep { ref } @rc;
+			$self->_cache($location, \@rc);
+			return @rc;
+		}
+
+		$self->_cache($location, $good_result);
+		return $good_result;
 	}
 
 	# ── No geocoder produced a usable result ──────────────────────────────
