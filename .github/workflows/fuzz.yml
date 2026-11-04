@@ -65,7 +65,7 @@ jobs:
       - name: Generate fuzz tests
         run: |
           mkdir t/fuzz
-          find t/conf -name '*.yml' | while read config; do
+          find t/conf -name '*.yml' | while IFS= read -r config; do
             test_name=$(basename "$config" .conf)
             fuzz-harness-generator "$config" > "t/fuzz/${test_name}_fuzz.t"
           done
