@@ -377,11 +377,11 @@ Approximate LCSAJ segments: 309<br>
 </span><span class="">   36: 
 </span><span class="">   37: =head1 VERSION
 </span><span class="">   38: 
-</span><span class="">   39: Version 0.39
+</span><span class="">   39: Version 0.40
 </span><span class="">   40: 
 </span><span class="">   41: =cut
 </span><span class="">   42: 
-</span><span class="">   43: our $VERSION = &#39;0.39&#39;;
+</span><span class="">   43: our $VERSION = &#39;0.40&#39;;
 </span><span class="">   44: 
 </span><span class="">   45: # &acirc;&#148;&#128;&acirc;&#148;&#128; Module-level constants (not user-configurable) &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
 </span><span class="">   46: 
@@ -833,7 +833,7 @@ Approximate LCSAJ segments: 309<br>
 </span><span class="">  492: 	# there are two answers this module can give on its own.
 </span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  493: 	return Geo::Location::Predicate::_valid_location($location) ? 1 : 0 if $HAVE_RULE;
 </span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  494: 
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  495: 	return 0 if ref($location);
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  495: 	return 0 if ref($location);
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
