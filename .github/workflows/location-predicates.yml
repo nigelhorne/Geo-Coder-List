@@ -129,7 +129,7 @@ jobs:
           ls -1 workspace
 
       - name: Setup Perl
-        uses: shogo82148/actions-setup-perl@v1.44.2
+        uses: shogo82148/actions-setup-perl@v1.44.5
         with:
           perl-version: '5.40'
 
